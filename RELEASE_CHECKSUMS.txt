@@ -1,0 +1,5 @@
+﻿# SHA-256 checksums for archive Release assets
+
+397923af8e79cdbb6a7127f12361acd7a2f83e06b05044ddf496e83de57a5bf0  vgg16-397923af.pth  (553433881 bytes)
+dcbb9e9dad569fff7a846263a77324fc34978fea2bfb039c012d710e1776ae44  vgg19-dcbb9e9d.pth  (574673361 bytes)
+8bbcf86234a5b253b15f720792ec54fb584baeb0129669f7e88ec13b5f55b51a  Q2_competition_final_outputs.zip  (155882011 bytes)
