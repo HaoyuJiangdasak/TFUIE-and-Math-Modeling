@@ -1,0 +1,62 @@
+\chapter{非线性优化：把“最好”写成可计算的问题}
+\section{目标、约束和决策变量}
+\subsection{约束优化标准式}
+\begin{equation}\min_{\boldsymbol x\in\mathbb R^n}f(\boldsymbol x),\quad g_i(\boldsymbol x)\le0\ (i=1,\ldots,m),\quad h_j(\boldsymbol x)=0\ (j=1,\ldots,p).\end{equation}
+$\boldsymbol x$ 是允许调节的 $n$ 维决策向量，如厚度、功率、时间；$f$ 是要最小化的单个目标，如成本；$g_i$ 是 $m$ 条不等式约束，$h_j$ 是 $p$ 条等式约束；$\mathbb R^n$ 表示 $n$ 个实数组成的空间。每条约束内部必须量纲一致，各变量可以有各自单位。最大化收益可以最小化其负数。参数是给定或估计值，决策变量才是优化器主动改变的量。
+\subsection{上下界}
+\begin{equation}l_k\le x_k\le u_k,\quad k=1,\ldots,n.\end{equation}
+$x_k$ 为第 $k$ 个变量，$l_k,u_k$ 为其物理下上界，单位与 $x_k$ 相同；$n$ 是变量数。厚度非负不意味着允许零厚度，真实工程可要求严格正的最小加工厚度。
+\subsection{目标缩放}
+\begin{equation}\widetilde f(\boldsymbol x)=\frac{f(\boldsymbol x)}{f_0},\qquad \widetilde x_k=\frac{x_k-l_k}{u_k-l_k}.\end{equation}
+$f_0>0$ 是目标典型尺度，$u_k>l_k$，波浪号表示无量纲缩放。这样能减少变量相差多个数量级导致的数值困难。结果必须换回原单位。固定变量上下界相同时，不用该缩放式，应从未知量中移除。
+
+\section{最基本的下降方法}
+本节两式针对已无量纲化的变量和目标；梯度、Hessian、方向及步长均按无量纲量理解。
+\subsection{梯度下降}
+\begin{equation}\boldsymbol x_{k+1}=\boldsymbol x_k-\alpha_k\nabla f(\boldsymbol x_k).\end{equation}
+$k$ 为迭代编号，$\boldsymbol x_k$ 为当前候选解，$\nabla f$ 为偏导组成的梯度，$\alpha_k>0$ 是步长。沿负梯度通常在足够小步长下下降；本式是无约束迭代，有约束不能直接照搬。建议先无量纲化；步长过大可能发散。
+\subsection{牛顿方向}
+\begin{equation}H_k\boldsymbol d_k=-\nabla f(\boldsymbol x_k),\qquad \boldsymbol x_{k+1}=\boldsymbol x_k+\alpha_k\boldsymbol d_k.\end{equation}
+$H_k=\nabla^2 f(\boldsymbol x_k)$ 是 Hessian，即二阶偏导矩阵，$\boldsymbol d_k$ 为方向，$\alpha_k$ 为步长。用线性求解获得方向；$H_k$ 非正定时方向未必下降，实际算法需修正 Hessian 或用信赖域。不要声称任意非线性问题都能由牛顿法求得全局最优。
+
+\section{KKT 条件与凸性}
+\subsection{拉格朗日函数}
+\begin{equation}\mathcal L(\boldsymbol x,\boldsymbol\lambda,\boldsymbol\nu)=f(\boldsymbol x)+\sum_{i=1}^m\lambda_i g_i(\boldsymbol x)+\sum_{j=1}^p\nu_j h_j(\boldsymbol x).\end{equation}
+$\mathcal L$ 是把目标与约束合起来的函数；$\lambda_i$ 为不等式乘子，$\nu_j$ 为等式乘子；$f,g_i,h_j,m,p,\boldsymbol x$ 含义同标准式。乘子的单位应使每项与 $f$ 同单位。乘子可辅助解释资源限制的边际价值，但符号解释取决于约束写法。
+\subsection{Karush--Kuhn--Tucker 条件}
+\begin{equation}\nabla_x\mathcal L=0,\quad g_i\le0,\quad h_j=0,\quad\lambda_i\ge0,\quad\lambda_i g_i=0.\end{equation}
+所有函数与梯度都在候选最优点计算；$i=1,\ldots,m$，$j=1,\ldots,p$。依次是驻点、原始可行性、对偶可行性和互补松弛。最后一项表示“不起限制作用的约束，其乘子必须为零”。对于可微问题，局部最优点在满足适当约束资格条件（例如 LICQ）时满足 KKT；任意问题的 KKT 点都全局最优是错误说法。LICQ 指所有等式约束和取等号的不等式约束的梯度向量线性无关，通俗说这些局部限制不能互相重复。等式乘子可以为正、为负或为零，不要求非负。
+\subsection{凸函数定义}
+\begin{equation}f(\tau\boldsymbol x+(1-\tau)\boldsymbol y)\le\tau f(\boldsymbol x)+(1-\tau)f(\boldsymbol y),\qquad 0\le\tau\le1.\end{equation}
+$\boldsymbol x,\boldsymbol y$ 是凸定义域内任意两点，$\tau$ 是无量纲混合权重。意思是连接两点的弦在函数图像上方。若目标与不等式函数凸、等式仿射，则是凸优化，局部最优也是全局最优；满足 KKT 的点为全局最优。Slater 条件等可保障凸问题强对偶和 KKT 必要性。严格凸目标在凸可行域上至多一个最优点，但并不保证最优点存在。参考 Boyd 与 Vandenberghe 的教材网站：\url{https://web.stanford.edu/~boyd/cvxbook/}。
+
+\section{参数拟合：和设计优化有什么不同}
+\subsection{加权非线性最小二乘}
+\begin{equation}\widehat{\boldsymbol\theta}=\arg\min_{\boldsymbol\theta}\sum_{i=1}^N\left[\frac{f(t_i;\boldsymbol\theta)-y_i}{s_i}\right]^2.\end{equation}
+$t_i$ 是第 $i$ 次观测的时间或输入，$y_i$ 为测量结果，$f$ 为预测函数，$\boldsymbol\theta$ 是待估参数，$s_i>0$ 为该观测误差标准差或明确指定的权重尺度，$N$ 是样本数；帽子表示估计结果。残差除以 $s_i$ 后无量纲。观测误差独立且正态、标准差已知时，它对应最大似然估计；相关误差需要协方差加权。
+\subsection{Tikhonov 正则化}
+\begin{equation}\min_{\boldsymbol\theta}\|\boldsymbol r(\boldsymbol\theta)\|_2^2+\lambda\|L(\boldsymbol\theta-\boldsymbol\theta_0)\|_2^2.\end{equation}
+$\boldsymbol r$ 是残差向量，$\lambda\ge0$ 为正则化强度，$L$ 是选定的缩放或差分矩阵，$\boldsymbol\theta_0$ 是参考参数，$\|\cdot\|_2$ 是欧氏范数。建议两项先无量纲化。第二项抑制过大或不平滑参数，不能凭空增加观测信息；$\lambda$ 应通过验证或误差原则选取。
+\subsection{Gauss--Newton 近似}
+\begin{equation}(J^\mathsf TJ)\Delta\boldsymbol\theta=-J^\mathsf T\boldsymbol r,\qquad J_{ij}=\frac{\partial r_i}{\partial\theta_j}.\end{equation}
+$J$ 是残差对参数的 Jacobian，$i$ 编号残差、$j$ 编号参数，$\Delta\boldsymbol\theta$ 为参数修正。该式忽略残差的二阶导数贡献，适合残差较小等情况。数值实现宜用 QR、SVD 或成熟最小二乘求解器；直接构造正规方程会恶化条件数。数据不足或参数作用相似时，即使拟合曲线很好，参数也可能不唯一。
+
+\section{多目标、鲁棒和概率约束}
+\subsection{多目标加权和}
+\begin{equation}\min_{\boldsymbol x}\sum_{j=1}^q w_j\frac{f_j(\boldsymbol x)-a_j}{s_j},\qquad w_j\ge0,\quad\sum_{j=1}^q w_j=1.\end{equation}
+$q$ 是目标数，$f_j$ 是第 $j$ 个目标，$a_j$ 是参考值，$s_j>0$ 是同单位尺度，$w_j$ 是无量纲偏好权重。先把所有目标统一为越小越好。权重体现偏好而非客观真理；非凸 Pareto 前沿的部分点无法通过加权和取得。
+\subsection{最坏情形鲁棒优化}
+\begin{equation}\min_{\boldsymbol x}\max_{\boldsymbol\theta\in\mathcal U} f(\boldsymbol x,\boldsymbol\theta).\end{equation}
+$\boldsymbol x$ 是决策，$\boldsymbol\theta$ 是不确定参数，$\mathcal U$ 是有依据设定的不确定集合，$f$ 是代价。意思是在可能的参数情形中也尽量控制最坏损失。集合过大可能过分保守，必须解释范围来源；约束也可要求对整个集合成立。
+\subsection{机会约束}
+\begin{equation}\mathbb P\{g(\boldsymbol x,\boldsymbol\xi)\le0\}\ge1-\varepsilon.\end{equation}
+$\boldsymbol\xi$ 是具有指定概率分布的随机输入，$g$ 是约束函数，$\varepsilon\in(0,1)$ 是允许违规概率，$\mathbb P$ 为概率。比如温度超限概率不超过 1\%，则 $\varepsilon=0.01$。有限样本中的合格比例不是自动的总体概率保证。
+
+\section{一个可以手算核验的优化例子}
+\begin{equation}\min_{x,y}(x-2)^2+(y-1)^2,\quad x\ge0,\ y\ge0,\ x+y\le2.\end{equation}
+$x,y$ 是无量纲决策量。无约束最优 $(2,1)$ 不可行；约束边界上令 $y=2-x$，最优是 $(1.5,0.5)$，目标值 0.5。几何意思是找可行三角形中离点 $(2,1)$ 最近的点。这是用于验证代码的凸问题，不能代表真实非凸问题的难度。
+
+\section{模板怎么选、结果怎么检查}
+用 \texttt{scipy.optimize.least\_squares} 做残差拟合；用 \texttt{minimize} 的 SLSQP 处理平滑目标和等式、不等式约束。SciPy 旧式字典约束的 \texttt{ineq} 表示函数大于等于零，与本章标准式的小于等于零方向相反。因此 $x+y\le2$ 要写为 \texttt{2-x-y}。接口依据：\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html}。
+
+验收顺序：读求解器成功标志和信息；重新计算目标；检查每个约束残差与上下界；改初值重复；改变缩放与容差；检查小扰动下结论是否稳定。多初值只能提高找到较好解的机会，不能证明全局最优。附录中的优化模板还演示了非线性指数拟合；其中无噪声合成数据只用于教学。

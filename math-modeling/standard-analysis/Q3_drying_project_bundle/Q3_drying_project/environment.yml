@@ -1,0 +1,12 @@
+name: q3_drying
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - numpy>=1.26
+  - pandas>=2.1
+  - scipy>=1.11
+  - matplotlib>=3.8
+  - openpyxl>=3.1
+  - jupyter>=1.0
+  - ipykernel>=6.29

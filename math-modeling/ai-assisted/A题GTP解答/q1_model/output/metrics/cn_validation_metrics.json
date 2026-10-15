@@ -1,0 +1,18 @@
+{
+  "temperatureBoundaryMethod": "linear interpolation of Attachment 1",
+  "boundaryTemperatureRMSE": 0,
+  "boundaryTemperatureR2": 1,
+  "parametricTemperatureRMSE": 0.144193444120797,
+  "parametricTemperatureR2": 0.99920192305839439,
+  "boundaryMoistureRMSE": 0.00020767558213667615,
+  "boundaryMoistureR2": 0.99934581920558674,
+  "gridConvergenceTemperatureMaxAbs": 9.2550616304976074E-5,
+  "gridConvergenceMoistureMaxAbs": 0.0014182846344712452,
+  "heatBalanceRelativeError": 1.0697600345551248E-12,
+  "moistureBalanceRelativeError": 2.4221086971851774E-14,
+  "maxPicardIterations": 13,
+  "temperatureMinimum": 27.9999999999998,
+  "temperatureMaximum": 36.7855561042966,
+  "moistureMinimum": 1.5102902147398307,
+  "moistureMaximum": 2.5500000000000047
+}

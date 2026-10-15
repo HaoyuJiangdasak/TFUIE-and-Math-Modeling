@@ -1,0 +1,77 @@
+% purpose: 读者应能回答"热量与水分在圆柱药材截面内分别沿什么方向传递、在表面受什么条件约束、两个场如何互相耦合"
+% topology: geometry (轴对称剖面) + causal (双场耦合)
+% reading_direction: coordinate-based（径向 r 由中心轴向外）
+% node_roles: 物料域、对称轴、受热表面、热风边界层、温度场、含水率场
+% edge_roles: 导热流、扩散质流、对流换热、表面对流传质、场间耦合
+% visual_encoding: 实线=物料实体与热流；虚线=水分扩散；波浪线=对流边界层；点划线=对称轴；无颜色
+% style_family: C1（纯黑白线稿，与全篇 mono 流程图一致）
+% annotation_policy: minimal   result_policy: none   final_width: text   print_mode: grayscale
+\documentclass[border=2pt]{standalone}
+\usepackage{ctex}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,decorations.pathmorphing}
+\begin{document}
+\begin{tikzpicture}[
+  font=\small,
+  solidline/.style={line width=0.9pt},
+  thinline/.style={line width=0.5pt},
+  heatflow/.style={-{Stealth[length=4.4pt,width=3.2pt]},line width=0.9pt},
+  massflow/.style={-{Stealth[length=4.4pt,width=3.2pt]},line width=0.7pt,densely dashed},
+  couple/.style={-{Stealth[length=4pt,width=3pt]},line width=0.6pt},
+  dimline/.style={{Stealth[length=3.6pt,width=2.8pt]}-{Stealth[length=3.6pt,width=2.8pt]},line width=0.5pt}
+]
+% ---- 半剖面：左侧为对称轴，右侧为受热表面。半剖面而非整圆，便于把径向坐标画成真正的一维轴。
+\def\Rr{4.2}      % 表面半径位置
+\def\Hh{3.1}      % 剖面半高
+
+% 物料区域轮廓（实线=给定实体边界）
+\draw[solidline] (0,-\Hh) -- (\Rr,-\Hh) -- (\Rr,\Hh) -- (0,\Hh);
+% 对称轴（点划线=辅助线）
+\draw[thinline,dash pattern=on 6pt off 2pt on 1pt off 2pt] (0,-\Hh-0.45) -- (0,\Hh+0.45);
+% 抬 0.12：与右上两行标签的顶边取齐（那块两行、顶边比锚点高一整行）
+\node[anchor=south,inner sep=1.5pt] at (0,\Hh+0.62) {对称轴};
+
+% ---- 径向坐标轴（双箭头量度线，置于图形之外）
+\draw[dimline] (0,-\Hh-0.95) -- (\Rr,-\Hh-0.95);
+\node[anchor=north,inner sep=2pt] at (0,-\Hh-1.0) {$r=0$};
+\node[anchor=north,inner sep=2pt] at (\Rr,-\Hh-1.0) {$r=R$};
+\node[anchor=south,inner sep=2pt] at ({\Rr/2},-\Hh-0.92) {径向坐标 $r$};
+
+% ---- 表面与边界层：波浪线表示热风侧对流边界层
+\draw[thinline,decorate,decoration={snake,amplitude=1.1pt,segment length=6pt}]
+      (\Rr+0.62,-\Hh) -- (\Rr+0.62,\Hh);
+\node[anchor=south,align=center,inner sep=2pt] at (\Rr+0.62,\Hh+0.10) {热风侧\\对流边界层};
+
+% ---- 热流：由热风穿过边界层进入表面，再向轴心导入（实线箭头）
+% 三行热流等间距（1.50 个单位）：原来 1.20/1.80 的不等间距会让中段读成"漏了一项"。
+% 内侧箭头尖端收在 2.80，与耦合竖箭头(x=2.45)留出净空，避免几条线在同一小区域挤作一团。
+\foreach \y in {2.15,0.65,-0.85}{
+  \draw[heatflow] (\Rr+1.62,\y) -- (\Rr+0.08,\y);
+  \draw[heatflow] (\Rr-0.22,\y) -- (2.80,\y);
+}
+\node[anchor=west,align=left,inner sep=2pt] at (\Rr+1.72,2.15) {对流换热\\第三类边界条件};
+\node[anchor=west,inner sep=2pt] at (\Rr+1.72,0.65) {表面吸热升温};
+\node[anchor=west,inner sep=2pt] at (\Rr+1.72,-0.85) {向内导热};
+
+% ---- 质流：水分自内向外扩散并在表面蒸发（虚线箭头）
+\foreach \y in {-1.30,-2.35}{
+  \draw[massflow] (2.80,\y) -- (\Rr-0.10,\y);
+  \draw[massflow] (\Rr+0.10,\y) -- (\Rr+1.54,\y);
+}
+\node[anchor=west,inner sep=2pt] at (\Rr+1.72,-1.30) {水分向外扩散};
+\node[anchor=west,align=left,inner sep=2pt] at (\Rr+1.72,-2.35) {表面对流传质\\第三类边界条件};
+
+% ---- 域内两个场与它们的耦合（同一画面内，不另起文字栏）
+\node[inner sep=2.2pt] at (1.55,1.62) {温度场 $T(r,t)$};
+\node[inner sep=2.2pt] at (1.55,-1.62) {含水率场 $C(r,t)$};
+% 两端各收 0.12 单位：Stealth 箭尖原先离两个场标签只有 1.6-2.3pt，看着像刺进文字。
+% 标签 inner sep 加到 4pt：原 2pt 时首字距箭杆 2.3pt，属"文字贴线"。
+\draw[couple] (1.80,1.26) -- node[left,inner sep=4pt,align=right]{升温增强\\水分扩散} (1.80,-1.26);
+\draw[couple] (2.45,-1.26) -- node[right,inner sep=4pt,align=left]{失水改变\\热物性} (2.45,1.26);
+
+% ---- 中心对称条件与内外差异（贴在轴侧，说明零通量与温升滞后）
+\node[anchor=west,inner sep=2pt] at (0.10,-2.62) {轴心零通量};
+\node[anchor=west,inner sep=2pt] at (0.10,2.72) {中心温升滞后于表面};
+\end{tikzpicture}
+\end{document}

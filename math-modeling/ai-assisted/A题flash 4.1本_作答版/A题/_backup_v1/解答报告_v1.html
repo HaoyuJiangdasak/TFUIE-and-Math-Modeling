@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A题《药材的烘干问题》详细解答</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(','\\)']] } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+<style>
+  :root{
+    --c-bg:#f6f7f9; --c-card:#ffffff; --c-ink:#1a2330; --c-sub:#5b6673;
+    --c-line:#e6e9ef; --c-accent:#0f6e4f; --c-accent2:#b45309; --c-code:#0b2a45;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--c-bg);color:var(--c-ink);
+       font-family:"Segoe UI","Microsoft YaHei",Roboto,Helvetica,Arial,sans-serif;
+       line-height:1.75;font-size:16px}
+  .wrap{max-width:980px;margin:0 auto;padding:40px 22px 80px}
+  header.hero{background:linear-gradient(135deg,#0f6e4f,#0b2a45);color:#fff;
+       border-radius:16px;padding:38px 34px;margin-bottom:28px}
+  header.hero h1{margin:0 0 8px;font-size:27px;letter-spacing:.5px}
+  header.hero .sub{opacity:.92;font-size:15px}
+  .badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);
+       padding:3px 12px;border-radius:999px;font-size:12.5px;margin-right:8px;margin-top:10px}
+  section.card{background:var(--c-card);border:1px solid var(--c-line);border-radius:14px;
+       padding:26px 30px;margin-bottom:22px;box-shadow:0 1px 2px rgba(20,40,60,.05)}
+  h2{font-size:21px;margin:0 0 14px;padding-bottom:10px;border-bottom:2px solid var(--c-accent);
+       display:flex;align-items:center;gap:10px}
+  h2 .num{background:var(--c-accent);color:#fff;border-radius:8px;min-width:30px;height:30px;
+       display:inline-flex;align-items:center;justify-content:center;font-size:15px}
+  h3{font-size:17px;margin:20px 0 8px;color:var(--c-accent2)}
+  p{margin:8px 0}
+  .eq{background:#fbfcfe;border-left:4px solid var(--c-accent);padding:12px 16px;margin:14px 0;
+       border-radius:0 8px 8px 0;overflow-x:auto;font-size:15.5px}
+  .eq.bc{border-left-color:var(--c-accent2)}
+  code{background:#eef2f6;color:var(--c-code);padding:1px 6px;border-radius:5px;font-family:Consolas,Menlo,monospace;font-size:90%}
+  table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14px;
+       font-family:Consolas,"SF Mono",Menlo,monospace}
+  caption{caption-side:top;text-align:left;font-weight:700;font-size:15px;color:var(--c-ink);padding:8px 0}
+  th,td{border:1px solid var(--c-line);padding:7px 10px;text-align:center}
+  thead th{background:#0f6e4f;color:#fff;font-weight:600}
+  tbody th{background:#eef4f1;font-weight:600;color:var(--c-accent)}
+  tr:nth-child(even) td{background:#fafbfc}
+  .note{background:#fff8f0;border:1px solid #f0d9b8;border-radius:8px;padding:10px 14px;
+       margin:14px 0;font-size:14.5px;color:#7a4a12}
+  .ok{background:#eefaf2;border:1px solid #cde9d6;color:#0f6e4f}
+  ul,ol{margin:8px 0;padding-left:24px}
+  li{margin:4px 0}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:720px){.grid{grid-template-columns:1fr}}
+  .prop-tbl td:first-child{font-style:normal;font-weight:600}
+  .small{font-size:13px;color:var(--c-sub)}
+  footer{margin-top:30px;text-align:center;color:var(--c-sub);font-size:13px}
+  a{color:var(--c-accent)}
+  .tag{font-weight:700;color:var(--c-accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>药材的烘干问题 —— 详细解答</h1>
+  <div class="sub">圆柱药材热风烘干的热传导–水分扩散耦合模型 · 有限体积法数值求解</div>
+  <div>
+    <span class="badge">热传导</span><span class="badge">水分扩散</span>
+    <span class="badge">无限长圆柱</span><span class="badge">移动边界</span>
+  </div>
+</header>
+
+<!-- ===================== 1 概述 ===================== -->
+<section class="card">
+  <h2><span class="num">1</span>问题概述与基本假设</h2>
+  <p>中药材呈圆柱形，长 <b>25 cm</b>、半径 <b>2 cm</b>。烘干开始时药材温度 28 ℃、干基含水率 2.55 kg/kg。
+     热风烘干分为「预热平衡」（药材升温至烘房温度）与「恒温干燥」（保持烘房环境、持续失水）两个阶段。
+     本题要求建立药材温度 \(T(r,t)\) 与水分浓度 \(C(r,t)\)（干基含水率）随径向位置与时间变化的数学模型，并给出不同阶段的数值结果。</p>
+  <h3>基本假设</h3>
+  <ol>
+    <li>药材近似为<b>无限长圆柱</b>（长度 25 cm ≫ 半径 2 cm），温度与水分只在<b>径向</b>变化，问题化为一维轴对称问题；</li>
+    <li>药材初始温度、初始水分均匀分布；</li>
+    <li>烘房环境的温度 \(T_a(t)\)、水分浓度 \(C_a(t)\) 由附件 1 给出（预热阶段随时间变化，恒温阶段取稳定值约 50 ℃ / 0.05 kg/kg）；</li>
+    <li>表面按第三类边界条件处理：对流换热（系数 \(h\)）与对流传质（系数 \(h_m\)）；</li>
+    <li>物性参数：问题 1 用附录 2；问题 2、3 用附录 3；问题 4 用附录 4（并考虑半径随时间收缩的移动边界）。</li>
+  </ol>
+</section>
+
+<!-- ===================== 2 数学模型 ===================== -->
+<section class="card">
+  <h2><span class="num">2</span>数学模型（控制方程与定解条件）</h2>
+
+  <h3>2.1 热传导方程</h3>
+  <p>由能量守恒，圆柱径向热传导方程为</p>
+  <div class="eq">\(\rho c_p \dfrac{\partial T}{\partial t} = \dfrac{1}{r}\dfrac{\partial}{\partial r}\Big(r\, k\dfrac{\partial T}{\partial r}\Big), \quad 0&lt;r&lt;R,\ t&gt;0\)</div>
+
+  <h3>2.2 水分扩散方程</h3>
+  <p>由质量守恒（干基含水率），水分扩散方程为</p>
+  <div class="eq">\(\dfrac{\partial C}{\partial t} = \dfrac{1}{r}\dfrac{\partial}{\partial r}\Big(r\, D\dfrac{\partial C}{\partial r}\Big), \quad 0&lt;r&lt;R,\ t&gt;0\)</div>
+
+  <h3>2.3 定解条件</h3>
+  <p><b>初始条件</b>（\(t=0\)）：</p>
+  <div class="eq">\(T(r,0)=28\ {}^\circ\text{C},\qquad C(r,0)=2.55\ \text{kg/kg}\)</div>
+  <p><b>边界条件</b>——中心处对称（零通量），表面处第三类边界：</p>
+  <div class="eq bc">\(r=0:\ \dfrac{\partial T}{\partial r}=\dfrac{\partial C}{\partial r}=0\)</div>
+  <div class="eq bc">\(r=R:\ -k\dfrac{\partial T}{\partial r}=h\big(T-T_a(t)\big),\qquad -D\dfrac{\partial C}{\partial r}=h_m\big(C-C_a(t)\big)\)</div>
+
+  <h3>2.4 物性参数与经验公式</h3>
+  <table class="prop-tbl">
+    <thead><tr><th>符号</th><th>附录 2（问题 1）</th><th>附录 3（问题 2、3）</th><th>附录 4（问题 4）</th></tr></thead>
+    <tbody>
+      <tr><td>密度 \(\rho\) (kg/m³)</td><td>820</td><td>\(650+128C\)</td><td>\(760+90C\)</td></tr>
+      <tr><td>比热容 \(c_p\) (J/(kg·K))</td><td>2600</td><td>\(1450+2736\,\frac{C}{C+1}\)</td><td>\(1850+2150\,\frac{C}{C+1}\)</td></tr>
+      <tr><td>导热系数 \(k\) (W/(m·K))</td><td>0.36</td><td>\(0.21+0.38\,\frac{C}{C+1}\)</td><td>\(0.12+0.20\,\frac{C}{C+1}\)</td></tr>
+      <tr><td>扩散系数 \(D\) (m²/s)</td><td>\(7\times10^{-9}e^{-0.89/C}\)</td><td>\(2.4\times10^{-3}e^{-0.45/C}e^{-3850/T}\)</td><td>\(4.2\times10^{-4}e^{-0.30/C}e^{-3850/T}\)</td></tr>
+    </tbody>
+  </table>
+  <div class="note">说明：附录 3、4 中 \(D\) 的第二个指数项 \(e^{-3850/T}\) 中温度取<b>开尔文</b> \(T\)(K)（
+  \(T=273.15+t\)）；\(C\) 为干基含水率（kg/kg）。对流换热系数 \(h=25\ \text{W/(m}^2\text{·K)}\)、
+  对流传质系数 \(h_m=8\times10^{-7}\ \text{m/s}\) 全程保持不变。</div>
+</section>
+
+<!-- ===================== 3 数值方法 ===================== -->
+<section class="card">
+  <h2><span class="num">3</span>数值方法</h2>
+  <p>上述抛物型方程组在圆柱坐标系中于 \(r=0\) 处有奇异性，且（问题 2–4）物性随 \(C,T\) 变化、边界条件随时间变化、问题 4 还存在<b>移动边界</b>，故采用<b>有限体积法（FVM）</b>在归一化坐标下求解。</p>
+
+  <h3>3.1 归一化坐标与移动边界</h3>
+  <p>引入 \(\xi = r/R(t)\in[0,1]\)（问题 1–3 中 \(R\) 为常数 2 cm，问题 4 中 \(R(t)\) 由附件 2 给出）。
+     经链式法则，方程化为</p>
+  <div class="eq">\(\dfrac{\partial T}{\partial t}=\dfrac{k}{\rho c_p R^2}\Big[\dfrac{\partial^2T}{\partial\xi^2}+\dfrac{1}{\xi}\dfrac{\partial T}{\partial\xi}\Big]+\dfrac{\xi}{R}\dfrac{dR}{dt}\dfrac{\partial T}{\partial\xi}\)</div>
+  <div class="eq">\(\dfrac{\partial C}{\partial t}=\dfrac{1}{R^2}\dfrac{1}{\xi}\dfrac{\partial}{\partial\xi}\Big(\xi D\dfrac{\partial C}{\partial\xi}\Big)+\dfrac{\xi}{R}\dfrac{dR}{dt}\dfrac{\partial C}{\partial\xi}\)</div>
+  <p class="small">（问题 1–3 中 \(dR/dt=0\)，右端第二项自动消失；问题 4 中 \(R(t)\)、\(dR/dt\) 由附件 2 分段差分与插值给出。）</p>
+
+  <h3>3.2 离散</h3>
+  <ul>
+    <li>径向取 \(N=141\) 个节点均匀离散 \(\xi\in[0,1]\)；</li>
+    <li>中心节点用对称性给出 \(\nabla^2\approx 4(u_1-u_0)/\Delta\xi^2\)；</li>
+    <li>内部节点用守恒型 FVM 离散通量，物性 \(k,D\) 取相邻面平均；</li>
+    <li>表面节点用「虚拟节点 + 第三类边界」二次精度处理；</li>
+    <li>时间方向用刚性稳定的 <b>BDF 隐式积分</b>（`scipy.solve_ivp`, 相对容差 \(10^{-7}\)），自动变步长，兼顾长时程（数天）与非线性不计的稳定性。</li>
+  </ul>
+  <div class="note ok">网格收敛性检验：问题 3 烘干时长在 \(N=101\sim161\) 稳定为 <b>57.6 h</b>，问题 4 稳定为 <b>52.5 h</b>，
+  说明空间分辨率已足够；结果保留 4 位小数。</div>
+</section>
+
+<!-- ===================== 4 问题1 ===================== -->
+<section class="card">
+  <h2><span class="num">4</span>问题 1：预热平衡阶段（0–1800 s）</h2>
+  <p>采用附录 2 的常数物性（除 \(D\) 随 \(C\) 变化外），烘房 \(T_a(t)\)、\(C_a(t)\) 取附件 1 的插值。
+     求解 30 分钟内药材内部温度与水分浓度分布。</p>
+
+  <table>
+    <caption>表 1　30 分钟内药材的温度（℃）</caption>
+    <thead><tr><th>时间 / s</th><th>r = 0</th><th>r = 0.5 cm</th><th>r = 1 cm</th><th>r = 1.5 cm</th><th>r = 2 cm</th></tr></thead>
+    <tbody>
+      <tr><th>100</th><td>28.0001</td><td>28.0003</td><td>28.0040</td><td>28.0327</td><td>28.1800</td></tr>
+      <tr><th>300</th><td>28.0408</td><td>28.0635</td><td>28.1514</td><td>28.3681</td><td>28.8487</td></tr>
+      <tr><th>600</th><td>28.4533</td><td>28.5360</td><td>28.8039</td><td>29.3159</td><td>30.1653</td></tr>
+      <tr><th>900</th><td>29.3243</td><td>29.4582</td><td>29.8754</td><td>30.6161</td><td>31.7304</td></tr>
+      <tr><th>1200</th><td>30.5427</td><td>30.7098</td><td>31.2223</td><td>32.1126</td><td>33.4276</td></tr>
+      <tr><th>1500</th><td>31.9957</td><td>32.1867</td><td>32.7660</td><td>33.7463</td><td>35.1203</td></tr>
+      <tr><th>1800</th><td>33.5754</td><td>33.7720</td><td>34.3642</td><td>35.3621</td><td>36.7856</td></tr>
+    </tbody>
+  </table>
+
+  <table>
+    <caption>表 2　30 分钟内药材的水分浓度（kg/kg）</caption>
+    <thead><tr><th>时间 / s</th><th>r = 0</th><th>r = 0.5 cm</th><th>r = 1 cm</th><th>r = 1.5 cm</th><th>r = 2 cm</th></tr></thead>
+    <tbody>
+      <tr><th>100</th><td>2.5500</td><td>2.5500</td><td>2.5500</td><td>2.5500</td><td>2.2465</td></tr>
+      <tr><th>300</th><td>2.5500</td><td>2.5500</td><td>2.5500</td><td>2.5492</td><td>2.0490</td></tr>
+      <tr><th>600</th><td>2.5500</td><td>2.5500</td><td>2.5500</td><td>2.5352</td><td>1.8742</td></tr>
+      <tr><th>900</th><td>2.5500</td><td>2.5500</td><td>2.5497</td><td>2.5044</td><td>1.7512</td></tr>
+      <tr><th>1200</th><td>2.5500</td><td>2.5500</td><td>2.5482</td><td>2.4642</td><td>1.6544</td></tr>
+      <tr><th>1500</th><td>2.5500</td><td>2.5499</td><td>2.5445</td><td>2.4201</td><td>1.5741</td></tr>
+      <tr><th>1800</th><td>2.5500</td><td>2.5497</td><td>2.5382</td><td>2.3748</td><td>1.5051</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note"><b>分析</b>：热扩散系数远大于水分扩散系数（\(k/\rho c_p\approx 1.7\times10^{-7}\ \text{m}^2/\text{s}\) vs \(D\approx 5\times10^{-9}\ \text{m}^2/\text{s}\)），
+  因此温度在 30 min 内已显著上升并趋于均匀（中心 33.6 ℃、表面 36.8 ℃，紧追烘房 41.5 ℃），
+  而水分仅在表面约 3 mm 的薄层内明显下降（表面 2.55→1.51），中心基本维持在 2.55。这是「预热阶段以升温为主、失水为辅」的典型特征。</div>
+  <p class="small">完整结果（每 1 s × 每 0.1 cm）见 <code>result1.xlsx</code>。</p>
+</section>
+
+<!-- ===================== 5 问题2 ===================== -->
+<section class="card">
+  <h2><span class="num">5</span>问题 2：整个烘干过程的模型（统一采用附录 3）</h2>
+  <p>因预热平衡与恒温干燥两阶段参数不同，指定<b>统一采用附录 3 的经验公式</b>（\(\rho,c_p,k,D\) 均随含水率/温度变化）。
+     给出 3 h 内、每 0.5 h 的温度与水分浓度。</p>
+
+  <table>
+    <caption>表 3　3 小时内药材的温度（℃）</caption>
+    <thead><tr><th>时间 / h</th><th>r = 0</th><th>r = 0.5 cm</th><th>r = 1 cm</th><th>r = 1.5 cm</th><th>r = 2 cm</th></tr></thead>
+    <tbody>
+      <tr><th>0.5</th><td>32.1935</td><td>32.3865</td><td>32.9708</td><td>33.9663</td><td>35.4195</td></tr>
+      <tr><th>1.0</th><td>40.3886</td><td>40.5606</td><td>41.0675</td><td>41.8851</td><td>43.0043</td></tr>
+      <tr><th>1.5</th><td>45.8520</td><td>45.9400</td><td>46.1980</td><td>46.6098</td><td>47.1446</td></tr>
+      <tr><th>2.0</th><td>48.4531</td><td>48.4909</td><td>48.6012</td><td>48.7761</td><td>49.0056</td></tr>
+      <tr><th>2.5</th><td>49.4683</td><td>49.4805</td><td>49.5149</td><td>49.5664</td><td>49.6618</td></tr>
+      <tr><th>3.0</th><td>49.8501</td><td>49.8559</td><td>49.8752</td><td>49.9107</td><td>49.9669</td></tr>
+    </tbody>
+  </table>
+
+  <table>
+    <caption>表 4　3 小时内药材的水分浓度（kg/kg）</caption>
+    <thead><tr><th>时间 / h</th><th>r = 0</th><th>r = 0.5 cm</th><th>r = 1 cm</th><th>r = 1.5 cm</th><th>r = 2 cm</th></tr></thead>
+    <tbody>
+      <tr><th>0.5</th><td>2.5499</td><td>2.5489</td><td>2.5255</td><td>2.3254</td><td>1.6478</td></tr>
+      <tr><th>1.0</th><td>2.5257</td><td>2.4947</td><td>2.3576</td><td>2.0225</td><td>1.4703</td></tr>
+      <tr><th>1.5</th><td>2.3858</td><td>2.3253</td><td>2.1340</td><td>1.8014</td><td>1.3467</td></tr>
+      <tr><th>2.0</th><td>2.1704</td><td>2.1080</td><td>1.9231</td><td>1.6252</td><td>1.2300</td></tr>
+      <tr><th>2.5</th><td>1.9561</td><td>1.9000</td><td>1.7353</td><td>1.4711</td><td>1.1154</td></tr>
+      <tr><th>3.0</th><td>1.7655</td><td>1.7159</td><td>1.5694</td><td>1.3323</td><td>1.0067</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note"><b>分析</b>：3 h 时药材温度已基本达到烘房温度（约 50 ℃）且径向几乎均匀；
+  水分由表面向中心逐步形成梯度，3 h 时中心 1.77、表面 1.01，失水进程明显快于问题 1（因附录 3 的 \(D\) 含温度项 \(e^{-3850/T}\)，升温后扩散显著加速）。</div>
+  <p class="small">完整结果（每 1 s × 每 0.1 cm）见 <code>result2.xlsx</code>。</p>
+</section>
+
+<!-- ===================== 6 问题3 ===================== -->
+<section class="card">
+  <h2><span class="num">6</span>问题 3：确定烘干时长（要求各处 \(C&lt;0.15\)）</h2>
+  <p>按附录 3 参数持续模拟至「药材各处（以中心为最慢点）水分浓度 &lt; 0.15 kg/kg」，得到烘干时长。</p>
+
+  <table>
+    <caption>表 5　药材烘干过程的水分浓度（kg/kg）</caption>
+    <thead><tr><th>时间 / h</th><th>r = 0</th><th>r = 0.5 cm</th><th>r = 1 cm</th><th>r = 1.5 cm</th><th>r = 2 cm</th></tr></thead>
+    <tbody>
+      <tr><th>6</th><td>1.0158</td><td>0.9869</td><td>0.9002</td><td>0.7534</td><td>0.5304</td></tr>
+      <tr><th>12</th><td>0.4545</td><td>0.4415</td><td>0.4012</td><td>0.3272</td><td>0.1510</td></tr>
+      <tr><th>18</th><td>0.2974</td><td>0.2901</td><td>0.2674</td><td>0.2243</td><td>0.0509</td></tr>
+      <tr><th>24</th><td>0.2371</td><td>0.2321</td><td>0.2162</td><td>0.1854</td><td>0.0507</td></tr>
+      <tr><th>30</th><td>0.2055</td><td>0.2016</td><td>0.1890</td><td>0.1641</td><td>0.0506</td></tr>
+      <tr><th>36</th><td>0.1858</td><td>0.1824</td><td>0.1718</td><td>0.1505</td><td>0.0505</td></tr>
+      <tr><th>42</th><td>0.1720</td><td>0.1691</td><td>0.1597</td><td>0.1409</td><td>0.0504</td></tr>
+      <tr><th>48</th><td>0.1618</td><td>0.1592</td><td>0.1508</td><td>0.1336</td><td>0.0504</td></tr>
+      <tr><th>54</th><td>0.1539</td><td>0.1515</td><td>0.1437</td><td>0.1279</td><td>0.0504</td></tr>
+      <tr><th><b>57.53（结束）</b></th><td>0.1500</td><td>0.1477</td><td>0.1402</td><td>0.1250</td><td>0.0504</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note ok"><b>结论</b>：中心（最慢点）含水率降至 0.15 kg/kg（表面已维持约 0.05 kg/kg 的平衡值）所需时间为
+  <span class="tag">57.53 h ≈ 2.40 天</span>，符合「2–3 天」的经验范围。</div>
+  <p class="small">完整结果（每 60 s × 每 0.1 cm）见 <code>result3.xlsx</code>。</p>
+</section>
+
+<!-- ===================== 7 问题4 ===================== -->
+<section class="card">
+  <h2><span class="num">7</span>问题 4：考虑尺寸收缩（移动边界）</h2>
+  <p>实际烘干中水分流失导致药材半径收缩（附件 2），采用附录 4 物性并取 <b>移动边界</b> \(R(t)\)：
+     半径由 2 cm 收缩至约 1.2 cm。用归一化坐标 \(\xi=r/R(t)\) 将各时间步的求解域自动随之缩放。</p>
+
+  <table>
+    <caption>表 6　药材烘干过程的水分浓度（kg/kg，末列为「药材表面」）</caption>
+    <thead><tr><th>时间 / h</th><th>r = 0</th><th>r = 0.5 cm</th><th>r = 1 cm</th><th>药材表面 (r = R(t))</th></tr></thead>
+    <tbody>
+      <tr><th>6</th><td>1.9520</td><td>1.7823</td><td>1.2557</td><td>0.5633</td></tr>
+      <tr><th>12</th><td>0.8714</td><td>0.7741</td><td>0.4826</td><td>0.2060</td></tr>
+      <tr><th>18</th><td>0.4570</td><td>0.4106</td><td>0.2618</td><td>0.0704</td></tr>
+      <tr><th>24</th><td>0.3054</td><td>0.2788</td><td>0.1888</td><td>0.0555</td></tr>
+      <tr><th>30</th><td>0.2369</td><td>0.2188</td><td>0.1547</td><td>0.0534</td></tr>
+      <tr><th>36</th><td>0.1993</td><td>0.1854</td><td>0.1351</td><td>0.0525</td></tr>
+      <tr><th>42</th><td>0.1756</td><td>0.1643</td><td>0.1223</td><td>0.0519</td></tr>
+      <tr><th>48</th><td>0.1593</td><td>0.1496</td><td>0.1133</td><td>0.0516</td></tr>
+      <tr><th><b>52.50（结束）</b></th><td>0.1500</td><td>0.1412</td><td>0.1080</td><td>0.0514</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note ok"><b>结论</b>：考虑半径收缩后烘干时长为 <span class="tag">52.50 h ≈ 2.19 天</span>，
+  较问题 3（57.53 h）缩短约 5 h。原因有二：一是半径收缩使水分扩散距离 \(R\) 减小（\(R^2\) 下降 ~2.8 倍），
+  二是附录 4 与附录 3 的物性系数不同。表面在收缩过程中始终处于约 0.05 kg/kg 的动态平衡。</div>
+  <p class="small">完整结果（每 60 s × 每 0.1 cm，超出现时半径的列置空）见 <code>result4.xlsx</code>。</p>
+</section>
+
+<!-- ===================== 8 结论 ===================== -->
+<section class="card">
+  <h2><span class="num">8</span>总结</h2>
+  <ul>
+    <li>建立了<b>圆柱径向热传导 + 水分扩散耦合模型</b>，用第三类边界条件刻画对流换热与对流传质，可统一处理预热/恒温阶段及移动边界。</li>
+    <li><b>问题 1</b>：30 min 内升温为主、失水集中于表面薄层；已给出表 1、表 2 与 <code>result1.xlsx</code>。</li>
+    <li><b>问题 2</b>：用附录 3 物性建立全过程模型，3 h 内温度趋于 50 ℃ 均匀，水分形成显著梯度；见表 3、表 4 与 <code>result2.xlsx</code>。</li>
+    <li><b>问题 3</b>：烘干时长 <b>57.53 h</b>；见表 5 与 <code>result3.xlsx</code>。</li>
+    <li><b>问题 4</b>：考虑半径收缩（移动边界），烘干时长 <b>52.50 h</b>；见表 6 与 <code>result4.xlsx</code>。</li>
+  </ul>
+  <div class="note">所有数值均保留 4 位小数；附件 1 烘房温度/水分浓度、附件 2 半径数据通过线性插值进入模型。
+   求解程序与完整结果文件见工作目录 <code>A题\结果\</code>。</div>
+</section>
+
+<footer>生成于 2026-09-10 · 求解器：Python (NumPy / SciPy) 有限体积法</footer>
+</div>
+</body>
+</html>

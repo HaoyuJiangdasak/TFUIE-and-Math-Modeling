@@ -1,0 +1,31 @@
+{
+  "torch_version": "2.13.0+cpu",
+  "device": "cpu",
+  "validation_only_run": false,
+  "training_seconds": 73.64614479999727,
+  "adam_epochs_per_network": 1800,
+  "lbfgs_max_iterations_per_network": 250,
+  "interior_collocation_points": 1200,
+  "boundary_collocation_points": 240,
+  "physics_residual_points": "training points",
+  "temperature_boundary_method": "piecewise-linear interpolation of Attachment 1",
+  "temperature_final_physics_loss": 0.00023215366508568943,
+  "moisture_final_physics_loss": 0.0022511373511506765,
+  "temperature_loss_terms": {
+    "pde": 2.7925639087557022e-05,
+    "center": 8.083366105344835e-09,
+    "surface": 2.0418760916760566e-05
+  },
+  "moisture_loss_terms": {
+    "pde": 0.0021209309523549393,
+    "center": 1.897520551628697e-06,
+    "surface": 6.035939801879691e-06
+  },
+  "temperature_vs_cn_rmse_C": 0.010235509709928375,
+  "temperature_vs_cn_mae_C": 0.00791503923227396,
+  "temperature_vs_cn_max_abs_C": 0.047229770914889,
+  "moisture_vs_cn_rmse_kgkg": 0.011455492480957272,
+  "moisture_vs_cn_mae_kgkg": 0.007423992478365807,
+  "moisture_vs_cn_max_abs_kgkg": 0.05506861702600396,
+  "interpretation": "PINN-CN agreement is a cross-method numerical check of the same PDE. It is not experimental validation because no internal material observations were provided."
+}

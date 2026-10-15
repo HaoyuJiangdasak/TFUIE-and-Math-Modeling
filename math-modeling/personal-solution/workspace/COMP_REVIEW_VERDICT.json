@@ -1,0 +1,137 @@
+{
+  "step": "comp-review",
+  "stage": "logic_adversarial_review",
+  "reviewed_at": "2026-09-11",
+  "problem_id": "A",
+  "competition": "cumcm",
+  "independent_anchor": "user_data/A题_extracted.md",
+  "reused_gate_anchors": [
+    "logic_audit: PASS (1 non-blocking WARN: brentq 被启发式误认作带约束优化)",
+    "facts_audit --stage code: 0 拒绝 / 22 警告",
+    "CROSS_PROBLEM_LEDGER.json: 9/9 observed 回填, 0 违规",
+    "constraint_audit: 38/38",
+    "sanity_check: 64/64"
+  ],
+  "fatal_count": 0,
+  "major_count": 5,
+  "minor_count": 4,
+  "findings_count": 9,
+  "verdict": "PASS_WITH_FINDINGS",
+  "gate": "允许进入论文撰写（fatal_count=0）；5 项 major 必须在写稿时按 fix 执行，不得以已通过闸门为由跳过",
+  "findings": [
+    {
+      "id": "M1",
+      "category": "double_count",
+      "severity": "major",
+      "title": "归因分解的两项用了不同基准，与并列印出的交互项互相否证",
+      "where": "RESULTS.md:143；产生处 code/problem4.py:190-196",
+      "evidence": "四次真实运行 A=207450.3340 s(附录3+固定域)、B=468207.6101 s(附录4+固定域)、C=91003.0196 s(附录3+收缩)、D=184144.0976 s(附录4+收缩)。代码 d_props=B-A=+260757 s、d_shrink=D-B=-284064 s（收缩效应量在附录4物性上），inter=(D-B)-(C-A)=-167616 s 隐含另一个收缩效应 C-A=-116447 s（量在附录3物性上）。实测 260757+(-284064)=-23307≈净效应 -23306，即前两项已精确等于净效应，读者据此只能推出交互项=0，与紧邻的 -167616 s / 719.19% 直接冲突。两个数各自真实，并列在一句话里不成立。",
+      "fix": "把两个收缩效应都写出并点名基准：收缩效应在附录3物性下为 -116447 s、在附录4物性下为 -284064 s，二者之差 -167616 s 即交互项。不要只印一个再谈交互项。"
+    },
+    {
+      "id": "M2",
+      "category": "double_count",
+      "severity": "major",
+      "title": "chain_closure_s 是恒等式而非校验，且碰不到第 4 次运行",
+      "where": "code/problem4.py:193,206；被引用处 RESULTS.md:134",
+      "evidence": "chain_closure_s=|d_props+d_shrink-(t_f-t_b)|=|(B-A)+(D-B)-(D-A)|，展开后 B 逐项抵消，恒等于 0，与四个数值取什么无关；tol_closure_s=1e-6 的断言永远通不了失败。该式只含 A、B、D 三次运行，第 4 次运行 app3_shrink（C=25.2786 h）完全不受其约束，C 只出现在 inter 里。RESULTS.md:134 却写作『四次完全独立的真实积分，链式闭合误差 0.0 s』，把信息量为零的恒等式呈现为四次运行互相印证的证据。",
+      "fix": "删掉『闭合误差 0.0 s』这一证据表述，或换成能失败的校验（以 C 为起点走另一条路径交叉核对，或把 interaction_s 与第 5 次运行对照）。不要因为它恒过就保留它当卖点。"
+    },
+    {
+      "id": "M3",
+      "category": "missing_feature",
+      "severity": "major",
+      "title": "表 5 / 表 6 的「烘干结束时间」行没有含水率数值（题面明写要求的行）",
+      "where": "figures/TABLE_5.md:14、figures/TABLE_6.md:13；数据源 figures/problem_3_results.json→table_5_moisture.t_end_row、figures/problem_4_results.json→table_6_moisture.t_end_row",
+      "evidence": "题面表 5、表 6 模板末行是「烘干结束时间」且该行有待填格（user_data/A题_extracted.md:120,142）。实际 t_end_row={'label':'烘干结束时间','hours':57.6251,'seconds':207450.334}（表 6 另有 R_cm），无 values/C 数组，渲染出来 5 个（表 6 为 6 个）格子全空。数据可得：事件积分的 sol.y_events 即 t_end 时刻的场；result3.xlsx 末行（t=207420 s，距 t_end 仅 30 s）已给 r=0→0.1500、0.5→0.1477、1→0.1403、1.5→0.1250、2→0.0525。",
+      "fix": "在 problem3.py/problem4.py 用事件时刻 y_events（或 dense_output）求 t_end 处的 5（6）个报告点，回填 t_end_row.values 后重生成两表。轻量重跑（问题三 24.85 s、问题四 32.80 s），不需重算敏感性。禁止用 result3/4 末行冒充 t_end 行（那是 t=207420 / 184140 s）。"
+    },
+    {
+      "id": "M4",
+      "category": "extrapolation",
+      "severity": "major",
+      "title": "自定的外推禁区规则被自家交付物全面违反（规则错，不是数错）",
+      "where": "MODELING_REPORT.md:1716（LOGIC_CONTRACT_MACHINE.train_range）",
+      "evidence": "声明 C_range_in_appendix_formulas=[0.15,2.55]，规则写『C<0.15 时物性式仍可求值但不作为报告区间』。实测：result3.xlsx 16978/72597 格(23.4%)低于 0.15，最小 0.0525；result4.xlsx 10710/44327(24.2%)，最小 0.0525；TABLE_5 r=2 cm 列 7/9；TABLE_6 药材表面列 6/8。这些数必须报——中心要降到 0.15，表面必然远低于 0.15（表面是唯一失水通道），且题面明确要求 result3 的 r=2 cm 列与表 6 的『药材表面』列。实质风险在别处：附录3 的 D=2.4e-3·exp(-0.45/C)·exp(-3850/T) 在 C=0.0525 处只有 3.0e-12 m²/s，比湿态(C=2.55, 1.35e-8)低约 4500 倍，干燥末期速率由这一段支配。",
+      "fix": "① 删掉『不作为报告区间』这句自相矛盾的规则，改为如实陈述：按题面要求，附录经验式在全部计算区间（含 C≈0.05 的表面薄层）原样代入，题面未给该式适用下限；② 前置已有诚实证据——敏感性里水分抑制常数 b（±10%→45.65…73.72 h）是第 2 号因子，正是这段低含水率行为的不确定度量化。禁止为『看起来在区间内』而截断或改写表面列。"
+    },
+    {
+      "id": "M5",
+      "category": "missing_feature",
+      "severity": "major",
+      "title": "一维径向降维的声明验证探针从未执行（AXIAL_MODE 只存在于报告里）",
+      "where": "MODELING_REPORT.md:1665（B1 的 direction_probe）、:1541（§10.6）、:1878（假设表）、:134（开关声明）",
+      "evidence": "B1 声明「AXIAL_MODE='2d_axisym' 对照运行，断言 t_end_2d < t_end_1d，并报告相对差」，假设表把『二维轴对称对照运行』列为该假设的验证方法。实测 AXIAL_MODE / 2d_axisym / axisym / 二维轴对称 在 code/、figures/*.json、RESULTS.md、CAPABILITY_VERDICT.json、_tmp/ 中全部零命中，也无任何 t_end_2d 产物：探针从未实现，L=25 cm 除参与长径比 6.25 的口头论证外不进入任何方程。替代证据（我实测，沿真实中心轨迹逐点代入对应附录 D 后梯形积分）：问题三 ∫D dt=7.633e-04 m² → 等效轴向扩散长度 2.763 cm → 轴向中截面因子 0.99862 → 中心含水率被高估 0.14%；问题四 2.172e-04 → 1.474 cm → 1.00000 → 0.00%。半长 12.5 cm 远大于 2.763 cm，端面失水传不到中截面，而决定 t_end 的正是中截面轴心（全域最大含水率所在点）。故 B1 声明的方向（忽略端面⇒高估 t_end⇒模型值为上界）正确且很紧。反例说明必要性：若按湿态常值 D(C0) 估，等效长度 5.28 cm、因子 0.906（高估 10%）——D 随干燥塌缩 4500 倍才是降维成立的真正原因；报告现有论证（Q1 的 1800 s：√(αt)=1.74 cm、Fo=0.7598、渗透 0.2981 cm，RESULTS.md:16-17）只覆盖 1800 s，不能直接支撑 2.4 天的 Q3/Q4。",
+      "fix": "二择一，不要两头空：① 真跑一次 2D 轴对称对照；或 ② 从报告与论文里删除『二维轴对称对照运行』这一验证承诺，改用上述 ∫D dt 论证（长时程下唯一站得住的量化理由）。严禁把未执行的探针按已执行口吻写进论文。"
+    },
+    {
+      "id": "m1",
+      "category": "extrapolation",
+      "severity": "minor",
+      "title": "result2.xlsx 只覆盖 3 h，题面对该文件未给时间上界",
+      "where": "code/params.py:103,106（Q2_T_END=10800）；决策记录 MODELING_REPORT.md:2158、:1990",
+      "evidence": "题面问题 1 写『将 1800 s 内每隔 1 s…保存到 result1.xlsx』，有时间上界；问题 2 只写『建立整个烘干过程…的模型…并将每隔 1 s、每隔 0.1 cm 的完整结果保存到 result2.xlsx』，没有时间上界（user_data/A题_extracted.md:61）。附件 3 模板是 5 行 … 占位（实测 dims 5×6，A 列首三行 1/2/3），无法据模板判定跨度。实现取 3 h（10800 行），MODELING_REPORT.md:2158 记为『至少 10800 s，实现上取 min(10800 s, t_end)』，是有意决策而非疏漏。",
+      "fix": "论文里用一句话讲明这个读法（『完整』指分辨率 1 s / 0.1 cm，跨度随表 3/表 4 取 3 h），别让阅卷人自己猜。不必重跑成 57.6 h × 1 s。"
+    },
+    {
+      "id": "m2",
+      "category": "cross_problem",
+      "severity": "minor",
+      "title": "漏掉一条能直接答『根据附件 2』的独立佐证",
+      "where": "RESULTS.md:109-160（问题四整节）",
+      "evidence": "实测附件 2（145 点，0…259200 s）：最后一次严格下降在 t=241200 s=67.00 h，其后 R 恒为 1.198 cm 直到 72 h（尾部 10 个零增量）。问题四 t_end=51.1511 h 时 R=1.2000 cm，总收缩量已完成 99.75%（(2-1.2)/(2-1.198)），体积比 0.3600 vs 末态 0.3588。半径不再变化即失水停止，故附件 2 自身就把烘干时长指到 51—67 h，与模型 51.15 h 同量级、方向一致。题面问的正是『请根据附件 2，确定药材的烘干时长』，正文完全没写这条。DATA_FACTS.json 的 E2 justification 已隐含此意。",
+      "fix": "在问题四结论处补这条独立校核，口径要诚实：99.75% 收缩完成度是支持性证据，不等于把 67 h 当答案；两者差异属附件 2 几何与附录 4 密度式的既有 13.42% 不自洽（已如实披露）。"
+    },
+    {
+      "id": "m3",
+      "category": "double_count",
+      "severity": "minor",
+      "title": "乘性框架残差的分母未声明（10.34% vs 11.54%）",
+      "where": "code/problem4.py:199；RESULTS.md:144",
+      "evidence": "mult_residual_pct=|(t_f/t_b)/prod-1|，以预测比值为分母：|0.8877/0.9901-1|=10.34%。若按常规以实际值为分母：|0.9901-0.8877|/0.8877=11.54%。两者都对，取决于定义。",
+      "fix": "正文写明『残差以预测比值为分母』，或直接改用 11.54% 的常规定义，避免阅卷人复算出 11.54% 后判为算错。"
+    },
+    {
+      "id": "m4",
+      "category": "missing_feature",
+      "severity": "minor",
+      "title": "DATA_FACTS.json 的 E1 规则仍写零阶保持，代码已改指数松弛",
+      "where": "DATA_FACTS.json→extrapolation_rules[E1]；实现 code/utils.py:115-133（HOLD_RELAX_TAU=300 s）",
+      "evidence": "E1 的 rule 是『取附件 1 末段平台的均值并保持恒定（零阶保持）』，而 driver_Ta/driver_Ca 实际是向平台均值指数松弛（τ=300 s）。改动本身正确且已披露：RESULTS.md:237 写明『零阶保持会在 t=14400 s 处留下 0.1965 °C 阶跃，故区外改用指数松弛』，MODELING_REPORT 以 ④M2 记录该口径覆盖。问题只在 DATA_FACTS.json 未同步。",
+      "fix": "写稿时以 RESULTS.md / ④M2 为准，不要从 DATA_FACTS.json 抄『零阶保持』；按需同步该字段。"
+    }
+  ],
+  "checked_clean": [
+    {
+      "category": "bound_direction",
+      "n_items": 10,
+      "result": "逐条正确",
+      "evidence": "B1 忽略端面=上界（方向经 ∫D dt 独立复核，见 M5）；B2 潜热=下界，χ 扫描 57.6251→60.5067 h 单调上升，方向相符；B3 表面值由 Robin 反解而非取最外格心，闭合残差 2.811e-12 / 1.653e-15；C 阈值判据为全域最大值 max_i C_i-0.15 且 direction=-1（首次下穿），20000 点密扫最小 0.15000000006；Arrhenius 用开尔文（D(50)/D(28)=2.3878，与解析比相对误差 1.86e-16）；干基含水率不归一化（max C=2.5500）；latent_sink 符号已修正为 +chi*rho_d*h_fg*dC/dt；A_face[0]=0 使中心零通量为结构恒等式；ρ_d(t)=ρ_d0(R0/R)² 记账方向正确（丢掉则漂移 61.06%）；PCHIP 半径单调不增（max ΔR=0）。"
+    },
+    {
+      "category": "double_count",
+      "result": "未发现（N1/N2/N3 三项声明的重复计量风险均不成立）",
+      "evidence": "N1 收缩效应：材料坐标下骨架速度使对流项精确抵消，moving_domain_rhs 中不含 dRdt 项，dRdt 只出现在 spurious_advection 反向变体（漂移 10.93%）；N2 潜热与显热未双算（χ=0 基准，且 latent_sink 只除以 rho*cp 一次）；N3 表面通量未在体积源与边界项各算一次（全局水量平衡：储量降 0.851701 vs 表面累积通量 0.851781 kg/m，残差 9.398e-05）。"
+    },
+    {
+      "category": "missing_feature",
+      "result": "未发现遗漏（除 M3/M5 已列）",
+      "evidence": "DATA_FACTS.json 中 role=observed 的变量（附件 1 的 t/Ta/Ca、附件 2 的 t/R）全部进入模型：Ta/Ca 逐点驱动 Robin 边界（241 点相对误差 0.00e+00），R(t) 经保单调 PCHIP 复现 145 点到 2.220e-16 cm 并驱动移动边界。"
+    },
+    {
+      "category": "cross_problem",
+      "result": "未发现矛盾",
+      "evidence": "问题三前 10800 s 与问题二逐位恒等（差 0.000e+00，长时程 max_step=60 s 后差 4.385e-06 °C）；问题四 t=0 时收缩域逐位退化为固定域（差 0.000e+00）；问题四 51.1511 h < 问题三 57.6251 h 与 2×2 分解一致，且 LHS 200 配对样本中问题四短于问题三的比例 1.00；CROSS_PROBLEM_LEDGER.json 9/9 observed 均由本轮真实运行回填，0 违规。"
+    },
+    {
+      "category": "task_understanding",
+      "n_items": 7,
+      "result": "主线读法正确（无 fatal）",
+      "evidence": "① 问题三『各处含水率均降至 0.15 以下』读作全域最大值判据（非平均、非表面），并给出误读代价对照：表面判据 -78.23%、体积平均 -37.27%；② 问题四表 6 末列『药材表面』读作移动表面 r=R(t) 而非固定 r=2 cm，超出当时半径的固定距离列如实留空（result4.xlsx 20122 个空单元格）；③ 四问物性附录对应正确（Q1 附录2、Q2/Q3 附录3、Q4 附录4）；④ 表 1—表 4 的行时刻/列位置与题面模板一致，130/130 格与 result1/2 逐位相符；⑤ result1—result4 均按模板 22 列写盘并读回比对（往返最大差 0.0）；⑥ 收缩方向由附件 2 + 附录 4 数据判定（只径向 +2.216% 接受 / 各向同性 +70.645% 拒绝），非假设；⑦ 求的是烘干时长最小首次达标时刻，非最大值、非稳态时间。"
+    }
+  ],
+  "self_limits": [
+    "本步为静态复核 + 轻量独立计算，未重跑四问主求解；M5 的 2D 轴对称对照仍未执行（替代证据为一维 ∫D dt 估计）。",
+    "M3 的回填需要一次轻量重跑，本步未执行（属写稿/出图步骤的产出边界）。"
+  ]
+}

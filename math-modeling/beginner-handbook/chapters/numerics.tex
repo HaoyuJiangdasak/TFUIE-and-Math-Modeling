@@ -1,0 +1,281 @@
+\chapter{常微分方程：从变化率走到随时间变化的结果}
+\section{先弄懂状态、初值和变化率}
+看到速度、温度、浓度随着时间变化，先问：系统现在的情况能用哪些数表示？这些数叫状态。状态随时间的变化规律叫常微分方程（ODE）。它不是直接告诉你答案，而是告诉你下一小段时间往哪个方向变化、变化多快。只有时间一个独立变量时是 ODE；温度同时随位置和时间变化时，一般要用偏微分方程（PDE）。
+
+\subsection{一阶初值问题与方程组}
+\begin{equation}
+\frac{\mathrm d\boldsymbol y}{\mathrm dt}=\boldsymbol f(t,\boldsymbol y;\boldsymbol p),\qquad \boldsymbol y(t_0)=\boldsymbol y_0.
+\end{equation}
+这里 $t$ 是时间，常用单位 s；$t_0$ 是开始时间；$\boldsymbol y=(y_1,\ldots,y_m)^{\mathsf T}$ 是 $m$ 个状态组成的列向量，上标 $\mathsf T$ 表示转置；$m$ 是状态数，无量纲；$\boldsymbol y_0$ 是初始状态；$\boldsymbol p$ 是给定参数；$f_i$ 是第 $i$ 个状态的变化率，单位为 $y_i$ 的单位除以 s。不同状态可以有不同单位，例如一个状态是位移 m，另一个是速度 m/s。分号仅用于区分已知参数与状态，没有特殊运算意义。例：只有一个温度状态时，$y_1=T$，$f_1$ 的单位就是 K/s。
+
+\subsection{二阶方程必须先拆成一阶}
+\begin{equation}
+m\ddot x+c\dot x+kx=F(t)\quad\Longrightarrow\quad
+\frac{\mathrm d}{\mathrm dt}\begin{pmatrix}x\\v\end{pmatrix}
+=\begin{pmatrix}v\\ {}[F(t)-cv-kx]/m\end{pmatrix},\quad v=\dot x.
+\end{equation}
+此处 $m$ 改为质量，单位 kg；$x$ 是位移 m；$v$ 是速度 m/s；上方一点、两点分别表示对时间求一阶、二阶导数；$c$ 是黏性阻尼系数 N$\cdot$s/m；$k$ 是弹簧刚度 N/m；$F$ 是外力 N。左右各项均为力。求解需要两个初值 $x(t_0)$ 和 $v(t_0)$。适用于质量集中、线性弹簧、小变形和线性阻尼的系统。例：$m=1$ kg、$c=0.2$ N$\cdot$s/m、$k=4$ N/m、$F=0$ 时，第一个返回量必须是速度，第二个返回量才是加速度。
+
+\subsection{解析解是检查程序的尺子}
+\begin{equation}
+\dot T=-\beta(T-T_\infty),\qquad
+T(t)=T_\infty+(T_0-T_\infty)e^{-\beta(t-t_0)}.
+\end{equation}
+$T$ 是物体温度，$T_\infty$ 是恒定环境温度，$T_0$ 是初始温度，均可用 $^\circ$C；$\beta>0$ 是冷却速率，单位 s$^{-1}$；$e$ 是自然常数，无量纲。指数里的 $\beta(t-t_0)$ 必须无量纲。适用于物体内部近似等温、环境恒定、换热参数恒定的集中参数模型。温差用摄氏度或开尔文数值相同；涉及辐射的四次方时必须改成 K。例：$T_0=90$、$T_\infty=20$、$\beta=0.08$，一段时间后温度向 20 渐近，不会在有限时间突然等于 20。
+
+\begin{equation}
+t_\star=t_0+\frac{1}{\beta}\ln\frac{T_0-T_\infty}{T_\star-T_\infty}.
+\end{equation}
+$T_\star$ 是目标温度，与前面温度同单位；$t_\star$ 是首次达到的时间 s；$\ln$ 是自然对数。仅在冷却且 $T_\infty<T_\star<T_0$ 时使用这个直接形式。例：上述参数下达到 40 摄氏度约需 15.66 s。目标为 10 摄氏度时不能把公式硬算下去，因为这个模型根本到不了。
+
+\section{手工数值方法：把曲线切成许多小步}
+\subsection{时间网格}
+\begin{equation}
+t_n=t_0+nh,\qquad n=0,1,\ldots,N,\qquad h=(t_f-t_0)/N.
+\end{equation}
+$t_f$ 是结束时间 s；$N$ 是总步数，无量纲正整数；$h$ 是时间步长 s；$n$ 是步编号；$\boldsymbol y_n$ 以后表示在 $t_n$ 上对真实状态 $\boldsymbol y(t_n)$ 的近似。下标 $n$ 不表示乘法。例：从 0 算到 10 s，用 100 步，就是每次前进 0.1 s。
+
+\subsection{显式欧拉：照着当前斜率往前走}
+\begin{equation}
+\boldsymbol y_{n+1}=\boldsymbol y_n+h\boldsymbol f(t_n,\boldsymbol y_n).
+\end{equation}
+$\boldsymbol y_n$ 和 $\boldsymbol y_{n+1}$ 是旧、新状态；$h\boldsymbol f$ 是这段时间内的状态增量，与状态同单位；$\boldsymbol f$、$t_n$、$h$ 的含义同前。适合讲解与初步试算，精度不高。对于前述冷却例题，初始变化率为 $-5.6$ 摄氏度每秒，取 $h=0.1$ s，下一步就是 $90-0.56=89.44$ 摄氏度。每步更新只能使用旧状态；向量内各分量要一起更新。
+
+\subsection{隐式欧拉：新状态也出现在右边}
+\begin{equation}
+\boldsymbol y_{n+1}=\boldsymbol y_n+h\boldsymbol f(t_{n+1},\boldsymbol y_{n+1}).
+\end{equation}
+符号与显式欧拉相同，但右侧用未知的新状态。每步要解线性或非线性方程，因此算一步更贵，却更适合快速衰减导致的刚性问题。例：$\dot y=-a y$ 时，其中 $a>0$ 的单位 s$^{-1}$，可直接整理为 $y_{n+1}=y_n/(1+ah)$。分母始终大于 1，因此不会出现显式欧拉在大步长下的放大振荡。
+
+\subsection{经典四阶 Runge--Kutta：每步探路四次}
+\begin{align}
+\boldsymbol k_1&=\boldsymbol f(t_n,\boldsymbol y_n),\\
+\boldsymbol k_2&=\boldsymbol f(t_n+h/2,\boldsymbol y_n+h\boldsymbol k_1/2),\\
+\boldsymbol k_3&=\boldsymbol f(t_n+h/2,\boldsymbol y_n+h\boldsymbol k_2/2),\\
+\boldsymbol k_4&=\boldsymbol f(t_n+h,\boldsymbol y_n+h\boldsymbol k_3),\\
+\boldsymbol y_{n+1}&=\boldsymbol y_n+\frac h6(\boldsymbol k_1+2\boldsymbol k_2+2\boldsymbol k_3+\boldsymbol k_4).
+\end{align}
+$\boldsymbol k_1$ 至 $\boldsymbol k_4$ 是四次估计的斜率，各分量单位为相应状态单位每秒；其余符号同前。这里的 $k_i$ 不是弹簧刚度。前两次看起点和中点，第三次改进中点，第四次看终点，再加权平均。适用于解比较光滑、非刚性的问题。不要把这个固定步长 RK4 与软件中的自适应 RK45 当成完全相同的算法。
+
+\subsection{误差阶：步长变小为什么有用}
+\begin{equation}
+E(h)=\max_{0\leq n\leq N}|y_n-y(t_n)|\approx C h^p,
+\quad \frac{E(h)}{E(h/2)}\approx 2^p.
+\end{equation}
+$E$ 是某一个状态的最大绝对误差，单位同该状态；$C$ 是依赖方程和区间的常数，单位为状态单位除以 s$^p$；$p$ 是全局收敛阶，无量纲；$|\cdot|$ 是绝对值。解足够光滑、方法稳定、舍入误差尚未主导时，欧拉法 $p=1$，经典 RK4 为 $p=4$。例：RK4 步长减半，误差理想情况下约缩小 16 倍。这不是任意复杂模型都无条件满足的保证。各分量单位不同时，不应直接把它们的绝对误差取共同最大值，应该先归一化。
+
+\begin{equation}
+p_{\mathrm{obs}}=\frac{\ln(E(h)/E(h/2))}{\ln 2},\qquad
+E_{\mathrm{fine}}\approx\frac{|y_{h/2}(t_f)-y_h(t_f)|}{2^p-1}.
+\end{equation}
+$p_{\mathrm{obs}}$ 是观察到的误差阶；$y_h$、$y_{h/2}$ 是两次计算在同一终点的值；$E_{\mathrm{fine}}$ 是细步长终点误差估计，单位同 $y$。第二式是主导误差项相同且已进入渐近区间时的步长加倍估计，不能把它当作严格误差上界。没有解析解时，至少比较三套步长，并确认误差比例趋于稳定。
+
+\subsection{稳定性与刚性：细步长有时是被迫的}
+\begin{equation}
+\dot y=\lambda y,\quad y_{n+1}=(1+h\lambda)y_n,
+\quad |1+h\lambda|\leq1.
+\end{equation}
+$\lambda$ 是线性增长或衰减系数，单位 s$^{-1}$，可以是复数；$h\lambda$ 无量纲；绝对值对复数表示模。最后是不让显式欧拉放大衰减模式的稳定条件。对实数 $\lambda<0$，它成为 $0<h\leq 2/|\lambda|$；等号处可能不衰减，因此实践中留余量。例：$\lambda=-1000$ s$^{-1}$ 时，哪怕只关心秒级慢变化，显式欧拉仍需不超过 0.002 s 的步长。
+
+\begin{equation}
+\kappa_{\mathrm{time}}=\frac{\max_j |\operatorname{Re}\lambda_j|}{\min_j |\operatorname{Re}\lambda_j|}.
+\end{equation}
+$\lambda_j$ 是局部雅可比矩阵 $\partial\boldsymbol f/\partial\boldsymbol y$ 的衰减特征值，单位 s$^{-1}$；$\operatorname{Re}$ 表示实部；$j$ 是模式编号；$\kappa_{\mathrm{time}}$ 无量纲。只对实部严格为负且不接近零的一组模式这样计算，它是时间尺度分离的提示，不是刚性的完整判据。存在正特征值说明可能真的不稳定；存在零特征值时分母不能照抄。刚性问题优先尝试 Radau 或 BDF，并比较解与计算成本。
+
+\section{自动步长、事件和结果检查}
+\begin{equation}
+s_i=\mathrm{atol}_i+\mathrm{rtol}|y_i|,\qquad
+\epsilon_i=\frac{e_i}{s_i}.
+\end{equation}
+$s_i$ 是第 $i$ 个状态的误差尺度，与 $y_i$ 同单位；$\mathrm{atol}_i$ 是绝对误差容限，同单位；$\mathrm{rtol}$ 是相对容限，无量纲；$e_i$ 是求解器估计的局部误差；$\epsilon_i$ 是归一化误差，无量纲。求解器根据整体归一化误差调节步长，这不等于承诺最终全局误差恰好小于这两个参数。例：位移为 $10^{-6}$ m 时，若把绝对容限设为 $10^{-3}$ m，设置很小的相对容限也无法挽救对微小位移的粗糙控制。
+
+\begin{equation}
+g(t_\star,\boldsymbol y(t_\star))=0.
+\end{equation}
+$g$ 是用户定义的事件函数，单位由物理定义决定；$t_\star$ 是事件发生时刻 s；$\boldsymbol y(t_\star)$ 是该时刻状态。温度到达阈值可取 $g=T-T_\star$，单位 K；落地可取高度 $g=z$，单位 m。事件函数最好连续；求解器通常通过步内符号变化检测事件，单个大步内多次过零可能漏检。因此快速振荡、碰撞等问题要适当限制最大步长，并在不连续处停止、更新状态后重新启动积分。
+
+\begin{equation}
+\delta_Q=\frac{\max_t |Q(\boldsymbol y(t))-Q(\boldsymbol y_0)|}{Q_{\mathrm{scale}}}.
+\end{equation}
+$Q$ 是理论上守恒的量，如机械能 J、总质量 kg；$Q_{\mathrm{scale}}>0$ 是同单位的参考尺度；$\delta_Q$ 是无量纲守恒偏差。只有模型确实守恒时才能这样检查。例：无阻尼自由振动用总机械能检查；有阻尼时能量本来应下降，不能误判为程序错误。真实系统还有持续输入时，应比较累计输入与状态增量。
+
+\subsection{可运行冷却模板与逐行解析}
+下面程序无需数据文件：它同时验证温度解析解和阈值事件时间。所有非空代码行右侧均附中文解释；数组从下标 0 开始，所以 \texttt{y[0]} 是第一个状态。\texttt{def} 创建函数，\texttt{return} 把结果交给求解器，\texttt{assert} 是验证条件不满足就停止的检查。\texttt{t\_eval} 只是要求输出在哪些时刻，不是把内部积分步长固定下来。事件提前终止后，最后的输出采样点可能早于真实事件；事件时间要读 \texttt{t\_events}。
+
+完整代码与每行中文注释见末尾“Python 入门与完整逐行注释模板”章的 ODE 小节。
+
+\subsection{从模板换到自己的赛题}
+先把 \texttt{rhs} 中的右端改成你的物理变化率，再按相同顺序给初始状态。两状态系统必须返回两个变化率，顺序始终对应。把参数值和单位写在一起，避免把分钟混成秒。如果环境温度随时间分段变化，可在右端计算环境温度函数；已知跳变时刻最好分段积分。对非刚性问题先用 RK45，对疑似刚性问题比较 Radau 或 BDF。最后报告算法、相对/绝对容限、最大步长、事件规则及验证结果，而不是只给一张曲线。
+
+\chapter{一维热传导有限差分：把一根杆切成小格子}
+\section{模型从守恒定律开始}
+\subsection{傅里叶导热定律与方向}
+\begin{equation}
+q_x''=-k\frac{\partial T}{\partial x}.
+\end{equation}
+$q_x''$ 是沿正 $x$ 方向的热流密度，单位 W/m$^2$；双撇号只是热流密度惯用记号，不是二阶导数；$k>0$ 是导热系数 W/(m$\cdot$K)；$T(x,t)$ 是温度 K 或摄氏度；$x$ 是位置 m；$\partial$ 表示只改变一个自变量的偏导数。负号说明热从高温流向低温。例：沿右方每米降温 10 K，且 $k=2$，则向右热流密度为 20 W/m$^2$。
+
+\subsection{小体积的能量账本}
+\begin{equation}
+\rho c_p A\Delta x\frac{\partial T}{\partial t}
+\approx A q_x''(x,t)-A q_x''(x+\Delta x,t)+\dot q_v A\Delta x.
+\end{equation}
+$\rho$ 是密度 kg/m$^3$；$c_p$ 是比热容 J/(kg$\cdot$K)；$A$ 是恒定横截面积 m$^2$；$\Delta x$ 是小段长度 m；$\dot q_v$ 是单位体积发热率 W/m$^3$，上点属于记号；$t$ 是时间 s；其他量同前。左侧是储热功率，右侧是流入减流出加内部发热，三项单位都是 W。这里假定截面内温度均匀、侧面不漏热、不发生相变和显著形变；若有侧面对流，要另加损失项。
+
+\begin{equation}
+\rho c_p\frac{\partial T}{\partial t}=\frac{\partial}{\partial x}\left(k\frac{\partial T}{\partial x}\right)+\dot q_v,
+\qquad \alpha=\frac{k}{\rho c_p}.
+\end{equation}
+$\alpha$ 是热扩散率，单位 m$^2$/s；其余符号同前。先对小段能量式除以体积，再令段长趋于零，就得到这条偏微分方程。导热系数随位置或温度变化时，$k$ 必须留在空间导数里面。例：两个材料接触时，不能拿一个平均 $k$ 随意替换整个空间，界面的热流连续性必须保持。
+
+\begin{equation}
+\frac{\partial T}{\partial t}=\alpha\frac{\partial^2 T}{\partial x^2}+s(x,t),\qquad s=\frac{\dot q_v}{\rho c_p}.
+\end{equation}
+$s$ 是温度源项，单位 K/s；$\partial^2 T/\partial x^2$ 是温度空间曲率，单位 K/m$^2$；$\alpha$ 与前同。此形式假设 $k,\rho,c_p$ 为常数。曲率是正时该点比两旁低，导热使它升温；曲率为负时使它降温。例：杆中央形成尖锐热峰，中央会逐渐冷却，热量向两侧扩散。
+
+\subsection{初始条件与三类边界条件}
+\begin{align}
+T(x,0)&=T_{\mathrm{init}}(x),\quad 0\leq x\leq L,\\
+T(0,t)&=T_L(t),\qquad T(L,t)=T_R(t).
+\end{align}
+$L$ 是杆长 m；$T_{\mathrm{init}}$ 是初始温度分布；$T_L,T_R$ 是左右端温度，单位同 $T$。第一行是初始条件，第二行是第一类（Dirichlet）边界。必须同时知道初始和边界信息，才能确定演化。例：两端恒为 0 摄氏度就令 $T_L=T_R=0$。为了得到光滑解，初温端点应与开始时的边界温度一致，否则会有起始边界层，可能降低观察到的收敛阶。
+
+\begin{equation}
+-k\frac{\partial T}{\partial n}=q_n'',\qquad
+\frac{\partial T}{\partial n}=0\ \text{（绝热）}.
+\end{equation}
+$n$ 表示边界向外的法向方向，不是时间编号；$q_n''$ 是向外流出的热流密度 W/m$^2$；$\partial T/\partial n$ 是沿外法向的温度梯度 K/m；$k$ 同前。这是第二类（Neumann）边界。杆左端外法向指向负 $x$，右端指向正 $x$，因此左右端的符号不能机械照抄。绝热不是温度为零，而是没有热流穿过边界。
+
+\begin{equation}
+-k\frac{\partial T}{\partial n}=h_c(T_s-T_\infty).
+\end{equation}
+$h_c$ 是表面对流换热系数 W/(m$^2\cdot$K)；$T_s$ 是端面温度；$T_\infty$ 是流体环境温度；其余符号同前。这是第三类（Robin）边界。$h_c$ 不是时间步长。例：端面比环境高 20 K，$h_c=10$，则向外散热 200 W/m$^2$。辐射显著时还需加入辐射热流，方程会因四次方而非线性。
+
+\section{空间离散与显式格式}
+\begin{equation}
+x_i=i\Delta x,\quad \Delta x=L/M,\quad t_n=n\Delta t,\quad T_i^n\approx T(x_i,t_n).
+\end{equation}
+$M$ 是空间区间数，无量纲，节点共有 $M+1$ 个；$i=0,\ldots,M$ 是空间编号；$n$ 是时间编号；$\Delta x$ 的单位 m；$\Delta t$ 的单位 s；$T_i^n$ 是温度近似值，上标 $n$ 是时间层而不是乘方。只有 $i=1,\ldots,M-1$ 是内部节点；两端由边界条件决定。例：1 m 长杆切成 10 段，需要存 11 个温度。
+
+\begin{equation}
+\left.\frac{\partial T}{\partial t}\right|_i^n\approx\frac{T_i^{n+1}-T_i^n}{\Delta t},\qquad
+\left.\frac{\partial^2T}{\partial x^2}\right|_i^n\approx\frac{T_{i-1}^n-2T_i^n+T_{i+1}^n}{\Delta x^2}.
+\end{equation}
+所有符号同上一式；竖线表示在这个网格点计算。第一个差商单位 K/s，第二个单位 K/m$^2$。时间前向差分一阶精度，空间中心二阶差分在温度足够光滑时二阶精度。例：一排温度为 0、10、0，中央的差分曲率为负，因此中央向外散热。
+
+\begin{equation}
+r=\frac{\alpha\Delta t}{\Delta x^2},\qquad
+T_i^{n+1}=rT_{i-1}^n+(1-2r)T_i^n+rT_{i+1}^n+\Delta t\,s_i^n.
+\end{equation}
+$r$ 是无量纲扩散比；$s_i^n=s(x_i,t_n)$ 是温度源项 K/s；其他符号同前。这就是显式 FTCS 格式。新温度由旧时刻三个温度算出，不能边计算边覆盖旧数组，否则会混用时间层。例：$r=0.4$、无热源、旧温度为 0、10、0，则新中央温度为 2。若本应平滑扩散却出现越来越大的正负交替，优先检查步长稳定性。
+
+\begin{equation}
+0\leq r\leq\frac12\quad\Longleftrightarrow\quad
+\Delta t\leq\frac{\Delta x^2}{2\alpha}.
+\end{equation}
+这是常系数一维纯扩散、均匀网格、标准边界处理下显式格式的稳定性条件；符号与前相同。满足条件时无热源更新权重非负且和为 1，可看成三个旧温度的加权平均。空间步长缩小到一半，允许的时间步长会缩小到四分之一。增加对流、反应或特殊边界后，要重新检查相应约束，不能直接套用这一条作为全部稳定条件。
+
+\begin{equation}
+G(\xi)=1-4r\sin^2(\xi/2),\qquad |G(\xi)|\leq1.
+\end{equation}
+$G$ 是单步误差放大因子，无量纲；$\xi$ 是网格上的无量纲波数（弧度视为无量纲）；$\sin$ 是正弦函数。它来自把误差分解成正弦波分析。所有波数都不放大时才稳定；最坏情况 $\sin^2(\xi/2)=1$ 就得到 $r\leq1/2$。这解释了为什么某些棋盘状高频误差最先爆炸。
+
+\section{隐式、Crank--Nicolson 与矩阵求解}
+\subsection{后向欧拉：新时间层的三个点一起解}
+\begin{equation}
+-rT_{i-1}^{n+1}+(1+2r)T_i^{n+1}-rT_{i+1}^{n+1}
+=T_i^n+\Delta t\,s_i^{n+1}.
+\end{equation}
+$T_i^n,r,\Delta t,s_i^{n+1}$ 均按此前定义。右边已知，左边含相邻新温度，因此所有内部点要组成联立方程一起求。常系数线性扩散下它无条件稳定，但时间精度仍是一阶；大步长会把真实变化抹得过平。稳定仅表示不爆炸，不表示答案准确。
+
+\subsection{Crank--Nicolson：平均新旧两层的导热}
+\begin{align}
+-\frac r2T_{i-1}^{n+1}+(1+r)T_i^{n+1}-\frac r2T_{i+1}^{n+1}
+&=\frac r2T_{i-1}^n+(1-r)T_i^n+\frac r2T_{i+1}^n\\
+&\quad+\frac{\Delta t}{2}(s_i^n+s_i^{n+1}).
+\end{align}
+符号同前。对于光滑解、光滑源项和一致的二阶边界处理，时间与空间均可达到二阶精度。它对线性扩散无条件稳定，但大时间步可能产生不衰减得足够快的交替振荡，尤其是阶跃初温。遇到这种现象，应减小时间步，或先用若干隐式欧拉小步平滑起始层，而不是仅仅宣布“无条件稳定所以没问题”。
+
+\subsection{一个参数统一三种方法}
+\begin{align}
+-\theta rT_{i-1}^{n+1}+(1+2\theta r)T_i^{n+1}-\theta rT_{i+1}^{n+1}
+&=T_i^n+(1-\theta)r(T_{i-1}^n-2T_i^n+T_{i+1}^n)\\
+&\quad+\Delta t[(1-\theta)s_i^n+\theta s_i^{n+1}].
+\end{align}
+$\theta\in[0,1]$ 是无量纲时间加权系数；$\theta=0$ 为显式，$\theta=1$ 为隐式欧拉，$\theta=1/2$ 为 Crank--Nicolson；其余符号同前。代码用这个统一格式避免重复三份更新逻辑。下面程序虽然显式情形也调用带状线性求解器，但这时矩阵是单位阵，数学结果与直接更新相同。
+
+\begin{equation}
+B\boldsymbol u^{n+1}=\boldsymbol b^n,\qquad
+B=\operatorname{tridiag}(-\theta r,1+2\theta r,-\theta r).
+\end{equation}
+$\boldsymbol u^{n+1}=(T_1^{n+1},\ldots,T_{M-1}^{n+1})^{\mathsf T}$ 是内部温度向量；$B$ 是无量纲的三对角系数矩阵；$\boldsymbol b^n$ 是旧温度、源项和边界项组成的右端，单位 K；$\operatorname{tridiag}$ 表示按下对角、主对角、上对角构造矩阵。不要显式计算 $B^{-1}$，应调用线性方程求解器。网格很大时利用三对角结构，比构造完整密集矩阵节省大量存储。
+
+\subsection{非零端点一定要补到右端}
+\begin{align}
+b_1^n&\mathrel{+}=\theta rT_L(t_{n+1}),\\
+b_{M-1}^n&\mathrel{+}=\theta rT_R(t_{n+1}).
+\end{align}
+$b_1^n$ 和 $b_{M-1}^n$ 是右端向量首尾元素，单位 K；符号 $\mathrel{+}=$ 表示“在已有值上再加”，不是新的物理定律；$T_L,T_R$ 为给定边界温度。旧时刻边界贡献已经包含在统一格式的旧时刻差分项中，新时刻边界贡献还必须由左侧移到右侧。下面代码的两端均为零，故这两项恰好为零；直接改成非零边界却不加它们会得到错误结果。
+
+\subsection{绝热与对流边界的离散例子}
+\begin{equation}
+\frac{-3T_0+4T_1-T_2}{2\Delta x}=0\quad\text{（左端绝热）}.
+\end{equation}
+$T_0,T_1,T_2$ 是同一时间层从左端开始的三个温度；$\Delta x$ 同前。这是左端一阶导数的二阶单边差分，导数为零即绝热。它要作为边界方程并入线性系统，不能既把 $T_0$ 固定为常数又声称绝热。更简单的 $T_0=T_1$ 只有一阶边界近似，可能影响总体收敛阶。
+
+\begin{equation}
+-k\frac{3T_M-4T_{M-1}+T_{M-2}}{2\Delta x}
+=h_c(T_M-T_\infty)\quad\text{（右端对流）}.
+\end{equation}
+$T_M$ 是右端温度，$T_{M-1},T_{M-2}$ 是其左侧两个点；$k,h_c,T_\infty$ 同前。这是右端外法向为正 $x$ 的二阶单边形式。左端不能直接复制负号，因为外法向反向。边界处理改变了系数矩阵结构，必须相应修改求解器存储；本页是建模公式，后面的基础模板只实现两端恒温。
+
+\section{材料变化、侧面散热与验证}
+\begin{equation}
+\rho_i c_{p,i}\frac{T_i^{n+1}-T_i^n}{\Delta t}
+=\frac{k_{i+1/2}(T_{i+1}^n-T_i^n)-k_{i-1/2}(T_i^n-T_{i-1}^n)}{\Delta x^2}+\dot q_{v,i}^n.
+\end{equation}
+$\rho_i,c_{p,i}$ 是第 $i$ 点的材料参数；$k_{i+1/2}$ 是 $i$ 与 $i+1$ 两点之间界面的有效导热系数；半整数标记界面，不是半个数组元素；其余符号与前同。左右都是 W/m$^3$。这是通量守恒型离散，适合空间材料参数变化；该式是显式时间处理，仍需专门确定稳定步长。界面有接触热阻时要另加热阻，不能假装完美接触。
+
+\begin{equation}
+k_{i+1/2}=\frac{2k_i k_{i+1}}{k_i+k_{i+1}}.
+\end{equation}
+$k_i,k_{i+1}$ 是相邻两材料的导热系数，单位 W/(m$\cdot$K)；$k_{i+1/2}$ 是同单位界面系数。等长半单元、分段常系数、完美接触情况下，串联热阻给出调和平均。例：$k_i=1$、$k_{i+1}=100$，有效系数约为 1.98，而不是算术平均 50.5，因为差导体限制了整个通路。
+
+\begin{equation}
+\rho c_p A\frac{\partial T}{\partial t}
+=kA\frac{\partial^2T}{\partial x^2}-h_cP(T-T_\infty)+A\dot q_v.
+\end{equation}
+$P$ 是截面周长 m；$A$ 是截面积 m$^2$；其余符号同前。每项单位 W/m，这是细长杆侧面对流散热的一维模型。适用于每个截面内温差较小的情况。侧面散热是沿整根杆持续损失，与只有端面散热不同；若已经把侧面项写进 PDE，不要在同一物理表面重复计入。
+
+\subsection{正弦解析解：三个方法共用的检验题}
+\begin{equation}
+T(x,t)=T_b+A_T\sin\left(\frac{\pi x}{L}\right)
+\exp\left[-\alpha\left(\frac{\pi}{L}\right)^2t\right].
+\end{equation}
+$T_b$ 是两端共同恒温；$A_T$ 是初始波峰超过边界温度的幅值 K；$\pi$ 是圆周率；$L,x,\alpha,t$ 如前。适用条件是常系数、无热源、初温恰为该正弦形、两端恒为 $T_b$。指数无量纲。代码取 $T_b=0$ 摄氏度、$A_T=10$ K、$L=1$ m、$\alpha=0.01$ m$^2$/s。它是人为构造的教学验证题，不是某种具体金属的实验测量。
+
+\begin{equation}
+E_\infty=\max_i|T_i^{\mathrm{num}}-T_i^{\mathrm{exact}}|,\qquad
+E_2=\left(\frac{1}{M+1}\sum_{i=0}^M(T_i^{\mathrm{num}}-T_i^{\mathrm{exact}})^2\right)^{1/2}.
+\end{equation}
+$T_i^{\mathrm{num}}$ 是某一固定时刻的数值温度，$T_i^{\mathrm{exact}}$ 是同一坐标、同一时刻的解析温度；$E_\infty$ 是最大误差，$E_2$ 是节点均方根误差，单位均为 K；$M$ 是区间数。这里 $E_2$ 是离散节点平均，不能与没有归一化的连续积分范数混为一谈。
+
+\begin{equation}
+E(\Delta x,\Delta t)\approx C_x\Delta x^2+C_t\Delta t^q,
+\quad q=1\ \text{（欧拉）},\quad q=2\ \text{（CN）}.
+\end{equation}
+$E$ 是温度误差；$C_x$ 的单位 K/m$^2$，$C_t$ 的单位 K/s$^q$；$q$ 是时间阶；其他符号同前。此为光滑问题的主导误差尺度描述，实际有符号误差可能抵消。代码让 $\Delta t$ 与 $\Delta x^2$ 同阶，所以三个方法的联合加密误差都约按 $\Delta x^2$ 缩小；不能据此声称隐式欧拉本身时间二阶。单独检验时间阶，应固定非常细的空间网格，只减时间步；单独检验空间阶则应把时间误差压得足够小。
+
+\begin{equation}
+\mathcal E(t)=\rho c_pA\int_0^L[T(x,t)-T_{\mathrm{ref}}]\,\mathrm dx.
+\end{equation}
+$\mathcal E$ 是相对于参考温度 $T_{\mathrm{ref}}$ 的储热量 J；$T_{\mathrm{ref}}$ 是固定温度，单位同 $T$；其余符号同前。两端绝热、无热源时它应守恒；两端恒温时它通常不守恒，因为热能从端点流出。验证时要先写清楚系统的能量边界，再判断能量变化对不对。
+
+\subsection{可运行三方法模板与逐行解析}
+程序对显式、隐式和 CN 各计算两套网格，与同一个解析解比较，检查误差随加密降低、端点不漂移、无热源时温度不超过初始最大值。每行的中文注释解释了数据和运算。\texttt{u[1:-1]} 表示排除两个端点的内部温度；\texttt{u[:-2]}、\texttt{u[2:]} 分别是这些内部点的左邻、右邻；\texttt{**2} 表示平方。\texttt{solve\_banded((1,1),...)} 中两个 1 表示只有一条下对角线和一条上对角线。此模板固定零温度边界、无源项、常材料参数；用于其他条件时，要按本章对应方程修改并重新验证。
+
+完整代码与每行中文注释见末尾“Python 入门与完整逐行注释模板”章的热传导小节。
+
+\section{本部分的来源与复现说明}
+经典差分教材的出版方入口：\url{https://epubs.siam.org/doi/10.1137/1.9780898717938}；经典 ODE 教材出版方入口：\url{https://link.springer.com/book/10.1007/978-3-540-78862-1}。
+上述方程推导和示例为教学性整理；软件行为核对于 2026 年 9 月 10 日。SciPy 官方文档支持 \texttt{solve\_ivp} 的方法选择、误差容限和事件接口：\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html}。带状线性方程求解器的存储格式见：\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.solve_banded.html}。软件接口可能随版本变化，提交比赛代码时应记录 Python、NumPy 和 SciPy 版本。热方程基本差分格式可参照经典教材：John C. Strikwerda, \textit{Finite Difference Schemes and Partial Differential Equations}, 2nd ed., SIAM, 2004；ODE 方法可参照 Hairer, N\o rsett and Wanner, \textit{Solving Ordinary Differential Equations I}, 2nd revised ed., Springer, 1993。书目用于进一步学习，不意味着本手册覆盖了这些书的全部定理和证明。

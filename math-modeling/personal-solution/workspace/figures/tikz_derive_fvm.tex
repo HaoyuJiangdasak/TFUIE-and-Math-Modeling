@@ -1,0 +1,125 @@
+% purpose: 读者应能回答"控制体如何按环形分割、界面通量写在哪里、为何中心零通量自动成立、表面未知值由哪两个通量消元得到"
+% topology: geometry (轴对称环形控制体) + derivation (通量消元)
+% reading_direction: coordinate-based（径向由中心向外）+ 局部放大
+% node_roles: 环形控制体、界面、格心、表面、外侧空气
+% edge_roles: 界面扩散通量、内侧离散通量、外侧对流通量
+% visual_encoding: 实线=界面与实体边界；斜线阴影=当前控制体；虚线箭头=质流；双箭头尺寸线=几何距离；无颜色
+% style_family: C1（纯黑白线稿，与全篇 mono 流程图一致）
+% annotation_policy: minimal   result_policy: symbolic   final_width: text   print_mode: grayscale
+% layout_rule: 扇形内只放短标签，含公式的说明块一律放到扇形外；右侧说明块共用同一左缘 \Xc
+\documentclass[border=2pt]{standalone}
+\usepackage{ctex}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,patterns,decorations.pathmorphing}
+\begin{document}
+\begin{tikzpicture}[
+  font=\normalsize,
+  solidline/.style={line width=0.9pt},
+  facelin/.style={line width=0.6pt},
+  thinline/.style={line width=0.5pt},
+  massflow/.style={-{Stealth[length=4.2pt,width=3.0pt]},line width=0.7pt,densely dashed},
+  lead/.style={line width=0.4pt,densely dotted},
+  dimline/.style={{Stealth[length=3.4pt,width=2.6pt]}-{Stealth[length=3.4pt,width=2.6pt]},line width=0.5pt}
+]
+% ---- 主图：四分之一截面。环形控制体的"图上面积"即体积权，中心退化为零面积。
+\def\Rs{4.20}          % eta=1 对应的绘图半径
+\def\fA{0.75}\def\fBi{2.55}\def\fBm{3.10}\def\fBo{3.65}
+\def\Xc{4.80}          % 右侧说明块统一左缘：全部 anchor=north west，避免左边界参差
+
+% 当前控制体 i：环形扇形阴影（先画底层，后画界面线，避免遮盖）
+\fill[pattern=north east lines]
+      (\fBi,0) -- (\fBm,0) arc[start angle=0,end angle=90,radius=\fBm]
+   -- (0,\fBi) arc[start angle=90,end angle=0,radius=\fBi] -- cycle;
+
+% 界面弧（细实线）与两条对称半径
+\foreach \r in {\fA,\fBi,\fBm,\fBo}{
+  \draw[facelin] (\r,0) arc[start angle=0,end angle=90,radius=\r];
+}
+\draw[thinline] (0,0) -- (\Rs,0);
+\draw[thinline] (0,0) -- (0,\Rs);
+% 外表面（粗实线=给定物理边界）
+\draw[solidline] (\Rs,0) arc[start angle=0,end angle=90,radius=\Rs];
+
+% ---- 格心（落在水平半径上）与省略的中间控制体
+\foreach \x in {0.375,2.825,3.375,3.925}{ \fill (\x,0) circle (1.5pt); }
+\node[inner sep=1pt] at (1.65,0.30) {$\cdots$};
+
+% 格心记号排在水平半径下方，用点引线相连，避免压住阴影与界面弧
+\foreach \x/\lb in {0.375/{$C_1$},2.825/{$C_i$},3.925/{$C_N$}}{
+  \draw[lead] (\x,-0.06) -- (\x,-0.42);
+  \node[anchor=north,inner sep=1.5pt] at (\x,-0.42) {\lb};
+}
+\draw[lead] (3.375,-0.06) -- (3.375,-0.98);
+\node[anchor=north,inner sep=1.5pt] at (3.375,-0.98) {$C_{i+1}$};
+
+% ---- 界面与端点坐标记号（贴在竖直半径外侧的空白区，互不相压）
+\node[anchor=east,inner sep=2pt] at (-0.06,\fBi) {$\eta_{i-1/2}$};
+\node[anchor=east,inner sep=2pt] at (-0.06,\fBm) {$\eta_{i+1/2}$};
+\node[anchor=north east,inner sep=2pt] at (-0.02,-0.02) {$\eta=0$};
+
+% ---- 受热/传质表面：标签移到左上空白角，用引线指到外弧，兼顾填白与不压线
+\node[anchor=south west,align=left,inner sep=2pt] at (-0.90,4.44) {受热/传质表面 $\eta=1$};
+\draw[lead] (0.62,4.40) -- (1.98,3.72);
+
+% ---- 阴影环形即控制体 i：扇形内只放不含公式的短标签（宽度小于无弧环带）
+\node[inner sep=2pt] at (1.15,1.30) {控制体 $i$};
+\draw[lead] (1.58,1.46) -- (2.06,2.06);
+
+% ---- 界面扩散通量（虚线箭头沿径向跨过界面弧）
+% 加长并加粗：原 11pt 长、0.7pt 的虚线压在 0.6pt 斜线阴影上会被读成纹理的一部分。
+% 仍保持"虚线=质流"的编码不变，只把线重提到明显高于阴影线，并保留两箭头之间的断口。
+\draw[massflow,line width=0.9pt] (2.11,0.76) -- (2.58,0.94);
+\draw[massflow,line width=0.9pt] (2.73,0.99) -- (3.24,1.185);
+
+% ---- 局部放大：最外控制体与表面（局部曲率可忽略，故画成平直薄层）
+% 放大引线由主图表面弧的两点拉向放大条的左端，指明放大的是哪一段
+\draw[lead] (3.95,1.44) -- (5.20,3.45);
+\draw[lead] (3.44,2.41) -- (5.20,4.55);
+% 坐标写成绝对值而不用 shift scope，便于自动检查真实读到节点位置
+\draw[facelin] (5.20,3.45) -- (5.20,4.55);
+\draw[thinline] (5.20,3.45) -- (8.20,3.45);
+\draw[thinline] (5.20,4.55) -- (8.20,4.55);
+\draw[solidline] (8.20,3.45) -- (8.20,4.55);
+% 放大条标题排在"内侧离散扩散"之上一行，两者同为 anchor=south，必须留出整行间距
+\node[anchor=south west,inner sep=2pt] at (5.20,5.26) {表面附近放大};
+% 格心与待求表面值：格心不落在表面上，这是本题的分水岭
+\fill (6.20,4.00) circle (1.5pt);
+\node[anchor=north,inner sep=2pt] at (6.20,3.92) {$C_N$};
+\draw[thinline] (8.20,4.00) circle (1.9pt);
+\node[anchor=south,inner sep=2pt] at (8.35,5.30) {待求 $C_s$};
+\draw[lead] (8.32,5.26) -- (8.22,4.08);
+% 几何距离：格心到表面只有半个网格（尺寸线画在薄层之外）
+\draw[dimline] (6.20,3.20) -- (8.20,3.20);
+\node[anchor=north,inner sep=2pt] at (7.20,3.18) {$R\Delta\eta/2$};
+% 两侧通量在表面相遇
+\draw[massflow] (6.30,4.30) -- (8.10,4.30);
+\draw[massflow] (8.30,4.30) -- (9.05,4.30);
+\node[anchor=south,inner sep=2pt] at (6.28,4.62) {内侧离散扩散};
+\node[anchor=north west,align=left,inner sep=2pt] at (8.35,4.16) {外侧\\对流传质};
+
+% ---- 右侧说明列：三块共用左缘 \Xc，各自贴近它所解释的对象
+% 表面值反解（紧贴放大图下方）
+\node[anchor=north west,align=left,inner sep=2pt] at (\Xc,2.62)
+     {表面两侧通量相等，消元得\\[2pt]
+      $C_s=(\beta C_N+h_mC_a)/(\beta+h_m)$\\[2pt]
+      其中 $\beta=2D_N/(R\Delta\eta)$};
+% 界面通量定义（与主图中跨界面的虚线箭头等高）
+\node[anchor=north west,align=left,inner sep=2pt] at (\Xc,0.55)
+     {跨界面弧的扩散通量\\[2pt]
+      $J_{i+1/2}=\eta_{i+1/2}D_{i+1/2}\dfrac{C_{i+1}-C_i}{\Delta\eta}$\\[2pt]
+      界面物性取调和平均};
+% 守恒平衡：控制体的变化率只由两个界面通量之差给出
+% 守恒平衡下移，填住右下空白带，同时与上一块留出整行间距
+\node[anchor=north west,align=left,inner sep=2pt] at (\Xc,-1.70)
+     {控制体 $i$ 的守恒平衡\\[2pt]
+      $R_0^{2}V_i\dfrac{\mathrm{d}C_i}{\mathrm{d}t}=J_{i+1/2}-J_{i-1/2}$};
+
+% ---- 底部左侧：体积权与中心退化。含公式，故放在扇形之外的空白带
+\node[anchor=north west,align=left,inner sep=2pt] at (-0.95,-1.62)
+     {画面环形面积 $\propto$ 体积权\\[1pt]
+      $V_i=(\eta_{i+1/2}^{2}-\eta_{i-1/2}^{2})/2$\\[2pt]
+      中心面积权 $\eta_{-1/2}=0$，\\[1pt]
+      轴心零通量自动满足};
+\end{tikzpicture}
+\end{document}

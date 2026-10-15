@@ -1,0 +1,236 @@
+{
+ "n_constraints": 38,
+ "n_passed": 38,
+ "all_passed": true,
+ "rows": [
+  {
+   "id": "C01",
+   "name": "均匀场零通量",
+   "passed": true,
+   "detail": "measured=0 < 1e-12 -> True"
+  },
+  {
+   "id": "C02",
+   "name": "柱面通量正比于 r",
+   "passed": true,
+   "detail": "measured=1.99018e-13 < 1e-12 -> True"
+  },
+  {
+   "id": "C03",
+   "name": "双场独立（两场同时活跃且不共享内存）",
+   "passed": true,
+   "detail": "dC_absmax=0.0120326 > 0 -> True"
+  },
+  {
+   "id": "C04",
+   "name": "表面值网格无关性",
+   "passed": true,
+   "detail": "measured=8.45982e-08 < 0.001 -> True"
+  },
+  {
+   "id": "C05",
+   "name": "Robin 闭合一致",
+   "passed": true,
+   "detail": "measured_T=2.81126e-12 < 1e-10 -> True"
+  },
+  {
+   "id": "C09",
+   "name": "半解析解 147 点对照",
+   "passed": true,
+   "detail": "measured_max_abs_C=6.16428e-05 < 0.001 -> True"
+  },
+  {
+   "id": "C10",
+   "name": "问题一单向解耦",
+   "passed": true,
+   "detail": "measured=0 < 1e-12 -> True"
+  },
+  {
+   "id": "C12",
+   "name": "五个物性偏导非零",
+   "passed": true,
+   "detail": "self=True"
+  },
+  {
+   "id": "C08",
+   "name": "附件 1 复现与衔接连续",
+   "passed": true,
+   "detail": "sample_rel_err_Ta=0 < 1e-09 -> True"
+  },
+  {
+   "id": "C15",
+   "name": "模型对比两两可分辨",
+   "passed": true,
+   "detail": "measured_min_gap=0.0286287 > 1e-06 -> True"
+  },
+  {
+   "id": "C17",
+   "name": "判据口径序关系",
+   "passed": true,
+   "detail": "gap_max_minus_volavg_s=77310.6 > 60 -> True"
+  },
+  {
+   "id": "C19",
+   "name": "首次下穿",
+   "passed": true,
+   "detail": "measured_endpoint_gap=0 < 1e-05 -> True"
+  },
+  {
+   "id": "C18",
+   "name": "半径单调且复现附件 2",
+   "passed": true,
+   "detail": "sample_repro_max_abs_cm=2.22045e-16 < 1e-09 -> True"
+  },
+  {
+   "id": "C20",
+   "name": "绝干骨架水量守恒",
+   "passed": true,
+   "detail": "forward_rel_drift=3.4831e-16 < 1e-10 -> True"
+  },
+  {
+   "id": "C21",
+   "name": "归因分解四例可分辨",
+   "passed": true,
+   "detail": "min_pairwise_gap_s=23306.2 > 60 -> True"
+  },
+  {
+   "id": "C22",
+   "name": "t=0 收缩域退化为固定域",
+   "passed": true,
+   "detail": "measured_max_abs_diff=0 < 1e-12 -> True"
+  },
+  {
+   "id": "C23",
+   "name": "敏感性逐点真实重算",
+   "passed": true,
+   "detail": "min_abs_gap_to_baseline_s=64.7925 > 60 -> True"
+  },
+  {
+   "id": "C06",
+   "name": "剖面单调（2 处）",
+   "passed": true,
+   "detail": "1:1,2:1"
+  },
+  {
+   "id": "C07",
+   "name": "全域最大含水率在中心（4 处）",
+   "passed": true,
+   "detail": "1:1,2:1,3:1,4:1"
+  },
+  {
+   "id": "C13",
+   "name": "干燥方向性（4 处）",
+   "passed": true,
+   "detail": "1:1,2:1,3:1,4:1"
+  },
+  {
+   "id": "C14",
+   "name": "低含水率下界保护（2 处）",
+   "passed": true,
+   "detail": "1:1,2:1"
+  },
+  {
+   "id": "C16",
+   "name": "写盘-读回往返一致（4 处）",
+   "passed": true,
+   "detail": "1:1,2:1,3:1,4:1"
+  },
+  {
+   "id": "C11",
+   "name": "附录绑定（4 处）",
+   "passed": true,
+   "detail": "1:1,2:1,3:1,4:1"
+  },
+  {
+   "id": "C11b",
+   "name": "各问物性附录绑定正确",
+   "passed": true,
+   "detail": "ok"
+  },
+  {
+   "id": "C12b",
+   "name": "物性偏导结构（5 非零 / 3 恒零）",
+   "passed": true,
+   "detail": "min|partial|=4.761e-11"
+  },
+  {
+   "id": "C20b",
+   "name": "C20 反向变体全部显著破坏守恒",
+   "passed": true,
+   "detail": "forward=3.483e-16; reverse min=0.7219%"
+  },
+  {
+   "id": "C17b",
+   "name": "判据序关系 surface<volavg<max",
+   "passed": true,
+   "detail": "12.5467 < 36.1499 < 57.6251 h"
+  },
+  {
+   "id": "V3.6",
+   "name": "四级模型阶梯两两可分辨",
+   "passed": true,
+   "detail": "min gap=0.0286287"
+  },
+  {
+   "id": "V3.10",
+   "name": "单因子弹性符号与机理一致",
+   "passed": true,
+   "detail": "mismatch=[]"
+  },
+  {
+   "id": "V3.4",
+   "name": "t_end 随潜热系数 chi 单调增大",
+   "passed": true,
+   "detail": "57.6251 < 58.1745 < 59.0274 < 60.5067 h"
+  },
+  {
+   "id": "V3.2",
+   "name": "网格收敛阶梯（四问）",
+   "passed": true,
+   "detail": "1:1,2:1,3:1,4:1"
+  },
+  {
+   "id": "V3.3",
+   "name": "时间容差对照 t_end < 60 s",
+   "passed": true,
+   "detail": "3:0.028s,4:0.050s"
+  },
+  {
+   "id": "XA2",
+   "name": "问题三与问题二逐格恒等",
+   "passed": true,
+   "detail": "0.000e+00"
+  },
+  {
+   "id": "V3.12",
+   "name": "烘干时长与题面 2-3 天同量级",
+   "passed": true,
+   "detail": "Q3=2.4010 d, Q4=2.1313 d（题面参照 2-3 d）"
+  },
+  {
+   "id": "U01",
+   "name": "Biot 数 O(1)（集中参数不成立）",
+   "passed": true,
+   "detail": "Bi_T=1.3889, Bi_m=3.2404"
+  },
+  {
+   "id": "U02",
+   "name": "D 落在 1e-11..1e-6 m^2/s",
+   "passed": true,
+   "detail": "D in [3.351e-10, 1.359e-08] m^2/s"
+  },
+  {
+   "id": "U03",
+   "name": "干基含水率保留 >1 的量级（未被归一化）",
+   "passed": true,
+   "detail": "max C=2.5500 kg/kg, C0=2.55"
+  },
+  {
+   "id": "XP",
+   "name": "跨问题台账（9 项）",
+   "passed": true,
+   "detail": "observed 齐全=True, 违规=[]"
+  }
+ ],
+ "failures": []
+}

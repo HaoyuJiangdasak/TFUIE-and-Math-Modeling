@@ -1,0 +1,33 @@
+\chapter{基础定理：为什么方程能解、算法可信}
+本章是条件清单式的入门解释，不是完整证明。使用定理前，必须核查它的假设；没有核查就引用定理，不能给模型增加可信度。
+\section{Picard--Lindelöf：初值能否决定唯一轨迹}
+\begin{equation}\dot{\boldsymbol y}=\boldsymbol f(t,\boldsymbol y),\quad\boldsymbol y(t_0)=\boldsymbol y_0,\quad \|\boldsymbol f(t,\boldsymbol u)-\boldsymbol f(t,\boldsymbol v)\|\le L\|\boldsymbol u-\boldsymbol v\|.\end{equation}
+$t$ 为时间，$t_0$ 为初始时刻，$\boldsymbol y$ 为状态，$\boldsymbol y_0$ 为初始状态；$\boldsymbol f$ 是变化率；$\boldsymbol u,\boldsymbol v$ 是初始状态附近的两个候选状态；$\|\cdot\|$ 是一致选用的向量范数；$L\ge0$ 为局部 Lipschitz 常数。如果状态用同一单位且时间为 s，$L$ 用 s$^{-1}$。异单位状态应先缩放。
+
+当 $\boldsymbol f$ 在初值附近连续，并对状态满足局部 Lipschitz 条件（在局部时间区间上一致）时，存在初始时刻附近的唯一解。白话是“变化规律不能在相邻状态间突然变得过于陡峭”。它只保证局部，不保证解永远存在；也不等于方程一定有初等函数解析解。基础来源：\url{https://epubs.siam.org/doi/10.1137/1.9780898719222}。
+
+\section{Gronwall 型估计：小误差可能随时间放大}
+\begin{equation}e(t)\le e_0+L\int_0^t e(s)\,\mathrm ds\quad\Longrightarrow\quad e(t)\le e_0e^{Lt},\quad t\ge0.\end{equation}
+$e(t)\ge0$ 是连续误差大小，$e_0\ge0$ 为初始误差上界，$L\ge0$ 为常数，$s$ 为积分用的时间变量；右端指数中的 $e$ 是自然常数，和误差函数 $e(t)$ 的字母重用但含义不同。若 $t$ 用 s，则 $L$ 用 s$^{-1}$。误差上界与误差同单位。白话是“即使一开始差得很少，长期结果也可能不再接近”；上界可能很保守，不代表实际误差一定按指数长大。它常用于 ODE 稳定性和收敛分析，可结合前节 ODE 教材学习。
+
+\section{散度定理：体内守恒怎样变成边界通量}
+\begin{equation}\int_\Omega\nabla\cdot\boldsymbol F\,\mathrm dV=\int_{\partial\Omega}\boldsymbol F\cdot\boldsymbol n\,\mathrm dA.\end{equation}
+$\Omega$ 是三维体积区域，$\partial\Omega$ 是其封闭边界，$\boldsymbol F$ 是足够光滑的向量通量场，$\boldsymbol n$ 是向外单位法向量，$\mathrm dV$ 和 $\mathrm dA$ 分别为微小体积和面积；点号为点积。若 $\boldsymbol F$ 是热通量 W/m$^2$，两边都是 W。区域边界通常要求分片光滑。
+
+白话是“内部各小块的净流出加起来，只剩整个外边界的流出”；内部公共面的相反通量会抵消。它连接热传导、流体守恒与有限体积法。法向量选成向内时符号会反过来。来源：\url{https://ocw.mit.edu/ans7870/18/18.013a/textbook/HTML/chapter22/section03.html}。
+
+\section{分部积分：把导数从嘈杂数据上移开}
+\begin{equation}\int_a^b u'(x)v(x)\,\mathrm dx=[u(x)v(x)]_a^b-\int_a^b u(x)v'(x)\,\mathrm dx.\end{equation}
+$u,v$ 是足够光滑的函数，$u',v'$ 是对 $x$ 的导数，$a,b$ 是积分端点，方括号表示上端值减下端值。若 $u$ 单位为温度、$v$ 无量纲、$x$ 用米，则各项都是温度。选择两端为零的 $v$ 可消掉边界项。有限元和弱形式模型识别会用它；边界项只能因实际条件为零而去掉，不能随意丢弃。
+
+\section{Lax 等价定理：一致性与稳定性怎样合起来}
+\begin{equation}\text{一致的线性差分格式：}\qquad \text{稳定}\ \Longleftrightarrow\ \text{收敛}.\end{equation}
+这行没有物理参数，是逻辑关系；双向箭头表示在定理条件下两性质等价。一致性是步长趋零时差分逼近原方程；稳定性是有限时间内误差放大有与网格无关的界；收敛是网格趋细时数值解趋近真实解。经典表述针对适定线性初值问题及相应一致的线性差分近似，使用相容的函数空间和范数。
+
+不要把这句简写推广到任意非线性算法，也不要把“某次没爆炸”当成稳定性证明。热方程显式法需要同时满足稳定步长与一致离散。基础课程入口：\url{https://www-math.mit.edu/~stevenj/18.336/}。
+
+\section{热方程最大值原理：没有热源就不会凭空更热}
+\begin{equation}\min_{\Gamma_p}T\le T(x,t)\le\max_{\Gamma_p}T,\quad \Gamma_p=\{(x,0):0\le x\le L\}\cup\{(0,t),(L,t):0\le t\le t_f\}.\end{equation}
+$T$ 是满足一维无源热方程的连续温度，$x$ 为杆内位置，$t$ 为时间，$L>0$ 是长度，$t_f>0$ 是终止时间；$\Gamma_p$ 是“初始时刻整根杆加上之后两端”的抛物边界，$\cup$ 表示集合并集。对于常正热扩散率、适当光滑解和 Dirichlet 边界，内部温度不会超过这组初始与边界数据的最大值，也不会低于最小值。所有温度单位一致。
+
+若两端恒温且初温处于某范围，数值温度大幅超出该范围通常应检查实现或离散振荡。有热源或不同方程时需修改结论。Crank--Nicolson 的稳定性不自动保证所有步长都保持离散最大值性质。参见差分章节的 Strikwerda 教材。

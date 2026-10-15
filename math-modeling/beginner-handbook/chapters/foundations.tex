@@ -1,0 +1,92 @@
+\chapter{先学会读公式：从题目到模型}
+\section{这本手册怎么用}
+这是面向全国大学生数学建模竞赛本科 A 题风格的通用参考，不是某一年题目的答案，也不是涵盖所有学科、所有文献的公式全集。题目可能横跨多个领域，应由题目事实决定模型。优先学守恒定律、ODE、热方程、参数拟合和误差检查，再按题目补充物理与统计。前沿方法是选读，不能代替可靠的基础模型。
+
+每个公式按“意思—符号—条件—例子或注意”来读。字母在不同章节可能有不同含义，以公式附近的定义为准。代码中的数字都是教学示例，不能当作题目提供的数据或材料常数。
+
+推荐顺序：第一遍看本章与对应的物理小节；第二遍运行 ODE 和热传导模板；第三遍学习优化与不确定性。每完成一步，先核对单位和一个简单算例，再增加复杂度。
+
+\section{最常遇到的符号}
+\begin{description}[style=nextline]
+\item[$x,t,T$] 常分别表示位置、时间、温度。它们是变量：会随情景改变。
+\item[$a,k,\theta$] 常表示常数或待估参数。参数在一次模拟内固定，但不同材料或拟合结果可能不同。
+\item[$f(x)$] 输入一个 $x$，按规则 $f$ 算出一个结果。例如温度可以是位置的函数。
+\item[$\mathrm{d}y/\mathrm{d}t$] $y$ 对时间的变化速度；不是 $y/t$。若 $y$ 用米、$t$ 用秒，导数用米每秒。
+\item[$\partial T/\partial t$] 多变量函数中的偏导：固定位置等其他变量，只看时间变化。
+\item[$\sum_{i=1}^{n}a_i$] 把编号从 1 到 $n$ 的数相加；$i$ 是编号，$n$ 是项数。
+\item[$\int_a^b f(x)\,\mathrm{d}x$] 从 $a$ 到 $b$ 累加连续的小贡献；积分的单位是 $f$ 的单位乘 $x$ 的单位。
+\item[$\boldsymbol{x},\|\boldsymbol{x}\|_2$] 粗体是多个数组成的向量；下标 2 的范数是各分量平方和开根号。
+\item[$\nabla f,\nabla\cdot\boldsymbol{v},\nabla^2 f$] 依次为梯度（各方向变化率）、散度（局部净流出程度）、拉普拉斯算子（各方向二阶偏导之和）。在一维，拉普拉斯就是二阶导数。
+\item[$\approx,\propto,\in,\forall$] 依次为近似相等、成比例、属于、对所有。
+\item[$\arg\min$] 返回使目标最小的输入；$\min$ 返回最小的目标值，两者不同。
+\item[$\exp(z),\ln z$] 以自然常数 $e$ 为底的指数和对数；指数的输入必须无量纲，对数输入须为正且无量纲。
+\end{description}
+
+\section{单位与量纲：最便宜的排错手段}
+统一采用 SI：长度 m、时间 s、质量 kg、温度 K、力 N、能量 J、功率 W、压力 Pa。摄氏温差与开尔文温差数值相同，但绝对温度不同。参考 NIST 的 SI 说明：\url{https://www.nist.gov/pml/owm/metric-si/si-units}。
+\subsection{温度换算}
+\begin{equation}T_{\mathrm K}=T_{\mathrm C}+273.15.\end{equation}
+这里 $T_{\mathrm K}$ 是开尔文温度的数值，$T_{\mathrm C}$ 是摄氏温度的数值，273.15 是两种温标零点的差。例：$20\,^{\circ}\mathrm C$ 是 $293.15\,\mathrm K$。辐射和理想气体公式必须用 K。
+\subsection{量纲齐次}
+\begin{equation}[a+b]=[a]=[b],\qquad [ab]=[a][b],\qquad [a/b]=[a]/[b].\end{equation}
+$[a]$ 表示量 $a$ 的物理量纲，$a,b$ 是物理量。只有相同量纲能相加；除法要求分母非零。例如速度乘时间是长度，不能把温度直接加到长度上。无量纲不等于数值一定很小。
+
+\section{所有物理模型的主线：守恒}
+\begin{equation}\frac{\mathrm d S}{\mathrm dt}=Q_{\rm in}-Q_{\rm out}+Q_{\rm gen}.\end{equation}
+$S$ 是系统储存量，可以是质量 kg 或能量 J；$t$ 是时间 s；$Q_{\rm in},Q_{\rm out},Q_{\rm gen}$ 分别是流入、流出、内部净生成速率，单位为 $S$ 的单位每秒。意思是“存量增加=进来−出去+内部产生”。必须先固定系统边界。总能量守恒时，化学能转成热不是凭空产生总能量，而是所追踪的热能增加。
+例：水箱每秒进 3 kg、出 2 kg，没有内部生成，则每秒多 1 kg。
+
+\section{泰勒展开、数值微分和积分}
+\subsection{局部线性近似与泰勒公式}
+\begin{equation}f(x+h)=f(x)+hf'(x)+\frac{h^2}{2}f''(\xi).\end{equation}
+$f$ 是至少二阶连续可微的标量函数，$x$ 是展开点，$h$ 是输入改变量，$f',f''$ 是一阶和二阶导数，$\xi$ 是 $x$ 与 $x+h$ 之间某点。最后一项是精确余项而非已知常数。丢掉余项得到局部直线近似；$h$ 不小或曲率很大时误差会大。所有项单位都与 $f$ 相同。
+\subsection{一阶导数中心差分}
+\begin{equation}f'(x)\approx\frac{f(x+h)-f(x-h)}{2h}.\end{equation}
+$h>0$ 是步长，$x$ 是求导点，$f$ 是函数；导数单位是输出单位除输入单位。函数足够光滑时截断误差为二阶，即步长减半通常使这部分误差约变为四分之一。噪声数据不能无限减小 $h$，否则差值除小数会放大噪声。
+\subsection{复合梯形积分}
+\begin{equation}\int_a^b f(x)\,\mathrm dx\approx h\left[\frac{f(x_0)+f(x_N)}2+\sum_{i=1}^{N-1}f(x_i)\right],\quad h=\frac{b-a}{N},\quad x_i=a+ih.\end{equation}
+$a,b$ 是积分下上限且 $b>a$，$N$ 是正整数区间数，$h$ 是等距间隔，$x_i$ 是第 $i$ 个采样点，$f(x_i)$ 是该点函数值。两端只算半份，中间算整份。例：对恒定 10 W 功率积 3 s，能量为 30 J。非等距数据必须分别用各段宽度。
+
+\section{向量、矩阵与线性方程}
+\subsection{点积与范数}
+\begin{equation}\boldsymbol a^\mathsf T\boldsymbol b=\sum_{i=1}^n a_i b_i,\qquad \|\boldsymbol a\|_2=\sqrt{\sum_{i=1}^n a_i^2}.\end{equation}
+$\boldsymbol a,\boldsymbol b$ 是具有 $n$ 个实数分量的向量，$a_i,b_i$ 是第 $i$ 个分量，$\mathsf T$ 表示转置。点积用来计算投影与做功；范数类似多维长度。直接把米、秒、开尔文混合进范数没有合理的物理含义，应先缩放。
+\subsection{线性系统}
+\begin{equation}A\boldsymbol x=\boldsymbol b.\end{equation}
+$A$ 是 $m\times n$ 系数矩阵，$\boldsymbol x$ 是 $n$ 维未知向量，$\boldsymbol b$ 是 $m$ 维已知向量。$m=n$ 且 $A$ 可逆时解唯一；其他情形需依据矩阵的秩与方程一致性判断，也可能有唯一解。代码应用线性求解器，不要为了求解而显式计算逆矩阵。热传导隐式离散就会产生这种系统。
+\subsection{奇异值分解与条件数}
+\begin{equation}A=U\Sigma V^\mathsf T,\qquad \kappa_2(A)=\frac{\sigma_{\max}}{\sigma_{\min}}.\end{equation}
+$A$ 是实矩阵，$U,V$ 为正交矩阵，$\Sigma$ 为非负奇异值组成的对角形矩阵；$\sigma_{\max},\sigma_{\min}$ 是最大与最小奇异值，条件数这里针对满秩方阵。$\kappa_2$ 无量纲，越大越容易把输入误差放大；最小奇异值为零时奇异。SVD 也可用于降维，但不能因方便而丢掉关键小尺度信号。
+
+\section{无量纲化与相似}
+\subsection{缩放变量}
+\begin{equation}x^*=\frac{x}{L},\qquad t^*=\frac{t}{\tau},\qquad T^*=\frac{T-T_{\rm ref}}{\Delta T}.\end{equation}
+$x$ 为位置 m，$L>0$ 为特征长度 m；$t$ 为时间 s，$\tau>0$ 为特征时间 s；$T,T_{\rm ref}$ 为温度，$\Delta T\ne0$ 是选定温差。星号表示无量纲变量，不表示最优值。选择典型尺度后，变量通常在数量级 1 附近，有利于求解。
+\subsection{Buckingham $\Pi$ 定理}
+\begin{equation}F(q_1,\ldots,q_n)=0\quad\Longrightarrow\quad G(\Pi_1,\ldots,\Pi_{n-r})=0.\end{equation}
+$q_1,\ldots,q_n$ 是 $n$ 个物理量，$F$ 是量纲齐次关系；$r$ 是量纲指数矩阵的秩，$\Pi_j$ 为由原物理量幂乘构成的无量纲组合，$G$ 是重新表达后的关系。定理在可用这些量完整表述、量纲变换一致的前提下说明独立组合数，不能自动给出 $G$ 的具体函数。例：阻力研究常转成阻力系数与雷诺数关系。参考 MIT 量纲分析教学材料及物理教材，本式为标准定理表述。
+
+\section{误差、收敛与灵敏度}
+\subsection{绝对误差和稳健相对误差}
+\begin{equation}e_{\rm abs}=|y_{\rm num}-y_{\rm ref}|,\quad e_{\rm rel}=\frac{|y_{\rm num}-y_{\rm ref}|}{\max(|y_{\rm ref}|,s_0)}.\end{equation}
+$y_{\rm num}$ 是数值结果，$y_{\rm ref}$ 是解析解或高精度参考，$s_0>0$ 为有同单位的小参考尺度，用于避免除零；$e_{\rm abs}$ 与 $y$ 同单位，$e_{\rm rel}$ 无量纲。当参考接近零时应同时报告绝对误差和所用尺度，不能随意挑尺度美化结果。
+\subsection{观测收敛阶}
+\begin{equation}p_{\rm obs}=\log_2\!\left(\frac{|u_h-u_{h/2}|}{|u_{h/2}-u_{h/4}|}\right).\end{equation}
+$u_h,u_{h/2},u_{h/4}$ 是同一物理位置和时刻、三种等比细化网格得到的同一标量输出；$h$ 是网格尺度，$p_{\rm obs}$ 是估计收敛阶，无量纲。需要误差处于单一主导幂次的渐近区间且差值非零。不能拿不同位置的输出相减；空间研究时要压低时间误差。
+\subsection{归一化局部灵敏度}
+\begin{equation}S_j=\frac{\theta_j}{y}\frac{\partial y}{\partial\theta_j}.\end{equation}
+$y\ne0$ 是模型标量输出，$\theta_j$ 是第 $j$ 个参数，$S_j$ 无量纲，表示参数相对变化引起的输出相对变化的一阶比例。若 $S_j=2$，小幅增加参数 1\% 通常导致输出约增 2\%；这是局部近似。输出或参数接近零时应采用未归一化导数或预先指定的非零参考尺度。
+\subsection{一阶不确定性传播}
+\begin{equation}\operatorname{Var}(y)\approx J\Sigma_\theta J^\mathsf T,\qquad J_j=\frac{\partial f}{\partial\theta_j}.\end{equation}
+$y=f(\boldsymbol\theta)$ 是参数到输出的函数，$J$ 是在参数均值处计算的行向量，$\Sigma_\theta$ 是参数协方差矩阵，$\operatorname{Var}(y)$ 是输出方差，单位是输出单位的平方。适合小扰动、局部近似线性情况；保留协方差才能反映参数相关性。强非线性可改用蒙特卡洛。
+
+\section{从题面开始的七步}
+\begin{enumerate}
+\item 写清要预测什么、优化什么、评价什么，输出必须能回答题目。
+\item 列符号表：已知量、待估参数、状态变量、控制变量、单位和来源。
+\item 画系统边界，写守恒，再补材料关系和几何关系。
+\item 写初始条件和边界条件；只写微分方程通常不够。
+\item 用最简单特例和量纲检验公式，再代入真实数据。
+\item 做参数估计、独立验证、网格与容差检查，报告误差和适用范围。
+\item 优化前确认约束表达了真实限制，优化后检查可行性与鲁棒性。
+\end{enumerate}

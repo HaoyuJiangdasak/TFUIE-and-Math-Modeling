@@ -1,0 +1,12 @@
+# 2026 高教社杯 A 题「药材的烘干问题」求解环境
+# 实际运行版本（python 3.11.9）；下界即本次验证过的版本，不设上界以便复现
+numpy==2.4.6
+scipy==1.17.1
+pandas==2.3.3
+openpyxl==3.1.5
+
+# 说明
+# - scipy 提供 solve_ivp(BDF) 刚性积分、事件检测、curve_fit、PchipInterpolator 与贝塞尔函数
+# - pandas + openpyxl 负责附件读入与 result1-4.xlsx 的按模板写盘与读回核验
+# - 不依赖 matplotlib：本步骤只产出数值与 JSON，绘图在后续步骤单独进行
+# - 入口：python code/main.py（会依次跑第 0 层读盘核验、四问、敏感性，并写出全部台账）

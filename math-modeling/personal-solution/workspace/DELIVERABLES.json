@@ -1,0 +1,186 @@
+{
+  "deliverables": [
+    {
+      "path": "code/params.py",
+      "desc": "参数唯一来源：由 PROBLEM_FACTS.json 派生，禁止手改数值"
+    },
+    {
+      "path": "code/utils.py",
+      "desc": "共用核心：守恒型有限体积、Robin 表面重构、驱动插值、材料坐标右端、写盘"
+    },
+    {
+      "path": "code/data_check.py",
+      "desc": "第 0 层读盘与口径核验（V0.1—V0.5）"
+    },
+    {
+      "path": "code/problem1.py",
+      "desc": "问题一：预热平衡阶段单向解耦场 + 贝塞尔-杜阿梅尔半解析对照"
+    },
+    {
+      "path": "code/problem2.py",
+      "desc": "问题二：全过程变物性双向强耦合 + 四级模型阶梯"
+    },
+    {
+      "path": "code/problem3.py",
+      "desc": "问题三：全域最大值判据下的烘干时长（事件检测）"
+    },
+    {
+      "path": "code/problem4.py",
+      "desc": "问题四：径向收缩移动边界（材料坐标）+ 2×2 归因分解"
+    },
+    {
+      "path": "code/sensitivity_analysis.py",
+      "desc": "第 3 层：单因子 OAT、7×7 响应面、LHS 全局不确定度"
+    },
+    {
+      "path": "code/sanity_check.py",
+      "desc": "结果自检汇总：只打印结论与至多 5 条违规样本"
+    },
+    {
+      "path": "code/constraint_audit.py",
+      "desc": "约束复核：C01—C23 与 V 系列判据在写盘 JSON 上重新断言"
+    },
+    {
+      "path": "code/make_tables.py",
+      "desc": "由 JSON 生成 figures/TABLE_*.md，供写稿步骤直接嵌入"
+    },
+    {
+      "path": "code/main.py",
+      "desc": "总编排入口：python code/main.py"
+    },
+    {
+      "path": "code/requirements.txt",
+      "desc": "运行环境版本锁定"
+    },
+    {
+      "path": "figures/problem_1_results.json",
+      "desc": "问题一全部数值结果与自检"
+    },
+    {
+      "path": "figures/problem_2_results.json",
+      "desc": "问题二全部数值结果、四级模型阶梯与 D 响应面"
+    },
+    {
+      "path": "figures/problem_3_results.json",
+      "desc": "问题三烘干时长、三判据对照与网格阶梯"
+    },
+    {
+      "path": "figures/problem_4_results.json",
+      "desc": "问题四收缩解、守恒试验与归因分解"
+    },
+    {
+      "path": "figures/sensitivity_results.json",
+      "desc": "敏感性与不确定度（268 次独立真实重算）"
+    },
+    {
+      "path": "figures/all_results.json",
+      "desc": "四问 + 敏感性的总汇与跨问题台账"
+    },
+    {
+      "path": "figures/TABLE_1.md",
+      "desc": "论文表 1（Markdown，数据取自 JSON）"
+    },
+    {
+      "path": "figures/TABLE_2.md",
+      "desc": "论文表 2（Markdown，数据取自 JSON）"
+    },
+    {
+      "path": "figures/TABLE_3.md",
+      "desc": "论文表 3（Markdown，数据取自 JSON）"
+    },
+    {
+      "path": "figures/TABLE_4.md",
+      "desc": "论文表 4（Markdown，数据取自 JSON）"
+    },
+    {
+      "path": "figures/TABLE_5.md",
+      "desc": "论文表 5（Markdown，数据取自 JSON）"
+    },
+    {
+      "path": "figures/TABLE_6.md",
+      "desc": "论文表 6（Markdown，数据取自 JSON）"
+    },
+    {
+      "path": "figures/TABLE_7.md",
+      "desc": "论文表 7（Markdown，数据取自 JSON）"
+    },
+    {
+      "path": "figures/TABLE_8.md",
+      "desc": "论文表 8（Markdown，数据取自 JSON）"
+    },
+    {
+      "path": "figures/TABLE_9.md",
+      "desc": "论文表 9（Markdown，数据取自 JSON）"
+    },
+    {
+      "path": "figures/TABLE_10.md",
+      "desc": "论文表 10（Markdown，数据取自 JSON）"
+    },
+    {
+      "path": "result1.xlsx",
+      "desc": "竞赛结果文件 result1.xlsx（按模板写盘并读回核验）"
+    },
+    {
+      "path": "result2.xlsx",
+      "desc": "竞赛结果文件 result2.xlsx（按模板写盘并读回核验）"
+    },
+    {
+      "path": "result3.xlsx",
+      "desc": "竞赛结果文件 result3.xlsx（按模板写盘并读回核验）"
+    },
+    {
+      "path": "result4.xlsx",
+      "desc": "竞赛结果文件 result4.xlsx（按模板写盘并读回核验）"
+    },
+    {
+      "path": "RESULTS.md",
+      "desc": "本步骤结果报告"
+    },
+    {
+      "path": "CROSS_PROBLEM_LEDGER.json",
+      "desc": "跨问题一致性台账（observed 由真实运行回填）"
+    },
+    {
+      "path": "CAPABILITY_VERDICT.json",
+      "desc": "能力项结论与定位证据"
+    },
+    {
+      "path": "figures/constraint_audit.json",
+      "desc": "约束复核逐条总账"
+    },
+    {
+      "path": "figures/latex_includes.tex",
+      "desc": "24 张数据图的 figure 环境与题注，题注数字由 JSON 现读生成"
+    },
+    {
+      "path": "figures/figure_captions.md",
+      "desc": "Word 口径同源伴生件：图片语法 + 题注，写作步骤直接引用"
+    },
+    {
+      "path": "FIGURES_REPORT.md",
+      "desc": "图表生成步骤报告（数据图 24 张）"
+    }
+  ],
+  "step": "comp-code",
+  "competition": "cumcm",
+  "problem_id": "A",
+  "language": "zh",
+  "n_deliverables": 40,
+  "n_checks": 64,
+  "n_checks_passed": 64,
+  "all_checks_passed": true,
+  "timing_s": {
+    "data_check": 0.0370020866394043,
+    "problem1": 2.338472604751587,
+    "problem2": 13.85597038269043,
+    "problem3": 24.8499276638031,
+    "problem4": 32.79636216163635,
+    "sensitivity": 4.48296594619751
+  },
+  "wall_time_s": 80.09808206558228,
+  "entry_point": "python code/main.py",
+  "fast_mode": false,
+  "sampling": false,
+  "full_dataset": true,
+  "sampling_note": "全量计算，无抽样：附件 1 的 241 点与附件 2 的 145 点全部参与；result1/2 逐秒输出（1800 与 10800 行），result3/4 逐 60 s 输出至 t_end；敏感性的 268 个算例每个都独立积分到事件触发，无插值外推"
+}

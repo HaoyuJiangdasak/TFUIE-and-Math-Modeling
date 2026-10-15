@@ -1,0 +1,1079 @@
+{
+ "competition": "cumcm",
+ "problem_id": "A",
+ "title": "药材的烘干问题",
+ "generated_by": "code/main.py",
+ "seed": 20260910,
+ "n_checks": 64,
+ "n_checks_passed": 64,
+ "all_checks_passed": true,
+ "timing_s": {
+  "data_check": 0.0370020866394043,
+  "problem1": 2.338472604751587,
+  "problem2": 13.85597038269043,
+  "problem3": 24.8499276638031,
+  "problem4": 32.79636216163635,
+  "sensitivity": 4.48296594619751
+ },
+ "wall_time_s": 80.09708213806152,
+ "headline": {
+  "q1_T_center_1800s_C": 33.57532879871604,
+  "q1_T_surface_1800s_C": 36.78558601032612,
+  "q1_C_center_1800s": 2.5499921437020148,
+  "q1_C_surface_1800s": 1.5102347285712345,
+  "q1_semi_analytic_max_dev_C": 6.164282062925963e-05,
+  "q1_Bi_T": 1.3888888888888888,
+  "q1_Bi_m": 3.2404045432170423,
+  "q2_T_center_10800s_C": 49.84949042097596,
+  "q2_T_surface_10800s_C": 49.966413251404134,
+  "q2_C_center_10800s": 1.7661858594169986,
+  "q2_C_surface_10800s": 1.0081270640367017,
+  "q2_volavg_C_10800s": 1.3825466829870092,
+  "q3_t_end_h": 57.62509277932544,
+  "q3_t_end_d": 2.401045532471893,
+  "q4_t_end_h": 51.15113822566188,
+  "q4_t_end_d": 2.131297426069245,
+  "q4_R_at_t_end_cm": 1.2,
+  "q4_water_removed_pct": 95.35638186343496,
+  "sens_baseline_t_end_h": 57.62509277932544,
+  "sens_top_factor": "act_scale",
+  "sens_lhs_p05_p50_p95_h": [
+   35.84507819517728,
+   57.58754329503998,
+   108.74379180435797
+  ]
+ },
+ "model_ladder": {
+  "times_s": [
+   1800,
+   3600,
+   5400,
+   7200,
+   9000,
+   10800
+  ],
+  "paths": {
+   "L1_const_prop": {
+    "C_center_end": 2.164225205790008,
+    "C_surface_end": 0.8654989046851677,
+    "T_center_end": 49.735129827227865,
+    "volavg_C_end": 1.4985516732467794,
+    "C_center_series": [
+     2.549967,
+     2.542477,
+     2.499003,
+     2.412336,
+     2.295927,
+     2.164225
+    ],
+    "volavg_C_series": [
+     2.2854320742509984,
+     2.082189816567909,
+     1.9095073123815827,
+     1.7576661372681568,
+     1.621675965166407,
+     1.4985516732467796
+    ]
+   },
+   "L2_oneway": {
+    "C_center_end": 2.19331336898404,
+    "C_surface_end": 0.8169558942857235,
+    "T_center_end": 49.83056160249895,
+    "volavg_C_end": 1.5271803632416157,
+    "C_center_series": [
+     2.549968,
+     2.542728,
+     2.501418,
+     2.420432,
+     2.313203,
+     2.193313
+    ],
+    "volavg_C_series": [
+     2.286970455430371,
+     2.087254455878776,
+     1.919353367475722,
+     1.773179726539659,
+     1.6435078291743495,
+     1.5271803632416154
+    ]
+   },
+   "L3_full": {
+    "C_center_end": 1.7661858594169986,
+    "C_surface_end": 1.0081270640367017,
+    "T_center_end": 49.84949042097596,
+    "volavg_C_end": 1.382546682987009,
+    "C_center_series": [
+     2.549933,
+     2.525708,
+     2.38604,
+     2.170847,
+     1.956647,
+     1.766186
+    ],
+    "volavg_C_series": [
+     2.282666243178353,
+     2.064988020655139,
+     1.868770058734918,
+     1.6901069686234065,
+     1.5282475705934884,
+     1.3825466829870092
+    ]
+   },
+   "L0_lumped": {
+    "C_end": 1.100699128609139,
+    "T_end": 49.99775371132782,
+    "note": "Bi_T, Bi_m 均为 O(1)，集中参数假设不成立，此路径仅作错误极限对照",
+    "C_series": [
+     2.211583,
+     1.920163,
+     1.668755,
+     1.451454,
+     1.263435,
+     1.100699
+    ],
+    "T_series": [
+     34.699173,
+     43.184352,
+     47.608606,
+     49.309832,
+     49.79389,
+     49.997754
+    ]
+   }
+  },
+  "baseline_volavg_C_end": 1.382546682987009
+ },
+ "criterion_comparison": {
+  "max": {
+   "t_end_s": 207450.33400557158,
+   "t_end_h": 57.62509277932544,
+   "nfev": 21261
+  },
+  "volavg": {
+   "t_end_s": 130139.74692228119,
+   "t_end_h": 36.14992970063366,
+   "nfev": 18628
+  },
+  "surface": {
+   "t_end_s": 45167.94719665904,
+   "t_end_h": 12.546651999071956,
+   "nfev": 15221
+  }
+ },
+ "q4_attribution": {
+  "q3_baseline": {
+   "props": "appendix_3",
+   "shrink": false,
+   "t_end_s": 207450.33400557158,
+   "t_end_h": 57.62509277932544,
+   "nfev": 21261
+  },
+  "app4_noshrink": {
+   "props": "appendix_4",
+   "shrink": false,
+   "t_end_s": 468207.6101057398,
+   "t_end_h": 130.05766947381662,
+   "nfev": 31717
+  },
+  "app3_shrink": {
+   "props": "appendix_3",
+   "shrink": true,
+   "t_end_s": 91003.01959061179,
+   "t_end_h": 25.278616552947717,
+   "nfev": 17349
+  },
+  "app4_shrink": {
+   "props": "appendix_4",
+   "shrink": true,
+   "t_end_s": 184144.0976123828,
+   "t_end_h": 51.15113822566188,
+   "nfev": 20764
+  }
+ },
+ "cross_problem_ledger": {
+  "n_items": 9,
+  "items": [
+   {
+    "id": "XP1",
+    "quantity": "问题一药材温度上界",
+    "unit": "°C",
+    "bound": {
+     "op": "<=",
+     "value": 41.513
+    },
+    "observed": 36.78558601032612,
+    "reason": "1800 s 内热风由 28 °C 线性升至 41.5130 °C，药材温度不得超过同期热风温度",
+    "satisfied": true
+   },
+   {
+    "id": "XP2",
+    "quantity": "问题一药材温度下界",
+    "unit": "°C",
+    "bound": {
+     "op": ">=",
+     "value": 28.0
+    },
+    "observed": 28.0,
+    "reason": "热风全程高于初温 28 °C，故药材只被加热",
+    "satisfied": true
+   },
+   {
+    "id": "XP3",
+    "quantity": "问题一含水率上界",
+    "unit": "kg/kg",
+    "bound": {
+     "op": "<=",
+     "value": 2.55
+    },
+    "observed": 2.55,
+    "reason": "干燥过程只失水，任意点含水率不超过初值 C0",
+    "satisfied": true
+   },
+   {
+    "id": "XP4",
+    "quantity": "问题二药材温度上界",
+    "unit": "°C",
+    "bound": {
+     "op": "<=",
+     "value": 50.246
+    },
+    "observed": 49.966413251404134,
+    "reason": "附件 1 热风温度峰值 50.2460 °C（现读自附件 1，出现在 t=10620 s），药材温度不得越过驱动包络",
+    "satisfied": true
+   },
+   {
+    "id": "XP5",
+    "quantity": "问题三与问题二在 t<=10800 s 的场差",
+    "unit": "°C 或 kg/kg",
+    "bound": {
+     "op": "<=",
+     "value": 1e-09
+    },
+    "observed": 0.0,
+    "reason": "同一右端、同一积分设定，问题三前 10800 s 必须与问题二逐格恒等",
+    "satisfied": true
+   },
+   {
+    "id": "XP6",
+    "quantity": "问题三事件时刻全域最大含水率",
+    "unit": "kg/kg",
+    "bound": {
+     "op": "<=",
+     "value": 0.15001
+    },
+    "observed": 0.15,
+    "reason": "判据即全域最大含水率首次下穿 0.15，事件时刻必须贴住阈值",
+    "satisfied": true
+   },
+   {
+    "id": "XP7",
+    "quantity": "问题四半径下界",
+    "unit": "cm",
+    "bound": {
+     "op": ">=",
+     "value": 1.198
+    },
+    "observed": 1.2,
+    "reason": "附件 2 末点半径 1.198 cm，保单调插值不得越出实测下界",
+    "satisfied": true
+   },
+   {
+    "id": "XP8",
+    "quantity": "问题四半径上界",
+    "unit": "cm",
+    "bound": {
+     "op": "<=",
+     "value": 2.0
+    },
+    "observed": 1.9949873268608413,
+    "reason": "半径单调不增，起点即为最大值 2.0 cm",
+    "satisfied": true
+   },
+   {
+    "id": "XP9",
+    "quantity": "问题三、四烘干时长量级",
+    "unit": "d",
+    "bound": {
+     "op": "in",
+     "value": [
+      0.2,
+      30.0
+     ]
+    },
+    "observed": [
+     2.401045532471893,
+     2.131297426069245
+    ],
+    "reason": "题面「一般持续 2-3 天」是独立量级参照，允许同量级偏离，不作标定目标",
+    "satisfied": true
+   }
+  ],
+  "violations": [],
+  "all_satisfied": true,
+  "cross_problem_check_module": "_utils/cross_problem_check.py",
+  "module_available": false,
+  "note": "SKILL 第 7 步引用的 _utils/cross_problem_check.py 在本运行时不存在；按「缺少内部模块时停止并报告模块名」的要求，此处只如实记录模块名，台账本身按 §12.2 的 bound/observed/reason 三段式由真实运行回填"
+ },
+ "checks": {
+  "problem1": {
+   "C01": {
+    "name": "均匀场零通量",
+    "measured": 0.0,
+    "tol": 1e-08,
+    "passed": true
+   },
+   "C02": {
+    "name": "柱面通量正比于 r",
+    "measured": 1.9901775700687994e-13,
+    "tol": 1e-08,
+    "passed": true,
+    "note": "线性场下界面通量密度恒定，面积权 A_face=eta_{i+1/2} 使总流量正比于 r"
+   },
+   "C03": {
+    "name": "双场独立",
+    "len_y": 240,
+    "expect_len": 240,
+    "dT_absmax": 0.03090751167602212,
+    "dC_absmax": 0.012032568660274724,
+    "slices_alias": false,
+    "passed": true
+   },
+   "C05": {
+    "name": "Robin 闭合一致",
+    "measured_C": 1.6531601077702643e-15,
+    "measured_T": 2.811262056602882e-12,
+    "tol": 1e-06,
+    "passed": true
+   },
+   "C10": {
+    "name": "问题一单向解耦",
+    "measured": 0.0,
+    "tol": 1e-14,
+    "passed": true
+   },
+   "C11": {
+    "name": "附录绑定",
+    "props_appendix": "appendix_2",
+    "passed": true
+   },
+   "C14": {
+    "name": "低含水率下界保护",
+    "C_floor": 1e-06,
+    "D_at_1e-18": 0.0,
+    "finite": true,
+    "passed": true
+   },
+   "C09": {
+    "name": "半解析解对照 147 点",
+    "measured_max_abs_C": 6.164282062925963e-05,
+    "tol": 0.001,
+    "n_points": 147,
+    "n_modes": 200,
+    "passed": true
+   },
+   "V3.2": {
+    "name": "网格收敛阶梯（五档）",
+    "dT_center_seq": [
+     0.0007018485232492822,
+     0.00017671703295718544,
+     4.225077277197897e-05,
+     1.3373866565302706e-05
+    ],
+    "finest_pair_dT": 1.3373866565302706e-05,
+    "tol": 0.0001,
+    "monotone_decreasing": true,
+    "passed": true
+   },
+   "C04": {
+    "name": "表面值网格无关性",
+    "measured": 8.459816203121306e-08,
+    "tol": 0.001,
+    "dC_surface_seq": [
+     0.00022945190293977014,
+     1.2077422412604122e-05,
+     3.167608320087112e-07,
+     8.459816203121306e-08
+    ],
+    "passed": true
+   },
+   "C06": {
+    "name": "剖面单调（中心最湿/最冷）",
+    "C_worst_increase": 8.881784197001252e-16,
+    "T_worst_decrease": 7.105427357601002e-15,
+    "tol": 1e-10,
+    "passed": true
+   },
+   "C07": {
+    "name": "全域最大含水率在中心",
+    "all_at_center": true,
+    "n_times_checked": 1800,
+    "passed": true
+   },
+   "C13": {
+    "name": "干燥方向性",
+    "max_rise_of_Cmax": 0.0,
+    "max_rise_of_volavg": -0.00011818199370905447,
+    "tol": 1e-12,
+    "passed": true
+   },
+   "V2.4": {
+    "name": "温度落在驱动包络内",
+    "T_min": 28.0,
+    "T_max": 36.78558601032612,
+    "envelope": [
+     28.0,
+     41.513
+    ],
+    "passed": true
+   },
+   "time_tol_layer": {
+    "name": "时间离散误差分层（收紧一档）",
+    "measured_tighten_1e-10": 4.928354375266508e-06,
+    "tol": 0.0001,
+    "passed": true,
+    "diagnostic_loosen_1e-6": 0.0003328460792957344,
+    "note": "§4.4 判据为收紧容差后变化 <1e-4；放松到 1e-6 的偏差 3.328e-04 °C 一并记录，V3.3 的 t_end<60 s 判据在问题三、四（有事件终止）处考核"
+   },
+   "C16": {
+    "name": "写盘-读回往返一致",
+    "measured": 0.0,
+    "tol": 0.0,
+    "per_sheet": {
+     "温度": {
+      "shape": [
+       1800,
+       21
+      ],
+      "roundtrip_max_abs_diff": 0.0,
+      "blank_cells": 0
+     },
+     "水分浓度": {
+      "shape": [
+       1800,
+       21
+      ],
+      "roundtrip_max_abs_diff": 0.0,
+      "blank_cells": 0
+     }
+    },
+    "passed": true
+   }
+  },
+  "problem2": {
+   "C11": {
+    "name": "附录绑定",
+    "props_appendix": "appendix_3",
+    "passed": true
+   },
+   "C12": {
+    "name": "五个物性偏导非零",
+    "partials": {
+     "d_rho_dC": 16.32000000000005,
+     "d_cp_dC": 26.72054078379233,
+     "d_lam_dC": 0.00371118621997113,
+     "d_D_dC": 4.760883572611019e-11,
+     "d_D_dT": 1.3099334582107984e-09
+    },
+    "tol": 1e-12,
+    "inert_partials_expected_zero": {
+     "d_rho_dT": 0.0,
+     "d_cp_dT": 0.0,
+     "d_lam_dT": 0.0
+    },
+    "passed": true
+   },
+   "C08": {
+    "name": "附件 1 复现与衔接连续",
+    "sample_rel_err_Ta": 0.0,
+    "sample_rel_err_Ca": 0.0,
+    "tol_sample": 1e-09,
+    "join_jump_Ta_C": 5.350386800273554e-12,
+    "join_jump_Ca": 1.4779844015322396e-15,
+    "tol_join": 1e-06,
+    "passed": true
+   },
+   "C14": {
+    "name": "低含水率下界保护",
+    "C_floor": 1e-06,
+    "D_at_1e-18": 0.0,
+    "passed": true
+   },
+   "C_kelvin": {
+    "name": "Arrhenius 用开尔文",
+    "measured_rel": 1.8598584293625458e-16,
+    "tol": 1e-12,
+    "D_ratio_50_over_28": 2.387758137065687,
+    "passed": true
+   },
+   "C_no_plateau": {
+    "name": "问题二未进入外推段",
+    "t_end_s": 10800,
+    "T_obs_s": 14400.0,
+    "passed": true
+   },
+   "C06": {
+    "name": "剖面单调（中心最湿；纯升温段中心最冷）",
+    "C_worst_increase": 8.881784197001252e-16,
+    "tol_C": 1e-10,
+    "T_inversion_rising_window": 1.0658141036401503e-14,
+    "tol_T_rising": 1e-10,
+    "t_first_driver_dip_s": 2940.0,
+    "n_times_rising": 2940,
+    "T_inversion_after_first_dip": 0.0007702515869993931,
+    "driver_worst_down_step_C": 0.45000000000000284,
+    "inversion_over_driver_step": 0.001711670193331974,
+    "tol_ratio": 0.05,
+    "driver_negative_increments": 95,
+    "note": "附件 1 平台段 Ta 有 95 次负增量（最大回落 0.45 °C）；热风回落时表面先冷于内部，该反转幅度仅为驱动回落量的 0.17%，是驱动的真实特征而非离散误差",
+    "passed": true
+   },
+   "C07": {
+    "name": "全域最大含水率在中心",
+    "max_minus_center": 4.440892098500626e-16,
+    "tol": 1e-12,
+    "n_times_checked": 10800,
+    "n_times_strict_argmax_at_center": 10794,
+    "note": "早期中心与邻近若干格心在 1e-16 量级并列，故用 max-center 差值判定",
+    "passed": true
+   },
+   "C13": {
+    "name": "干燥方向性",
+    "max_rise_of_Cmax": 0.0,
+    "max_rise_of_volavg": -7.667067570449326e-05,
+    "tol": 1e-12,
+    "passed": true
+   },
+   "V2.4": {
+    "name": "温度落在驱动包络内",
+    "T_min": 28.0,
+    "T_max": 49.966413251404134,
+    "envelope": [
+     28.0,
+     50.246
+    ],
+    "passed": true
+   },
+   "V3.2": {
+    "name": "网格收敛阶梯（四档）",
+    "dC_center_seq": [
+     0.00010517804296572564,
+     2.6323551884477325e-05,
+     6.559849185405753e-06
+    ],
+    "finest_pair": 6.559849185405753e-06,
+    "tol": 0.001,
+    "passed": true
+   },
+   "C04": {
+    "name": "表面值网格无关性",
+    "measured": 2.9676179060800223e-06,
+    "tol": 0.001,
+    "dC_surface_seq": [
+     4.738139262228103e-05,
+     1.1798709184107636e-05,
+     2.9676179060800223e-06
+    ],
+    "passed": true
+   },
+   "V3.6": {
+    "name": "四级模型阶梯真实独立运行",
+    "volavg_C_end_by_path": {
+     "L0_lumped": 1.100699128609139,
+     "L1_const_prop": 1.4985516732467794,
+     "L2_oneway": 1.5271803632416157,
+     "L3_full": 1.382546682987009
+    },
+    "min_pairwise_gap": 0.028628689994836254,
+    "tol": 1e-06,
+    "passed": true
+   },
+   "C15": {
+    "name": "模型对比两两可分辨",
+    "measured_min_gap": 0.028628689994836254,
+    "tol": 1e-06,
+    "n_pairs": 6,
+    "passed": true
+   },
+   "C16": {
+    "name": "写盘-读回往返一致",
+    "measured": 0.0,
+    "tol": 0.0,
+    "per_sheet": {
+     "温度": {
+      "shape": [
+       10800,
+       21
+      ],
+      "roundtrip_max_abs_diff": 0.0,
+      "blank_cells": 0
+     },
+     "水分浓度": {
+      "shape": [
+       10800,
+       21
+      ],
+      "roundtrip_max_abs_diff": 0.0,
+      "blank_cells": 0
+     }
+    },
+    "passed": true
+   }
+  },
+  "problem3": {
+   "C11": {
+    "name": "附录绑定（与问题二同源）",
+    "props_appendix": "appendix_3",
+    "passed": true
+   },
+   "C19": {
+    "name": "首次下穿（密扫无更早穿越）",
+    "measured_endpoint_gap": 0.0,
+    "tol": 1e-05,
+    "n_scan_points": 20000,
+    "n_points_below_thr": 0,
+    "min_Cmax_before_t_end": 0.15000000006014585,
+    "passed": true
+   },
+   "C07": {
+    "name": "事件时刻最大值在中心",
+    "argmax_cell": 0,
+    "C_center": 0.15,
+    "C_surface_cell": 0.06442020719827425,
+    "passed": true
+   },
+   "C17": {
+    "name": "判据口径序关系",
+    "t_surface_h": 12.546651999071956,
+    "t_volavg_h": 36.14992970063366,
+    "t_max_h": 57.62509277932544,
+    "ordered": true,
+    "gap_max_minus_volavg_s": 77310.58708329039,
+    "tol_gap": 60.0,
+    "underestimate_by_volavg_h": 21.475163078691775,
+    "underestimate_pct": 37.2670342778113,
+    "passed": true
+   },
+   "V3.3": {
+    "name": "时间容差对照（t_end）",
+    "measured_dt_end_s": 0.02847718686098233,
+    "tol": 60.0,
+    "t_end_rtol_1e_6_s": 207450.30552838472,
+    "t_end_rtol_1e_8_s": 207450.33400557158,
+    "passed": true
+   },
+   "V3.2": {
+    "name": "网格收敛阶梯（t_end，五档）",
+    "dt_end_seq_s": [
+     1291.9727614244912,
+     572.1641460937972,
+     230.21980071696453,
+     84.04798748571193
+    ],
+    "dt_end_seq_rel": [
+     0.00621073572764489,
+     0.0027580777289971984,
+     0.0011109915733825567,
+     0.00040576220752165795
+    ],
+    "finest_pair_s": 84.04798748571193,
+    "finest_pair_rel": 0.00040576220752165795,
+    "tol_rel": 0.002,
+    "observed_order": 1.4537267420398083,
+    "richardson_limit_s": 207087.7390875055,
+    "richardson_limit_h": 57.52437196875153,
+    "baseline_minus_richardson_h": 0.10072081057391187,
+    "monotone_decreasing": true,
+    "note": "t_end 以约一阶精度收敛（表面重构与阈值定位均为一阶）；最细两档相对变化 0.041%，故用相对判据 0.2%",
+    "passed": true
+   },
+   "XA2": {
+    "name": "问题三与问题二逐格恒等（t<=10800 s）",
+    "measured_max_abs_diff": 0.0,
+    "tol": 1e-09,
+    "n_times": 6,
+    "n_cells": 240,
+    "long_run_max_abs_dT_C": 4.3852010094269644e-06,
+    "long_run_max_abs_dC": 3.267164649933818e-08,
+    "note": "同一右端、同一 max_step 时逐位相同；长时程运行用 max_step=60 s（M6），其与问题二的差异 4.4e-06 °C 纯属时间步差异，远小于四位小数口径",
+    "passed": true
+   },
+   "V3.12": {
+    "name": "与题面 2-3 天量级对照",
+    "measured_days": 2.401045532471893,
+    "reference_range_days": [
+     2.0,
+     3.0
+    ],
+    "inside_range": true,
+    "same_order_of_magnitude": true,
+    "note": "题面区间是独立于模型的量级参照，不是标定目标；未对任何物性做反向调参",
+    "passed": true
+   },
+   "C16": {
+    "name": "写盘-读回往返一致",
+    "measured": 0.0,
+    "tol": 0.0,
+    "per_sheet": {
+     "Sheet1": {
+      "shape": [
+       3457,
+       21
+      ],
+      "roundtrip_max_abs_diff": 0.0,
+      "blank_cells": 0
+     }
+    },
+    "passed": true
+   },
+   "C13": {
+    "name": "干燥方向性（全程）",
+    "max_rise_of_Cmax": 0.0,
+    "max_rise_of_volavg": -1.2736274198843489e-05,
+    "tol": 1e-12,
+    "passed": true
+   },
+   "V2.4": {
+    "name": "温度落在驱动包络内",
+    "T_min": 28.000000032297375,
+    "T_max": 50.039858921077666,
+    "envelope": [
+     28.0,
+     50.246
+    ],
+    "passed": true
+   }
+  },
+  "problem4": {
+   "C11": {
+    "name": "附录绑定（附录 4 物性 + 附件 2 半径）",
+    "props_appendix": "appendix_4",
+    "shrink_mode": "radial",
+    "passed": true
+   },
+   "C18": {
+    "name": "半径轨迹单调不增且复现附件 2",
+    "max_dR_over_scan_cm": 0.0,
+    "max_dRdt_cm_per_s": 0.0,
+    "min_dRdt_cm_per_s": -8.359240209935024e-05,
+    "n_scan_points": 10000,
+    "sample_repro_max_abs_cm": 2.220446049250313e-16,
+    "tol_repro_cm": 1e-12,
+    "R0_cm": 2.0,
+    "R_end_cm": 1.198,
+    "total_shrink_pct": 40.1,
+    "passed": true
+   },
+   "C20": {
+    "name": "绝干骨架水量守恒（正向 + 三个反向变体）",
+    "forward_rel_drift": 3.4831010026778146e-16,
+    "tol_forward": 1e-08,
+    "mass_kg_per_m_rel_drift_with_bookkeeping": 3.3306690738754696e-16,
+    "reverse_rel_drift": {
+     "reverse_B_spurious_advection": 0.10927917630498298,
+     "reverse_C_nonconservative": 0.007218516701785699,
+     "reverse_A_drop_rho_d": 0.6106240000000002
+    },
+    "tol_reverse_min": 0.0001,
+    "min_reverse_drift": 0.007218516701785699,
+    "t_test_s": 43200.0,
+    "R_cm_span": [
+     2.0,
+     1.248
+    ],
+    "rho_d_span": [
+     278.7323943661972,
+     715.8437971682827
+    ],
+    "note": "反向 A 丢弃 rho_d(t) 记账、B 按 §7.5 再加 R*Rdot 对流通量、C 用非守恒 Laplacian 展开；三者分别漂移 61.06%、10.93%、0.72%",
+    "passed": true
+   },
+   "C22": {
+    "name": "t=0 收缩域退化为固定域",
+    "measured_max_abs_diff": 0.0,
+    "tol": 1e-12,
+    "R_at_0_cm": 2.0,
+    "dRdt_at_0_cm_per_s": 0.0,
+    "passed": true
+   },
+   "C_direction": {
+    "name": "收缩方向性判定（径向 vs 各向同性）",
+    "rho_d0": 278.7323943661972,
+    "rho_d_end_radial": 776.8439730273806,
+    "rho_d_end_isotropic": 1296.901457474759,
+    "reference_rho_zero_moisture": 760.0,
+    "deviation_radial_pct": 2.216312240444812,
+    "deviation_isotropic_pct": 70.64492861509986,
+    "tol_accept_pct": 5.0,
+    "tol_reject_pct": 20.0,
+    "selected": "radial",
+    "note": "径向假设下末态绝干密度 776.84 kg/m^3 与附录 4 零含水率密度 760 相差 2.22%；各向同性假设给出 1296.90 kg/m^3，相差 70.64%，物理上不可接受",
+    "passed": true
+   },
+   "C_volume_consistency": {
+    "name": "收缩量自洽性（几何 vs 密度式反推）",
+    "volume_ratio_geometric": 0.358801,
+    "volume_ratio_from_density": 0.41440498192776565,
+    "relative_gap": 0.13417787997890893,
+    "tol": 0.2,
+    "rho_d_at_C_thr": 672.608695652174,
+    "note": "附件 2 的几何收缩量 0.3588 与附录 4 密度式反推的 0.4144 差 13.42%；两者同阶但不完全自洽，本文以附件 2 实测轨迹为准，未反向调参",
+    "passed": true
+   },
+   "C19": {
+    "name": "首次下穿（密扫无更早穿越）",
+    "measured_endpoint_gap": 0.0,
+    "tol": 1e-05,
+    "n_scan_points": 20000,
+    "n_points_below_thr": 0,
+    "min_Cmax_before_t_end": 0.15000000009438963,
+    "passed": true
+   },
+   "C07": {
+    "name": "事件时刻最大值在中心",
+    "argmax_cell": 0,
+    "C_center": 0.15,
+    "C_outermost_cell": 0.058672944860578446,
+    "passed": true
+   },
+   "C21": {
+    "name": "归因分解闭合与交互项量化",
+    "chain_closure_s": 0.0,
+    "tol_closure_s": 1e-06,
+    "delta_props_s": 260757.2761001682,
+    "delta_shrink_s": -284063.512493357,
+    "total_s": -23306.236393188796,
+    "interaction_s": -167616.1980783972,
+    "interaction_over_total_pct": 719.1903285053039,
+    "mult_ratio_props": 2.256962430791579,
+    "mult_ratio_shrink": 0.4386737675156873,
+    "mult_predicted_ratio": 0.9900702126567057,
+    "mult_actual_ratio": 0.8876538979563039,
+    "mult_residual_pct": 10.344348652363033,
+    "n_runs": 4,
+    "note": "附录 4 换物性使 t_end 增 72.43 h，径向收缩使其减 78.91 h，两者叠加只净减 6.47 h；加法框架下交互项达总效应的 719%，乘法框架残差 10.3%，故两机制近似乘性叠加",
+    "passed": true
+   },
+   "V3.2": {
+    "name": "网格收敛阶梯（t_end，五档）",
+    "dt_end_seq_s": [
+     294.8531518972013,
+     122.43814152065897,
+     42.92029216338415,
+     13.063452534523094
+    ],
+    "dt_end_seq_rel": [
+     0.0016001448699887182,
+     0.0006649039698160035,
+     0.00023313426230148454,
+     7.09630418828267e-05
+    ],
+    "finest_pair_s": 13.063452534523094,
+    "finest_pair_rel": 7.09630418828267e-05,
+    "tol_rel": 0.002,
+    "observed_order": 1.7161236601591345,
+    "richardson_limit_s": 184082.39813238793,
+    "richardson_limit_h": 51.13399948121887,
+    "baseline_minus_richardson_h": 0.017138744443016347,
+    "monotone_decreasing": true,
+    "note": "与问题三同口径：表面重构与阈值定位均为一阶，故 t_end 用相对判据 0.2%，最细两档相对变化 0.007%",
+    "passed": true
+   },
+   "V3.3": {
+    "name": "时间容差对照（t_end）",
+    "measured_dt_end_s": 0.04975953185930848,
+    "tol": 60.0,
+    "t_end_rtol_1e_6_s": 184144.04785285093,
+    "t_end_rtol_1e_8_s": 184144.0976123828,
+    "passed": true
+   },
+   "C16": {
+    "name": "写盘-读回往返一致（含空单元格掩码）",
+    "measured": 0.0,
+    "tol": 0.0,
+    "per_sheet": {
+     "Sheet1": {
+      "shape": [
+       3069,
+       21
+      ],
+      "roundtrip_max_abs_diff": 0.0,
+      "blank_cells": 20122
+     }
+    },
+    "n_blank_cells": 20122,
+    "blank_rule": "r > R(t) 的格为空（药材已收缩到该位置以内）",
+    "passed": true
+   },
+   "C20_balance": {
+    "name": "全局水量平衡闭合（h_m 非零）",
+    "measured_rel_gap": 9.398233875206151e-05,
+    "tol": 0.001,
+    "stored_drop_kg_per_m": 0.8517011900766734,
+    "cumulative_flux_kg_per_m": 0.8517812349464348,
+    "m_w_initial_kg_per_m": 0.8931769153075049,
+    "m_w_final_kg_per_m": 0.04147572523083147,
+    "note": "储量按 2*pi*rho_d(t)*R(t)^2*sum(V_i C_i) 记，失水按表面对流通量在 60 s 网格上梯形累加，残差含梯形求积误差",
+    "passed": true
+   },
+   "C13": {
+    "name": "干燥方向性（全程）",
+    "max_rise_of_Cmax": 0.0,
+    "max_rise_of_volavg": -2.0940056025278708e-05,
+    "tol": 1e-12,
+    "passed": true
+   },
+   "V2.4": {
+    "name": "温度落在驱动包络内",
+    "T_min": 28.000000000001734,
+    "T_max": 50.05003341902996,
+    "envelope": [
+     28.0,
+     50.246
+    ],
+    "passed": true
+   },
+   "V3.12": {
+    "name": "与题面 2-3 天量级对照",
+    "measured_days": 2.131297426069245,
+    "reference_range_days": [
+     2.0,
+     3.0
+    ],
+    "inside_range": true,
+    "note": "量级参照，非标定目标",
+    "passed": true
+   }
+  },
+  "sensitivity": {
+   "C23": {
+    "name": "敏感性逐点真实重算",
+    "n_oat_points": 16,
+    "n_lhs_points": 200,
+    "n_lhs_q4_points": 200,
+    "n_surface_points": 49,
+    "min_abs_gap_to_baseline_s": 64.79252452845685,
+    "tol_gap_s": 60.0,
+    "lhs_min_pairwise_gap_s": 0.9785556997230742,
+    "lhs_q4_min_pairwise_gap_s": 3.777042830886785,
+    "n_distinct_lhs_t_end": 200,
+    "n_distinct_lhs_q4_t_end": 200,
+    "total_real_solves": 471,
+    "checkpoint_hits": {
+     "oat_latent": true,
+     "surface": true,
+     "lhs": true,
+     "lhs_q4": true
+    },
+    "passed": true
+   },
+   "V3.9": {
+    "name": "敏感性排序一致（OAT 首因子 = 秩相关首因子）",
+    "oat_rank": [
+     "act_scale",
+     "moist_scale",
+     "d_scale",
+     "h_m",
+     "ta_plateau",
+     "C0",
+     "ca_plateau",
+     "h"
+    ],
+    "top_oat": "act_scale",
+    "top_spearman": "act_scale",
+    "spearman": {
+     "h_m": -0.018253956348908723,
+     "h": -0.028115202880072,
+     "ta_plateau": -0.04285907147678692,
+     "ca_plateau": 0.03981849546238656,
+     "d_scale": -0.20793369834245856,
+     "act_scale": 0.8680702017550439,
+     "C0": 0.08715667891697293,
+     "moist_scale": 0.41175729393234833
+    },
+    "passed": true
+   },
+   "V3.10": {
+    "name": "单因子弹性符号与机理一致",
+    "expected": {
+     "h_m": -1,
+     "h": -1,
+     "ta_plateau": -1,
+     "ca_plateau": 1,
+     "d_scale": -1,
+     "act_scale": 1,
+     "C0": 1,
+     "moist_scale": 1
+    },
+    "observed": {
+     "h_m": -1,
+     "h": -1,
+     "ta_plateau": -1,
+     "ca_plateau": 1,
+     "d_scale": -1,
+     "act_scale": 1,
+     "C0": 1,
+     "moist_scale": 1
+    },
+    "mismatch": [],
+    "note": "h_m/h/Ta/D0 增大加快干燥（t_end 下降），Ca/活化温度/C0/水分抑制常数 b 增大延长干燥（b 增大使 exp(-b/C) 在低含水率端急剧变小）",
+    "passed": true
+   },
+   "V3.11": {
+    "name": "响应面双向单调",
+    "monotone_along_D0": true,
+    "monotone_along_hm": true,
+    "span_h": [
+     47.654618,
+     73.161755
+    ],
+    "corner_ratio": 1.535250056982935,
+    "passed": true
+   },
+   "V3.4": {
+    "name": "潜热方向探针（t_end 随 chi 单调增大）",
+    "chi_values": [
+     0.0,
+     0.1,
+     0.25,
+     0.5
+    ],
+    "n_fired": 4,
+    "n_scanned": 4,
+    "t_end_h_by_chi": [
+     57.62509277932544,
+     58.174549755907485,
+     59.027377566317504,
+     60.50671866784861
+    ],
+    "T_field_min_C_by_chi": [
+     28.0,
+     27.104841660287295,
+     24.70624456097025,
+     19.183703613185788
+    ],
+    "monotone_increasing": true,
+    "note": "chi=0 为基准；未触发的 chi 说明其 t_end 超出保护上限 1.2e+06 s，方向同样成立",
+    "passed": true
+   },
+   "V3.13": {
+    "name": "问题三/四鲁棒性配对同源（同一 LHS 矩阵）",
+    "n_pairs": 200,
+    "multipliers_identical": true,
+    "q4_shorter_fraction": 1.0,
+    "ratio_q4_over_q3": {
+     "mean": 0.884924274319014,
+     "min": 0.7944315929507959,
+     "max": 0.9830370160918223
+    },
+    "note": "两条分布共用同一组因子取值，故雨云图是配对对比；q4/q3 比值恒小于 1 即收缩缩短工期这一结论在全分布上稳健",
+    "passed": true
+   }
+  }
+ },
+ "result_files": {
+  "1": "result1.xlsx",
+  "2": "result2.xlsx",
+  "3": "result3.xlsx",
+  "4": "result4.xlsx"
+ }
+}

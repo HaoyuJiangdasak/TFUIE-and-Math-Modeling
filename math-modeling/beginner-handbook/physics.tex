@@ -1,0 +1,370 @@
+\chapter{物理建模工具箱：先判断现象，再选公式}
+本章是面向国赛工程与物理建模题的通用工具箱，不代表任何一届题目的押题清单。一个物理公式只有在假设成立时才有用。读题后先画出研究对象和边界，再标出质量、力、热量或流量从哪里进入、从哪里离开。所有算例数据均为教学假设值，不是比赛数据或材料推荐值。除特别说明外，使用国际单位制；角度代入程序前换成弧度，温差可用摄氏度差，绝对温度用开尔文。
+
+\section{力学：物体为什么运动、变形、振动}
+\subsection{M1：位置、速度、加速度}
+\begin{equation}
+\mathbf v=\frac{d\mathbf r}{dt},\qquad \mathbf a=\frac{d\mathbf v}{dt}=\frac{d^2\mathbf r}{dt^2}.
+\end{equation}
+\textbf{符号：} $t$ 是时间（s）；$\mathbf r$ 是相对选定原点的位置向量（m）；$\mathbf v$ 是速度向量（m/s）；$\mathbf a$ 是加速度向量（m/s$^2$）；$d/dt$ 表示对时间求导，粗体表示有大小和方向。
+\textbf{白话：} 位置改变得多快叫速度，速度改变得多快叫加速度。\textbf{条件与误用：} 轨迹需要足够光滑；速率是速度的大小，匀速圆周运动的速率不变但方向变，所以加速度不为零。用实验数据求导时，噪声会被放大，通常先平滑再求导。
+
+\subsection{M2：匀加速直线运动}
+\begin{equation}
+v=v_0+at,\qquad x=x_0+v_0t+\frac12at^2.
+\end{equation}
+\textbf{符号：} $x,x_0$ 为当前、初始位置（m）；$v,v_0$ 为当前、初始带符号速度（m/s）；$a$ 为常加速度（m/s$^2$）；$t$ 为从初始时刻起经过的时间（s）。
+\textbf{白话：} 每秒增加相同速度时才能直接套这两式。\textbf{条件与误用：} 仅适用于同一直线方向上的常加速度；有随速度变化的空气阻力时应改用微分方程。\textbf{算例：} 从静止开始，$a=2\ \mathrm{m/s^2}$，经过 $3\ \mathrm{s}$，速度为 $6\ \mathrm{m/s}$，位移为 $9\ \mathrm m$。
+
+\subsection{M3：牛顿第二定律与静力平衡}
+\begin{equation}
+\sum_j\mathbf F_j=m\mathbf a;\qquad \sum_j\mathbf F_j=\mathbf0,\quad \sum_j\boldsymbol\tau_j=\mathbf0\quad\text{（静力平衡）}.
+\end{equation}
+\textbf{符号：} $\mathbf F_j$ 为第 $j$ 个外力（N）；$j$ 为力的编号；$\sum$ 为求和；$m$ 为不变质量（kg）；$\mathbf a$ 为质心加速度（m/s$^2$）；$\boldsymbol\tau_j$ 为该力对同一参考点的力矩（N$\cdot$m）；$\mathbf0$ 为零向量。
+\textbf{白话：} 合力决定平动，合力矩决定是否有转动趋势。\textbf{条件与误用：} 使用惯性参考系；静止刚体要同时满足力和力矩平衡。变质量喷射系统不能只写固定质量的 $m\mathbf a$ 而忽略喷出物的动量流。
+
+\subsection{M4：重力与万有引力}
+\begin{equation}
+F_g=mg,\qquad F=G\frac{m_1m_2}{r^2}.
+\end{equation}
+\textbf{符号：} $F_g,F$ 为引力大小（N）；$m,m_1,m_2$ 为质量（kg）；$g$ 为当地重力加速度（常用教学近似 $9.81\ \mathrm{m/s^2}$）；$r$ 为质点间距或球对称物体中心间距（m）；$G$ 为万有引力常数，约 $6.6743\times10^{-11}\ \mathrm{m^3/(kg\,s^2)}$。
+\textbf{白话：} 地面附近用 $mg$，天体尺度用随距离变化的引力。\textbf{条件与误用：} 第二式适合质点或不重叠球对称物体；不能把物体表面间距当中心间距；地面高度变化很小时才把 $g$ 当常数。
+
+\subsection{M5：库仑摩擦}
+\begin{equation}
+|F_s|\leq\mu_sN,\qquad |F_k|=\mu_kN.
+\end{equation}
+\textbf{符号：} $F_s,F_k$ 为静摩擦、滑动摩擦的带符号分量（N），竖线表示大小；$\mu_s,\mu_k$ 为无量纲静、动摩擦系数；$N$ 为法向接触力（N）。
+\textbf{白话：} 没滑动时摩擦按需要提供，超过上限才滑动。\textbf{条件与误用：} 干接触、经验系数近似；静摩擦不是始终等于最大值；斜面、加速升降和额外压紧时 $N$ 不一定等于重力。方向反对接触面的相对滑动或其趋势。核对来源：\href{https://openstax.org/books/university-physics-volume-1/pages/6-key-equations}{OpenStax：牛顿定律应用关键公式}。
+
+\subsection{M6：功、动能与功率}
+\begin{equation}
+W=\int_C\mathbf F\cdot d\mathbf r,\qquad K=\frac12mv^2,\qquad W_{\rm net}=K_2-K_1,\qquad P=\mathbf F\cdot\mathbf v.
+\end{equation}
+\textbf{符号：} $W,W_{\rm net}$ 为某力、合力做功（J）；$C$ 为运动路径；$\mathbf F$ 为力（N）；$d\mathbf r$ 为微小位移（m）；点号表示点积；$K,K_1,K_2$ 为当前、初态、末态平动动能（J）；$m$ 为质量（kg）；$v$ 为速率（m/s）；$P$ 为瞬时机械功率（W）；$\mathbf v$ 为速度向量（m/s）。
+\textbf{白话：} 只有沿位移方向的力分量做功；功率是做功快慢。\textbf{条件与误用：} 固定质量质点的动能定理；不能把所有功都当成热，也不能把摩擦损耗计入后又重复扣除。
+
+\subsection{M7：机械能与势能}
+\begin{equation}
+E=K+U_g+U_s,\qquad U_g=mgh,\qquad U_s=\frac12kx^2,\qquad E_2-E_1=W_{\rm nc}.
+\end{equation}
+\textbf{符号：} $E,E_1,E_2$ 为机械能及初末值（J）；$K$ 为动能（J）；$U_g,U_s$ 为重力、弹簧势能（J）；$m$ 为质量（kg）；$g$ 为重力加速度（m/s$^2$）；$h$ 为相对零势能面的高度（m）；$k$ 为线性弹簧刚度（N/m）；$x$ 为相对自然长度的伸长或压缩量（m）；$W_{\rm nc}$ 为非保守力做功（J）。
+\textbf{白话：} 能量在速度、高度、弹簧变形之间转换，摩擦会减少机械能。\textbf{条件与误用：} $g$ 近似不变且弹簧线性；不是任何系统的机械能都守恒；零势能面可任选但全程一致。
+
+\subsection{M8：动量、冲量与碰撞}
+\begin{equation}
+\mathbf p=m\mathbf v,\qquad \mathbf p_2-\mathbf p_1=\int_{t_1}^{t_2}\mathbf F_{\rm ext}\,dt.
+\end{equation}
+\textbf{符号：} $\mathbf p,\mathbf p_1,\mathbf p_2$ 为动量及初末值（kg$\cdot$m/s）；$m$ 为质量（kg）；$\mathbf v$ 为速度（m/s）；$\mathbf F_{\rm ext}$ 为系统合外力（N）；$t,t_1,t_2$ 为时间和碰撞开始、结束时刻（s）；积分结果叫冲量（N$\cdot$s）。
+\textbf{白话：} 外力持续作用的累计效果改变动量。\textbf{条件与误用：} 对封闭系统统计所有物体；外冲量可忽略才有总动量守恒。非弹性碰撞可守恒动量但不守恒机械能。
+
+\subsection{M9：圆周运动}
+\begin{equation}
+v=\omega R,\qquad a_n=\frac{v^2}{R}=\omega^2R,\qquad F_n=ma_n.
+\end{equation}
+\textbf{符号：} $v$ 为切向速率（m/s）；$\omega$ 为角速度大小（rad/s）；$R$ 为轨道半径（m）；$a_n$ 为指向圆心的法向加速度（m/s$^2$）；$F_n$ 为合力的向心分量（N）；$m$ 为质量（kg）。
+\textbf{白话：} 转弯需要持续把速度方向往圆心方向拉。\textbf{条件与误用：} 圆周半径固定；向心力是已有力的合效果，不能在受力图中再额外加一股“向心力”。
+
+\subsection{M10：转动惯量与平行轴定理}
+\begin{equation}
+I=\int r_\perp^2\,dm,\qquad I=I_C+md^2,\qquad K_{\rm rot}=\frac12I\omega^2.
+\end{equation}
+\textbf{符号：} $I,I_C$ 为指定轴、平行质心轴的转动惯量（kg$\cdot$m$^2$）；$r_\perp$ 为质量微元到轴的垂直距离（m）；$dm$ 为质量微元（kg）；$m$ 为总质量（kg）；$d$ 为两平行轴间距（m）；$K_{\rm rot}$ 为绕指定固定轴的转动动能（J）；$\omega$ 为角速度（rad/s）。
+\textbf{白话：} 同样质量离轴越远，越难转起来。\textbf{条件与误用：} 刚体、轴必须明确；平行轴定理的一根轴必须经过质心。来源：\href{https://openstax.org/books/university-physics-volume-1/pages/10-key-equations}{OpenStax：固定轴转动公式}。
+
+\subsection{M11：力矩、角动量与固定轴动力学}
+\begin{equation}
+\boldsymbol\tau=\mathbf r\times\mathbf F,\qquad \mathbf L=\mathbf r\times\mathbf p,\qquad \frac{d\mathbf L}{dt}=\boldsymbol\tau_{\rm ext},\qquad I\ddot\theta=\tau.
+\end{equation}
+\textbf{符号：} $\boldsymbol\tau,\boldsymbol\tau_{\rm ext}$ 为力矩及合外力矩（N$\cdot$m）；$\mathbf r$ 为参考点指向受力点或质点的位置向量（m）；$\mathbf F$ 为力（N）；$\times$ 为叉积；$\mathbf L$ 为角动量（kg$\cdot$m$^2$/s）；$\mathbf p$ 为动量（kg$\cdot$m/s）；$t$ 为时间（s）；$I$ 为固定轴转动惯量（kg$\cdot$m$^2$）；$\theta$ 为转角（rad）；双点为时间二阶导数；$\tau$ 为轴向合力矩（N$\cdot$m）。
+\textbf{白话：} 离转轴远且方向合适的力更容易转动物体。\textbf{条件与误用：} 角动量定理采用惯性系固定参考点；最后一式仅是恒定惯量固定轴形式，三维自由转动一般要用惯量张量。
+
+\subsection{M12：弹簧、阻尼与受迫振动}
+\begin{equation}
+m\ddot x+c\dot x+kx=F_0\cos(\Omega t),\qquad \omega_n=\sqrt{k/m},\qquad \zeta=\frac{c}{2\sqrt{km}}.
+\end{equation}
+\textbf{符号：} $m$ 为质量（kg）；$x$ 为相对平衡点位移（m）；$t$ 为时间（s）；单点、双点为速度和加速度；$c$ 为黏性阻尼系数（N$\cdot$s/m）；$k$ 为刚度（N/m）；$F_0$ 为激励力幅值（N）；$\Omega$ 为外力角频率（rad/s）；$\omega_n$ 为无阻尼固有角频率（rad/s）；$\zeta$ 为无量纲阻尼比。
+\textbf{白话：} 惯性、阻尼、弹簧恢复力共同对抗外力。\textbf{条件与误用：} 小位移、线性弹簧、速度正比阻尼；$\Omega$ 接近 $\omega_n$ 时要警惕共振。必须再给初始位移、初始速度才能得到唯一运动曲线。
+
+\subsection{M13：欠阻尼自由振动的解析核验式}
+\begin{equation}
+x(t)=e^{-\zeta\omega_nt}\left(A\cos\omega_dt+B\sin\omega_dt\right),\qquad \omega_d=\omega_n\sqrt{1-\zeta^2}.
+\end{equation}
+\textbf{符号：} $x$ 为位移（m）；$t$ 为时间（s）；$\zeta$ 为阻尼比（无量纲）；$\omega_n,\omega_d$ 为无阻尼、阻尼后的角频率（rad/s）；$A,B$ 为由初始条件决定的长度常数（m）；$e$ 为自然对数底；$\cos,\sin$ 为三角函数。
+\textbf{白话：} 正弦振荡外面套一个逐渐变小的包络。\textbf{条件与误用：} 外力为零且 $0\leq\zeta<1$；临界阻尼和过阻尼不能使用这条振荡表达式。数值 ODE 解可与本式比较验证程序。
+
+\subsection{M14：线弹性与轴向杆变形}
+\begin{equation}
+\sigma=\frac{F}{A},\qquad \varepsilon=\frac{\Delta L}{L},\qquad \sigma=E\varepsilon,\qquad \Delta L=\frac{FL}{EA}.
+\end{equation}
+\textbf{符号：} $\sigma$ 为轴向正应力（Pa）；$F$ 为轴向拉力（N）；$A$ 为横截面积（m$^2$）；$\varepsilon$ 为轴向应变（无量纲）；$L$ 为原长（m）；$\Delta L$ 为伸长量（m）；$E$ 为杨氏模量（Pa）。
+\textbf{白话：} 应力是每单位面积承担的力，应变是相对伸长比例。\textbf{条件与误用：} 均匀直杆、等截面、轴向载荷、小变形、线弹性范围；超出屈服后不能继续用直线关系；MPa 代入 SI 公式时要乘 $10^6$。
+
+\subsection{M15：Euler--Bernoulli 梁与悬臂端挠度}
+核对来源：\href{https://pastewka.github.io/Micromechanics/lecture/chapter04.html}{Lars Pastewka：Micromechanics，Beam kinematics 课程}。
+\begin{equation}
+EI_b\frac{d^4w}{dx^4}=q(x),\qquad I_b=\frac{bh^3}{12},\qquad \delta_{\rm tip}=\frac{FL^3}{3EI_b}.
+\end{equation}
+\textbf{符号：} $E$ 为杨氏模量（Pa）；$I_b$ 为截面对中性轴的面积二次矩（m$^4$，不是质量转动惯量）；$w$ 为与载荷正方向一致的横向挠度（m）；$x$ 为沿梁轴坐标（m）；$q(x)$ 为单位长度横向载荷（N/m）；$b$ 为矩形截面宽度（m）；$h$ 为弯曲方向高度（m）；$\delta_{\rm tip}$ 为悬臂自由端挠度大小（m）；$F$ 为自由端横向集中力（N）；$L$ 为梁长（m）。
+\textbf{白话：} 梁越长越容易弯，高度增加尤其能增强抗弯能力。\textbf{条件与误用：} 细长、等刚度、小挠度梁；端挠度式仅用于一端固支、另一端受集中力；短厚梁或大转角要考虑剪切变形或几何非线性。通用四阶方程还需四个边界条件。
+
+\section{光学：先分清光线模型与波动模型}
+\subsection{O1：折射率与波长}
+\begin{equation}
+n=\frac{c_0}{v_p},\qquad \lambda=\frac{v_p}{f}=\frac{\lambda_0}{n}.
+\end{equation}
+\textbf{符号：} $n$ 为相折射率（无量纲）；$c_0=299792458\ \mathrm{m/s}$ 为真空光速；$v_p$ 为介质中相速度（m/s）；$\lambda,\lambda_0$ 为介质、真空波长（m）；$f$ 为光频率（Hz）。
+\textbf{白话：} 光进入介质后频率通常不变，速度和波长改变。\textbf{条件与误用：} 透明介质中的单色波；色散时 $n$ 随频率变化。不要把群速度和相速度混用，也不要把 nm 直接当 m。
+
+\subsection{O2：反射、折射与全反射}
+\begin{equation}
+\theta_r=\theta_i,\qquad n_1\sin\theta_i=n_2\sin\theta_t,\qquad \theta_c=\arcsin(n_2/n_1)\quad(n_1>n_2).
+\end{equation}
+\textbf{符号：} $\theta_i,\theta_r,\theta_t$ 为相对于界面法线的入射、反射、折射角（rad）；$n_1,n_2$ 为入射、透射介质折射率（无量纲）；$\theta_c$ 为全反射临界角（rad）；$\arcsin$ 为反正弦函数。
+\textbf{白话：} 入射角从垂直界面的法线算；由高折射率介质射向低折射率介质且超过临界角时发生全反射。\textbf{条件与误用：} 平滑界面、几何光学近似；从界面本身量角会把正弦误写成余弦。来源：\href{https://openstax.org/books/university-physics-volume-3/pages/1-6-huygenss-principle}{OpenStax：惠更斯原理与反射折射}。
+
+\subsection{O3：薄透镜成像}
+\begin{equation}
+\frac1f=\frac1u+\frac1v,\qquad M=\frac{h_i}{h_o}=-\frac vu.
+\end{equation}
+\textbf{符号：} $f$ 为焦距（m，会聚透镜正、发散透镜负）；$u$ 为物距（m，实物正）；$v$ 为像距（m，实像正、虚像负）；$M$ 为横向放大率（无量纲）；$h_i,h_o$ 为带方向的像高、物高（m）。
+\textbf{白话：} 物体位置决定像出现在哪里以及是否倒立。\textbf{条件与误用：} 薄透镜、近轴小角度、采用此处符号约定；厚透镜需主平面，边缘光线需像差模型。\textbf{算例：} $f=0.10\ \mathrm m$，$u=0.30\ \mathrm m$，则 $v=0.15\ \mathrm m$、$M=-0.5$，得到倒立缩小实像。
+
+\subsection{O4：光程与相位差}
+\begin{equation}
+\mathcal L=\int_C n(s)\,ds,\qquad \Delta\phi=\frac{2\pi}{\lambda_0}(\mathcal L_2-\mathcal L_1)+\phi_b.
+\end{equation}
+\textbf{符号：} $\mathcal L,\mathcal L_1,\mathcal L_2$ 为光程及两束光的光程（m）；$C$ 为光路；$s$ 为沿光路的弧长坐标（m）；$n(s)$ 为折射率（无量纲）；$ds$ 为微小路程（m）；$\Delta\phi$ 为两束光相位差（rad）；$\lambda_0$ 为真空波长（m）；$\phi_b$ 为反射等引入的附加相位差（rad）；$\pi$ 为圆周率。
+\textbf{白话：} 光程把在不同介质里走路的“难易程度”换成等效长度。\textbf{条件与误用：} 相干单色波、约定同一比较点；薄膜反射可能多一个半波相位，不能只算几何距离。
+
+\subsection{O5：两束光干涉强度}
+\begin{equation}
+I=I_1+I_2+2\sqrt{I_1I_2}\cos\Delta\phi.
+\end{equation}
+\textbf{符号：} $I$ 为合成光强（W/m$^2$）；$I_1,I_2$ 为两束光单独存在时的光强（W/m$^2$）；$\Delta\phi$ 为相位差（rad）。
+\textbf{白话：} 两束光既能增强也能抵消，不能总把强度直接相加。\textbf{条件与误用：} 同频、相位关系稳定、偏振方向一致且空间重叠；非相干光长期平均后干涉项消失。测量噪声与部分相干会降低条纹对比度。
+
+\subsection{O6：双缝条纹位置与间距}
+\begin{equation}
+d\sin\theta_m=m\lambda,\qquad y_m\simeq\frac{m\lambda D}{d},\qquad \Delta y\simeq\frac{\lambda D}{d}.
+\end{equation}
+\textbf{符号：} $d$ 为两缝中心间距（m）；$\theta_m$ 为第 $m$ 级亮纹相对中央方向的角度（rad）；$m$ 为整数级次，可为零或正负整数；$\lambda$ 为传播介质波长（m）；$y_m$ 为亮纹相对中央的屏上位置（m）；$D$ 为缝到屏距离（m）；$\Delta y$ 为相邻亮纹间距（m）；$\simeq$ 为近似相等。
+\textbf{白话：} 波长越大、屏越远，条纹越疏。\textbf{条件与误用：} 相干窄缝，后两式另需远屏和小角度；$m=0$ 是中央亮纹；缝宽较大时还叠加单缝衍射包络。来源：\href{https://openstax.org/books/university-physics-volume-3/pages/3-1-youngs-double-slit-interference}{OpenStax：杨氏双缝干涉}。
+
+\subsection{O7：单缝衍射}
+\begin{equation}
+I(\theta)=I_0\left(\frac{\sin\beta}{\beta}\right)^2,\qquad \beta=\frac{\pi a\sin\theta}{\lambda},\qquad a\sin\theta_m=m\lambda\quad(m=\pm1,\pm2,\ldots).
+\end{equation}
+\textbf{符号：} $I(\theta)$ 为方向 $\theta$ 上光强（W/m$^2$）；$I_0$ 为中央最大光强（W/m$^2$）；$\theta,\theta_m$ 为观察角、暗纹角（rad）；$\beta$ 为无量纲相位参数；$a$ 为缝宽（m）；$\lambda$ 为介质波长（m）；$m$ 为非零整数暗纹级次。
+\textbf{白话：} 缝越窄，中央亮斑越宽。\textbf{条件与误用：} 均匀照明、远场单缝；中央 $\beta=0$ 处应取极限 1，程序直接除零会出错。暗纹公式不能把 $m=0$ 算成暗纹。来源：\href{https://openstax.org/books/university-physics-volume-3/pages/4-3-double-slit-diffraction}{OpenStax：衍射包络与双缝衍射}。
+
+\subsection{O8：圆孔分辨极限}
+\begin{equation}
+\theta_{\min}\simeq1.22\frac{\lambda}{D_a}.
+\end{equation}
+\textbf{符号：} $\theta_{\min}$ 为 Rayleigh 判据的最小可分辨角（rad）；$\lambda$ 为介质波长（m）；$D_a$ 为圆形孔径直径（m）；1.22 为圆孔衍射第一零点相关系数。
+\textbf{白话：} 更大的镜头口径原则上能分清更近的两个点。\textbf{条件与误用：} 理想圆孔、衍射受限成像、点源；像差、大气扰动、像素采样可能让实际分辨率更差；这不是所有图像算法的绝对分辨率上限。
+
+\subsection{O9：Malus 偏振定律}
+\begin{equation}
+I=I_p\cos^2\theta,\qquad I_p=\frac12I_u\quad\text{（自然光通过理想起偏器）}.
+\end{equation}
+\textbf{符号：} $I$ 为检偏器后强度（W/m$^2$）；$I_p$ 为入射检偏器的线偏振强度（W/m$^2$）；$\theta$ 为入射偏振方向与检偏器透光轴夹角（rad）；$I_u$ 为起偏器前非偏振自然光强（W/m$^2$）。
+\textbf{白话：} 检偏器只放过沿自身方向的光场分量。\textbf{条件与误用：} 理想偏振片；$\cos^2$ 用在线偏振光上，不是把自然光直接带入并任选一个角度。真实偏振片还存在透过率损失。
+
+\subsection{O10：Beer--Lambert 衰减与吸光度}
+核对来源：\href{https://goldbook.iupac.org/terms/view/B00626}{IUPAC Gold Book：Beer--Lambert 定律及单位约定}。
+\begin{equation}
+I=I_0e^{-\alpha\ell},\qquad A_{10}=\log_{10}\frac{I_0}{I}=\varepsilon c\ell.
+\end{equation}
+\textbf{符号：} $I,I_0$ 为透射、入射光强（W/m$^2$）；$\alpha$ 为自然指数衰减系数（m$^{-1}$）；$\ell$ 为光程长度（m）；$A_{10}$ 为十进制吸光度（无量纲）；$\varepsilon$ 为与十进制对数匹配的摩尔吸光系数（m$^2$/mol，若浓度用 mol/m$^3$）；$c$ 为浓度（mol/m$^3$）；$e$ 为自然对数底。
+\textbf{白话：} 每走相同距离损失相同比例，形成指数衰减。\textbf{条件与误用：} 单色光、均匀介质、线性吸收；强散射、高浓度、化学平衡变化会偏离。仪器常用 L/(mol$\cdot$cm) 和 mol/L、cm，不能与 SI 数值直接混配；$\alpha$ 与 $\varepsilon c$ 相差 $\ln10$ 因子。
+
+\section{热学：始终从能量收支开始}
+\subsection{H1：热容量与显热}
+\begin{equation}
+Q=mc\,(T_2-T_1),\qquad C=mc.
+\end{equation}
+\textbf{符号：} $Q$ 为物体吸收的显热（J）；$m$ 为质量（kg）；$c$ 为相应过程的比热容（J/(kg$\cdot$K)）；$T_1,T_2$ 为初末温度（K 或同一摄氏温标）；$C$ 为总热容量（J/K）。
+\textbf{白话：} 质量乘以每千克升温一度所需能量，再乘温差。\textbf{条件与误用：} 无相变、$c$ 近似常数；气体要区分定压比热和定容比热；水蒸发时不能只算升温。\textbf{算例：} 假设水的 $c=4200\ \mathrm{J/(kg\,K)}$，$m=1\ \mathrm{kg}$，升温 $10\ \mathrm K$，需 $42\ \mathrm{kJ}$。来源：\href{https://openstax.org/books/university-physics-volume-2/pages/1-4-heat-transfer-specific-heat-and-calorimetry}{OpenStax：比热与量热}。
+
+\subsection{H2：热力学第一定律}
+\begin{equation}
+\Delta U=Q-W,\qquad W=\int_{V_1}^{V_2}p\,dV\quad\text{（准静态体积功）}.
+\end{equation}
+\textbf{符号：} $\Delta U$ 为系统内能增加量（J）；$Q$ 为外界传入系统的热量（J）；$W$ 为系统对外做功（J）；$p$ 为准静态过程中的边界压力（Pa）；$V,V_1,V_2$ 为体积及初末值（m$^3$）；$dV$ 为微小体积变化（m$^3$）。
+\textbf{白话：} 流入的热，扣掉对外做的功，剩下的存成内能。\textbf{条件与误用：} 此写法用于封闭系统，忽略宏观动能、势能变化；开放管道还要计入流入流出焓与机械能；有些教材把对系统做功取正，使用时先统一符号。
+
+\subsection{H3：理想气体状态方程}
+\begin{equation}
+pV=n_mR_uT,\qquad p=\rho R_sT,\qquad R_s=R_u/M_m.
+\end{equation}
+\textbf{符号：} $p$ 为绝对压力（Pa）；$V$ 为体积（m$^3$）；$n_m$ 为物质的量（mol）；$R_u\approx8.31446\ \mathrm{J/(mol\,K)}$ 为通用气体常数；$T$ 为绝对温度（K）；$\rho$ 为密度（kg/m$^3$）；$R_s$ 为比气体常数（J/(kg$\cdot$K)）；$M_m$ 为摩尔质量（kg/mol）。
+\textbf{白话：} 同种气体压得更密或加热，压力通常升高。\textbf{条件与误用：} 稀薄、远离凝结的气体近似；不能用表压或摄氏温度；高压或接近临界点时要用真实气体状态方程。
+
+\subsection{H4：Fourier 导热定律}
+\begin{equation}
+\mathbf q''=-k\nabla T,\qquad \dot Q=\frac{kA}{L}(T_h-T_c)\quad\text{（稳态平板）}.
+\end{equation}
+\textbf{符号：} $\mathbf q''$ 为热流密度向量（W/m$^2$）；$k$ 为导热系数（W/(m$\cdot$K)）；$\nabla T$ 为温度空间梯度（K/m）；$\dot Q$ 为从热侧到冷侧的传热率（W）；$A$ 为垂直热流的面积（m$^2$）；$L$ 为厚度（m）；$T_h,T_c$ 为两面温度（K 或同一摄氏温标）。
+\textbf{白话：} 热往温度低的地方走，负号保证方向正确。\textbf{条件与误用：} 第一式为各向同性介质；第二式另需一维、稳态、无内热源、常导热系数。不要把热流密度与总功率混淆。来源：\href{https://openstax.org/books/university-physics-volume-2/pages/1-6-mechanisms-of-heat-transfer}{OpenStax：传热机制}。
+
+\subsection{H5：Newton 对流换热}
+\begin{equation}
+\dot Q=hA(T_s-T_\infty).
+\end{equation}
+\textbf{符号：} $\dot Q$ 为表面传向流体的热功率（W）；$h$ 为对流换热系数（W/(m$^2\cdot$K)）；$A$ 为换热面积（m$^2$）；$T_s$ 为表面温度（K）；$T_\infty$ 为远离表面的流体主体温度（K）。
+\textbf{白话：} 表面比空气热得越多、面积越大，通常散热越快。\textbf{条件与误用：} $h$ 是由流动、几何、物性决定的经验或计算量；不是材料固有常数。物体内部温度不均匀时，不能把中心温度直接当表面温度。
+
+\subsection{H6：Stefan--Boltzmann 热辐射}
+\begin{equation}
+\dot Q_{\rm rad}=\epsilon\sigma_{\rm SB}A(T_s^4-T_{\rm sur}^4).
+\end{equation}
+\textbf{符号：} $\dot Q_{\rm rad}$ 为净向外辐射功率（W）；$\epsilon$ 为表面有效发射率（无量纲，0 到 1）；$\sigma_{\rm SB}\approx5.670374419\times10^{-8}\ \mathrm{W/(m^2\,K^4)}$ 为 Stefan--Boltzmann 常数；$A$ 为表面积（m$^2$）；$T_s,T_{\rm sur}$ 为表面和大包围环境绝对温度（K）。
+\textbf{白话：} 高温物体辐射增长非常快，因为温度被四次方。\textbf{条件与误用：} 小灰体位于温度均匀的大包围环境，且可用该有效发射率近似；多表面腔体要考虑视角因子和反射；绝不能把摄氏温度四次方。
+
+\subsection{H7：平板热阻、对流热阻与串联}
+\begin{equation}
+R_{\rm cond}=\frac{L}{kA},\quad R_{\rm conv}=\frac1{hA},\quad R_{\rm total}=\sum_jR_j,\quad \dot Q=\frac{T_h-T_c}{R_{\rm total}}.
+\end{equation}
+\textbf{符号：} $R_{\rm cond},R_{\rm conv},R_j,R_{\rm total}$ 为导热、对流、第 $j$ 段及总热阻（K/W）；$L$ 为层厚（m）；$k$ 为导热系数（W/(m$\cdot$K)）；$A$ 为对应面积（m$^2$）；$h$ 为换热系数（W/(m$^2\cdot$K)）；$j$ 为层或边界编号；$T_h,T_c$ 为热冷端温度（K）；$\dot Q$ 为热功率（W）。
+\textbf{白话：} 把传热路径像电路一样一段段相加。\textbf{条件与误用：} 稳态、同一热流串联；并行传热路径应加热导而不是热阻；接触不良要另加接触热阻。
+
+\subsection{H8：圆筒壁导热热阻}
+\begin{equation}
+R_{\rm cyl}=\frac{\ln(r_o/r_i)}{2\pi kL},\qquad \dot Q=\frac{T_i-T_o}{R_{\rm cyl}}.
+\end{equation}
+\textbf{符号：} $R_{\rm cyl}$ 为圆筒壁热阻（K/W）；$r_i,r_o$ 为内外半径（m）；$k$ 为导热系数（W/(m$\cdot$K)）；$L$ 为轴向长度（m）；$T_i,T_o$ 为内外壁温度（K）；$\dot Q$ 为向外传热功率（W）；$\ln$ 为自然对数。
+\textbf{白话：} 圆筒越向外面积越大，所以不能随便拿内表面积套平板式。\textbf{条件与误用：} 轴向足够长、一维径向稳态、无热源、常物性；$L$ 是管长，不是壁厚。
+
+\subsection{H9：集总热容冷却与时间常数}
+\begin{equation}
+mc\frac{dT}{dt}=-hA(T-T_\infty),\quad T(t)=T_\infty+(T_0-T_\infty)e^{-t/\tau},\quad \tau=\frac{mc}{hA}.
+\end{equation}
+\textbf{符号：} $m$ 为物体质量（kg）；$c$ 为比热容（J/(kg$\cdot$K)）；$T,T_0$ 为均匀物体温度及初值（K）；$t$ 为时间（s）；$h$ 为换热系数（W/(m$^2\cdot$K)）；$A$ 为外表面积（m$^2$）；$T_\infty$ 为恒定环境温度（K）；$\tau$ 为时间常数（s）；$e$ 为自然对数底。
+\textbf{白话：} 经过一个时间常数，物体与环境的温差剩下原来的约 36.8\%。\textbf{条件与误用：} 内部近似等温、无内热源、常物性、仅上述对流机制；加入明显辐射后不能仍直接用本指数解。
+
+\subsection{H10：Biot 数与 Fourier 数}
+\begin{equation}
+\mathrm{Bi}=\frac{hL_c}{k_s},\qquad L_c=\frac VA,\qquad \mathrm{Fo}=\frac{\alpha t}{L_d^2},\qquad \alpha=\frac{k_s}{\rho c}.
+\end{equation}
+\textbf{符号：} $\mathrm{Bi}$ 为内外传热阻力比较的 Biot 数（无量纲）；$h$ 为表面对流系数（W/(m$^2\cdot$K)）；$L_c$ 为集总判据特征长度（m）；$V$ 为物体体积（m$^3$）；$A$ 为参与换热的面积（m$^2$）；$k_s$ 为固体导热系数（W/(m$\cdot$K)）；$\mathrm{Fo}$ 为热扩散时间尺度比（无量纲）；$\alpha$ 为热扩散率（m$^2$/s）；$t$ 为时间（s）；$L_d$ 为所研究扩散距离（m）；$\rho$ 为密度（kg/m$^3$）；$c$ 为比热容（J/(kg$\cdot$K)）。
+\textbf{白话：} Bi 小表示内部传热快，适合把整个物体当一个温度；Fo 衡量热扩散走了多远。\textbf{条件与误用：} 常用 $\mathrm{Bi}<0.1$ 是工程近似筛选而非普适严格误差保证；不同解析解的特征长度定义必须核对，不能把板厚与半厚混用。
+
+\subsection{H11：含热源的导热方程}
+\begin{equation}
+\rho c\frac{\partial T}{\partial t}=\nabla\cdot(k\nabla T)+q_v.
+\end{equation}
+\textbf{符号：} $\rho$ 为密度（kg/m$^3$）；$c$ 为比热容（J/(kg$\cdot$K)）；$T$ 为温度场（K）；$t$ 为时间（s）；$k$ 为导热系数（W/(m$\cdot$K)）；$q_v$ 为单位体积产热率（W/m$^3$）；$\partial$ 为偏导数；$\nabla T$ 为梯度（K/m）；$\nabla\cdot$ 为散度，计算热流在局部的收支。
+\textbf{白话：} 一小块材料升温，是因为流入的热比流出的多，或它自己在发热。\textbf{条件与误用：} 静止介质、适当定义热容；流动流体还要加入对流输运项；变 $k$ 时不能把 $k$ 直接移出散度。初始条件与边界条件缺一不可。
+
+\subsection{H12：相变潜热与界面 Stefan 条件}
+拓展来源：\href{https://cea-lbm-saclay.github.io/LBM_Saclay_Documentation/src_doc/05_COURSES/Thermo-PhaseTransition/Phase_Change_Models.html}{CEA Saclay：固液相变模型课程}；本节采用固体在左的坐标约定，比较文献时须先统一相区方向。
+\begin{equation}
+Q_{\rm lat}=mL_f,\qquad \rho L_f\frac{ds}{dt}=k_s\left.\frac{\partial T_s}{\partial x}\right|_{s^-}-k_l\left.\frac{\partial T_l}{\partial x}\right|_{s^+}.
+\end{equation}
+\textbf{符号：} $Q_{\rm lat}$ 为相变热量（J）；$m$ 为发生相变的质量（kg）；$L_f$ 为单位质量熔化潜热（J/kg）；$\rho$ 为共同近似密度（kg/m$^3$）；$x$ 为向右坐标（m）；$s(t)$ 为界面位置（m），固体在左、液体在右，正 $ds/dt$ 表示凝固推进；$t$ 为时间（s）；$k_s,k_l$ 为固、液导热系数（W/(m$\cdot$K)）；$T_s,T_l$ 为固、液温度场（K）；$s^-,s^+$ 表示从固、液侧趋近界面。
+\textbf{白话：} 凝固释放的潜热等于界面两边热流的净差。\textbf{条件与误用：} 平面尖锐界面、无界面储热、等密度近似，并在界面给出熔点条件；方向定义变化会改变符号。不要将辐射常数 Stefan--Boltzmann 定律与相变 Stefan 条件混为一谈。
+
+\section{流体：先看守恒，再看黏性与尺度}
+\subsection{F1：密度、压力与静水压力}
+\begin{equation}
+\rho=\frac mV,\qquad p=\frac{F_n}{A},\qquad p(z)=p_0+\rho gz.
+\end{equation}
+\textbf{符号：} $\rho$ 为密度（kg/m$^3$）；$m$ 为质量（kg）；$V$ 为体积（m$^3$）；$p$ 为均匀法向压力（Pa）；$F_n$ 为法向压力合力（N）；$A$ 为受压面积（m$^2$）；$p_0$ 为液面压力（Pa）；$g$ 为重力加速度（m/s$^2$）；$z$ 为从液面向下量的深度（m）。
+\textbf{白话：} 同一静止液体越深压力越大。\textbf{条件与误用：} 静止、密度近似不变；静水式这里向下为正，不要与向上坐标公式混用；表压与绝对压力需标明。
+
+\subsection{F2：浮力}
+\begin{equation}
+F_b=\rho_f gV_{\rm disp}.
+\end{equation}
+\textbf{符号：} $F_b$ 为向上浮力大小（N）；$\rho_f$ 为周围流体密度（kg/m$^3$）；$g$ 为重力加速度（m/s$^2$）；$V_{\rm disp}$ 为排开流体体积（m$^3$），即浸没部分体积。
+\textbf{白话：} 浮力等于被挤开的那部分流体的重量。\textbf{条件与误用：} 静水、均匀密度近似；漂浮时不能用物体全部体积；水底完全密封接触等特殊边界不能直接照套。
+
+\subsection{F3：流量与连续性方程}
+\begin{equation}
+Q_v=\int_A\mathbf u\cdot\mathbf n\,dA,\quad \dot m=\rho Q_v,\quad \frac{\partial\rho}{\partial t}+\nabla\cdot(\rho\mathbf u)=0,\quad A_1\bar u_1=A_2\bar u_2.
+\end{equation}
+\textbf{符号：} $Q_v$ 为体积流量（m$^3$/s）；$A$ 为截面，$dA$ 为微小面积（m$^2$）；$\mathbf u$ 为速度场（m/s）；$\mathbf n$ 为截面单位法向量（无量纲）；$\dot m$ 为质量流量（kg/s）；$\rho$ 为密度（kg/m$^3$）；$t$ 为时间（s）；$\nabla\cdot$ 为散度；$A_1,A_2$ 为两截面积（m$^2$）；$\bar u_1,\bar u_2$ 为两截面的法向平均流速（m/s）。
+\textbf{白话：} 不漏水、不储水的管道，进来多少就出去多少；变窄处平均流速会增大。\textbf{条件与误用：} $\dot m=\rho Q_v$ 需截面密度均匀；最后一式需稳态不可压且无支流；中心最大速度不能代替平均速度。
+
+\subsection{F4：不可压 Newton 流体的 Navier--Stokes 方程}
+\begin{equation}
+\rho\left(\frac{\partial\mathbf u}{\partial t}+(\mathbf u\cdot\nabla)\mathbf u\right)=-\nabla p+\mu\nabla^2\mathbf u+\rho\mathbf g,\qquad \nabla\cdot\mathbf u=0.
+\end{equation}
+\textbf{符号：} $\rho$ 为恒定密度（kg/m$^3$）；$\mathbf u$ 为速度（m/s）；$t$ 为时间（s）；$p$ 为压力（Pa）；$\mu$ 为恒定动力黏度（Pa$\cdot$s）；$\mathbf g$ 为重力加速度向量（m/s$^2$）；$\nabla$ 为梯度算子；$\nabla^2$ 为对各空间方向二阶导数求和；$(\mathbf u\cdot\nabla)\mathbf u$ 为流体运动到不同位置导致的加速度（m/s$^2$）。
+\textbf{白话：} 流体版牛顿第二定律：惯性等于压力作用、黏性作用与重力。\textbf{条件与误用：} 连续介质、不可压、Newton 流体、常黏度；可压流和非 Newton 流体要改方程。必须给初边值条件；直接离散并不自动保证压力速度耦合正确。来源：\href{https://www.grc.nasa.gov/www/k-12/airplane/nseqs.html}{NASA Glenn：Navier--Stokes 方程概述}。
+
+\subsection{F5：Bernoulli 能量式}
+\begin{equation}
+\frac p{\rho g}+\frac{u^2}{2g}+z=H.
+\end{equation}
+\textbf{符号：} $p$ 为压力（Pa）；$\rho$ 为流体密度（kg/m$^3$）；$g$ 为重力加速度（m/s$^2$）；$u$ 为局部速率（m/s）；$z$ 为向上的高程（m）；$H$ 为沿同一流线的总水头常数（m）。
+\textbf{白话：} 压力、高度和速度可以互相交换能量。\textbf{条件与误用：} 稳态、不可压、忽略黏性损耗、无泵或涡轮做功，通常只沿同一流线成立；存在明显管摩擦时不能硬设两点 $H$ 相等。三个加项的单位都是长度。
+
+\subsection{F6：有泵和损失的管道能量式}
+\begin{equation}
+\frac{p_1}{\rho g}+\alpha_1\frac{\bar u_1^2}{2g}+z_1+h_p=\frac{p_2}{\rho g}+\alpha_2\frac{\bar u_2^2}{2g}+z_2+h_t+h_L.
+\end{equation}
+\textbf{符号：} $p_1,p_2$ 为两截面压力（Pa）；$\rho$ 为恒定密度（kg/m$^3$）；$g$ 为重力加速度（m/s$^2$）；$\bar u_1,\bar u_2$ 为截面平均速度（m/s）；$\alpha_1,\alpha_2$ 为动能修正系数（无量纲）；$z_1,z_2$ 为高程（m）；$h_p$ 为泵加入水头（m）；$h_t$ 为涡轮取出水头（m）；$h_L$ 为不可逆损失水头（m）。
+\textbf{白话：} 泵加能量，涡轮和阻力拿走能量。\textbf{条件与误用：} 稳态不可压；均匀剖面修正系数为 1，充分发展圆管层流为 2；不能把泵输入电功率全部当流体有效功率。
+
+\subsection{F7：Darcy--Weisbach 沿程损失与局部损失}
+\begin{equation}
+\Delta p_f=f_D\frac LD\frac{\rho\bar u^2}{2},\qquad \Delta p_{\rm local}=K\frac{\rho\bar u^2}{2},\qquad h_L=\frac{\Delta p_{\rm loss}}{\rho g}.
+\end{equation}
+\textbf{符号：} $\Delta p_f,\Delta p_{\rm local},\Delta p_{\rm loss}$ 为沿程、局部、总损失对应压差（Pa）；$f_D$ 为 Darcy 摩擦因子（无量纲）；$L$ 为管长（m）；$D$ 为圆管内径（m）；$\rho$ 为密度（kg/m$^3$）；$\bar u$ 为平均速度（m/s）；$K$ 为按指定参考速度定义的局部阻力系数（无量纲）；$h_L$ 为总损失水头（m）；$g$ 为重力加速度（m/s$^2$）。
+\textbf{白话：} 长管损失按长度累积，弯头阀门另外计。\textbf{条件与误用：} 管道经验模型；Darcy 因子是 Fanning 因子的 4 倍，必须查清文献定义。变径附件的 $K$ 必须配套其规定的截面速度。
+
+\subsection{F8：圆管 Poiseuille 层流}
+\begin{equation}
+Q_v=\frac{\pi R^4\Delta p}{8\mu L},\qquad \bar u=\frac{Q_v}{\pi R^2},\qquad f_D=\frac{64}{\mathrm{Re}}.
+\end{equation}
+\textbf{符号：} $Q_v$ 为体积流量（m$^3$/s）；$R$ 为管内半径（m）；$\Delta p$ 为水平直管两端压差（Pa）；$\mu$ 为动力黏度（Pa$\cdot$s）；$L$ 为管长（m）；$\bar u$ 为平均速度（m/s）；$f_D$ 为 Darcy 摩擦因子（无量纲）；$\mathrm{Re}$ 为以管径和平均速度定义的 Reynolds 数（无量纲）。
+\textbf{白话：} 同样压差下，半径翻倍会让该模型的流量变为 16 倍。\textbf{条件与误用：} 长直圆管、稳态、不可压 Newton 流体、充分发展层流、无滑移；入口区或湍流不能套；半径与直径弄错会引入 16 倍误差。来源：\href{https://openstax.org/books/university-physics-volume-1/pages/14-7-viscosity-and-turbulence}{OpenStax：黏性、Poiseuille 定律与湍流}。
+
+\subsection{F9：Reynolds 数与运动黏度}
+\begin{equation}
+\mathrm{Re}=\frac{\rho UL}{\mu}=\frac{UL}{\nu},\qquad \nu=\frac\mu\rho.
+\end{equation}
+\textbf{符号：} $\mathrm{Re}$ 为惯性与黏性作用之比的 Reynolds 数（无量纲）；$\rho$ 为密度（kg/m$^3$）；$U$ 为特征速度（m/s）；$L$ 为特征长度（m）；$\mu$ 为动力黏度（Pa$\cdot$s）；$\nu$ 为运动黏度（m$^2$/s）。
+\textbf{白话：} 数值越小，黏性越能把流动“抹平”。\textbf{条件与误用：} $U,L$ 按问题定义；圆管常取平均速度与直径，约 2300 以下通常为层流筛选、2300--4000 为过渡区，但扰动和入口会改变转捩。不能把这组管流阈值当平板、球体的通用阈值。来源：\href{https://www.grc.nasa.gov/WWW/k-12/airplane/reynolds.html}{NASA Glenn：Reynolds 数}。
+
+\subsection{F10：Mach 数与声速}
+\begin{equation}
+\mathrm{Ma}=\frac Ua,\qquad a=\sqrt{\gamma R_sT}.
+\end{equation}
+\textbf{符号：} $\mathrm{Ma}$ 为 Mach 数（无量纲）；$U$ 为流速（m/s）；$a$ 为当地声速（m/s）；$\gamma$ 为定压与定容比热之比（无量纲）；$R_s$ 为该气体比气体常数（J/(kg$\cdot$K)）；$T$ 为绝对温度（K）。
+\textbf{白话：} Mach 数比较流动快慢与压力扰动传播快慢。\textbf{条件与误用：} 声速式用于理想气体的局部等熵小扰动；$\mathrm{Ma}<0.3$ 常作为弱压缩性初筛，但强加热等仍可能造成明显密度变化。来源：\href{https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/mass-flow-rate-equations/}{NASA Glenn：质量流率、Mach 数与声速}。
+
+\subsection{F11：二次阻力与低 Reynolds 球体阻力}
+\begin{equation}
+F_D=\frac12C_D\rho A_pU^2,\qquad F_{\rm Stokes}=6\pi\mu RU.
+\end{equation}
+\textbf{符号：} $F_D,F_{\rm Stokes}$ 为阻力大小（N）；$C_D$ 为与形状和 Reynolds 数等有关的阻力系数（无量纲）；$\rho$ 为流体密度（kg/m$^3$）；$A_p$ 为与系数定义匹配的参考投影面积（m$^2$）；$U$ 为物体相对流体速率（m/s）；$\mu$ 为动力黏度（Pa$\cdot$s）；$R$ 为球半径（m）。
+\textbf{白话：} 阻力方向反对相对运动；非常慢的小球由黏性主导，阻力与速度一次方相关。\textbf{条件与误用：} Stokes 式需孤立刚性球、无滑移、近似无限流体、$\mathrm{Re}\ll1$；二次式的 $C_D$ 一般并非恒定。注意减去流体背景速度后才是相对速度。
+
+\subsection{F12：Nusselt、Prandtl 与 P\'eclet 数}
+核对来源：\href{https://bpb-us-e1.wpmucdn.com/sites.mit.edu/dist/6/1810/files/2024/04/AHTTv600.pdf}{Lienhard 与 Lienhard：A Heat Transfer Textbook，第六版，符号表及对流换热章节}。
+\begin{equation}
+\mathrm{Nu}=\frac{hL}{k_f},\qquad \mathrm{Pr}=\frac{\mu c_p}{k_f}=\frac\nu\alpha,\qquad \mathrm{Pe}=\mathrm{Re}\,\mathrm{Pr}=\frac{UL}{\alpha}.
+\end{equation}
+\textbf{符号：} $\mathrm{Nu}$ 为对流与跨特征长度导热强弱之比（无量纲）；$h$ 为换热系数（W/(m$^2\cdot$K)）；$L$ 为特征长度（m）；$k_f$ 为流体导热系数（W/(m$\cdot$K)）；$\mathrm{Pr}$ 为动量扩散与热扩散之比（无量纲）；$\mu$ 为动力黏度（Pa$\cdot$s）；$c_p$ 为定压比热（J/(kg$\cdot$K)）；$\nu$ 为运动黏度（m$^2$/s）；$\alpha$ 为流体热扩散率（m$^2$/s）；$\mathrm{Pe}$ 为输运与热扩散之比（无量纲）；$\mathrm{Re}$ 为采用同一速度长度定义的 Reynolds 数；$U$ 为特征速度（m/s）。
+\textbf{白话：} 无量纲数把不同尺寸的实验放在同一尺度下比较；知道 Nu 就能反求 $h$。\textbf{条件与误用：} 查换热关联式时必须匹配几何、流态、边界条件及物性评估温度；不要只因名字相同就互换特征长度。
+
+\subsection{F13：流动携热与泵有效功率}
+\begin{equation}
+\dot Q=\dot m c_p(T_{\rm out}-T_{\rm in}),\qquad P_{\rm hyd}=\Delta p\,Q_v,\qquad P_{\rm in}=\frac{P_{\rm hyd}}\eta.
+\end{equation}
+\textbf{符号：} $\dot Q$ 为流体吸收热功率（W）；$\dot m$ 为质量流量（kg/s）；$c_p$ 为定压比热（J/(kg$\cdot$K)）；$T_{\rm out},T_{\rm in}$ 为出口、入口混合平均温度（K）；$P_{\rm hyd}$ 为液压有效功率（W）；$\Delta p$ 为泵提供的等效总压升（Pa）；$Q_v$ 为体积流量（m$^3$/s）；$P_{\rm in}$ 为输入功率（W）；$\eta$ 为输入到液压功率的总效率（无量纲，0 到 1）。
+\textbf{白话：} 流量越大，同样升温需要的热越多；泵输入还要补上效率损失。\textbf{条件与误用：} 热量式需稳态、无相变、常比热、机械能变化可忽略；功率式用于不可压泵流，若只量静压需补偿速度与高程差。
+
+\section{怎样把物理工具箱接到比赛模型}
+\begin{enumerate}
+\item 写研究对象：例如“长度为某值的加热板”“阀门之间的一段管道”，避免整个工程系统一次全建。
+\item 写假设并说明证据：是否一维、是否稳态、是否小变形、是否可忽略压缩性。数量级分析比“为了简化”更有说服力。
+\item 列参数表：名称、符号、单位、数值、来源、是否待估。材料参数随温度变化时应给适用范围。
+\item 先写守恒式，再代入本构式。守恒式管收支，本构式说明力与变形、热流与温差、黏性与速度梯度如何联系。
+\item 设置初始和边界条件，选数值算法，检查量纲、守恒误差、极限情况和网格收敛。
+\item 用实验或题目数据校准，再用未参与拟合的数据验证。不能以曲线看起来平滑作为模型正确的证据。
+\end{enumerate}

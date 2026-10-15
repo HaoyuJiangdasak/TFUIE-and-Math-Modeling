@@ -1,0 +1,256 @@
+\chapter{概率、统计与不确定性：结果到底有多可信}
+本章把“一个数算出来了”升级成“这个数在什么假设下可信”。大写 $X$ 通常表示尚未观测的随机变量，小写 $x$ 表示已经看到的具体数值；帽子 $\hat{\theta}$ 表示由数据估计的参数；横线表示平均。概率无单位，概率密度的单位则是随机变量单位的倒数。以下公式中的求和符号，意思是把指定范围的项目逐个加起来。
+
+\section{概率的基本语言}
+\subsection{S01：条件概率与乘法公式}
+\begin{equation}
+ P(A\mid B)=\frac{P(A\cap B)}{P(B)},\qquad P(A\cap B)=P(A\mid B)P(B).
+\end{equation}
+\textbf{人话：}已经知道 $B$ 发生后，只在 $B$ 的范围里重新计算 $A$ 发生的比例。例如只看高温工况下设备失效的比例。
+\textbf{符号：}$A,B$ 是事件；$P$ 表示概率；竖线表示“已知”；$\cap$ 表示同时发生。所有概率无单位。
+\textbf{条件与误用：}要求 $P(B)>0$。通常 $P(A\mid B)$ 不等于 $P(B\mid A)$；“失效设备常常高温”不等于“高温设备常常失效”。独立时条件概率才等于原来的 $P(A)$。基础阅读：\url{https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/}。
+
+\subsection{S02：全概率与贝叶斯公式}
+\begin{equation}
+ P(B)=\sum_{j=1}^{m}P(B\mid A_j)P(A_j),\qquad
+ P(A_i\mid B)=\frac{P(B\mid A_i)P(A_i)}{\sum_{j=1}^{m}P(B\mid A_j)P(A_j)}.
+\end{equation}
+\textbf{人话：}先把总体分成互不重叠的来源，再按各来源占比加权。贝叶斯公式用新证据更新来源的可能性。
+\textbf{符号：}$A_1,\ldots,A_m$ 是覆盖全部可能情况且互斥的 $m$ 类事件；$i$ 是想追查的类别；$j$ 是求和用的临时下标；$B$ 是已看到的证据；$P(A_i)$ 是先验，$P(A_i\mid B)$ 是后验，$P(B\mid A_i)$ 是似然意义上的证据概率。概率均无单位。
+\textbf{条件与误用：}分母必须大于零；各类必须没有重复、没有遗漏。不能把先验随便设为相等却不说明依据；故障率很低时，即使报警器准确，报警后也未必很可能真故障。基础阅读：\url{https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/}。
+
+\subsection{S03：期望——按可能性加权的平均}
+\begin{equation}
+ \mathrm{E}[X]=\sum_k x_kp_k\quad\text{或}\quad
+ \mathrm{E}[X]=\int_{-\infty}^{\infty}x f_X(x)\,\mathrm{d}x.
+\end{equation}
+\textbf{人话：}结果越常出现，在平均中占的比重越大。它描述长期平均，不保证单次结果接近这个数。
+\textbf{符号：}$x_k$ 是离散取值，$p_k=P(X=x_k)$；$k$ 枚举全部取值；$f_X$ 是连续变量的概率密度；积分是连续情形的加权求和；$\mathrm{d}x$ 是积分变量的微小区间。$X$ 若以米计，期望也以米计，密度以 $\mathrm{m}^{-1}$ 计。
+\textbf{条件与误用：}通常要求绝对可积，即绝对值的平均有限。不要把连续密度 $f_X(x)$ 当作点概率，连续变量单点概率通常为零。基础阅读：\url{https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/}。
+
+\subsection{S04：方差与标准差——波动有多大}
+\begin{equation}
+ \operatorname{Var}(X)=\mathrm{E}[(X-\mu)^2]=\mathrm{E}[X^2]-\mu^2,
+ \qquad \sigma=\sqrt{\operatorname{Var}(X)},\quad \mu=\mathrm{E}[X].
+\end{equation}
+\textbf{人话：}先计算离平均值有多远，再平方平均，避免正负抵消；开平方后回到原单位。
+\textbf{符号：}$\mu$ 是总体均值；$\sigma$ 是总体标准差；$\mathrm{E}$ 是期望。若 $X$ 单位为 K，方差为 $\mathrm{K}^2$，标准差为 K。
+\textbf{条件与误用：}需要二阶矩有限。均值相同的设备稳定性仍可能完全不同；标准差描述单个观测的波动，均值的标准误描述估计平均值的不确定性，二者不同。基础阅读：\url{https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/}。
+
+\subsection{S05：协方差与相关系数}
+\begin{equation}
+ \operatorname{Cov}(X,Y)=\mathrm{E}[(X-\mu_X)(Y-\mu_Y)],\qquad
+ \rho_{XY}=\frac{\operatorname{Cov}(X,Y)}{\sigma_X\sigma_Y}.
+\end{equation}
+\textbf{人话：}两个量是否经常一起偏高或一起偏低？相关系数把这种线性同步变化压到 $[-1,1]$ 范围。
+\textbf{符号：}$X,Y$ 是两个变量；$\mu_X,\mu_Y$ 是各自均值；$\sigma_X,\sigma_Y$ 是各自标准差；下标 $XY$ 表示这两个变量之间的关系。协方差单位为两个变量单位的乘积，$\rho_{XY}$ 无单位。
+\textbf{条件与误用：}二阶矩有限且两个标准差非零。零相关只排除线性关系，不能一般推出独立；相关不证明因果。温度和能耗共同上升，可能由负荷这个第三变量驱动。基础阅读：\url{https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/}。
+
+\section{先根据产生机制选择分布}
+\subsection{S06：伯努利与二项分布}
+\begin{equation}
+ P(X=k)=\binom{n}{k}p^k(1-p)^{n-k},\quad k=0,1,\ldots,n;
+ \quad \mathrm{E}[X]=np,\quad\operatorname{Var}(X)=np(1-p).
+\end{equation}
+\textbf{人话：}独立重复 $n$ 次成功或失败的试验，统计成功次数。$n=1$ 就是伯努利分布。
+\textbf{符号：}$X,k$ 为成功次数；$n$ 为总次数；$p$ 为每次成功概率；$\binom{n}{k}=n!/[k!(n-k)!]$ 为从 $n$ 次中选 $k$ 次成功位置的方法数，感叹号表示阶乘，$0!=1$。次数与概率按无量纲处理。
+\textbf{条件与误用：}次数固定，各次独立且成功概率相同。若设备之间受共同电源故障影响，就不应直接假设独立。定义核对：\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binom.html}。
+
+\subsection{S07：泊松分布——固定区间内的事件次数}
+\begin{equation}
+ P(N=k)=\frac{\lambda^k e^{-\lambda}}{k!},\quad k=0,1,2,\ldots;
+ \qquad \mathrm{E}[N]=\operatorname{Var}(N)=\lambda=rt.
+\end{equation}
+\textbf{人话：}描述固定时间内随机到达的数量，例如稳定工况下计数器记录的稀疏事件。
+\textbf{符号：}$N$ 是次数；$k$ 是具体次数；$r$ 为平均发生率，单位如 $\mathrm{s}^{-1}$；$t$ 是区间长度，单位 s；$\lambda$ 是区间内平均次数，无量纲；$e$ 为自然常数，约 $2.71828$。
+\textbf{条件与误用：}齐次泊松过程要求不重叠区间增量独立、发生率恒定、极短时间多次事件概率足够小。明显成群发生或方差远大于均值时，应检查过度离散。定义核对：\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.poisson.html}。
+
+\subsection{S08：正态分布——对称的随机波动}
+\begin{equation}
+ f_X(x)=\frac{1}{\sigma\sqrt{2\pi}}\exp\!\left[-\frac{(x-\mu)^2}{2\sigma^2}\right],\qquad Z=\frac{X-\mu}{\sigma}.
+\end{equation}
+\textbf{人话：}钟形曲线，中心由均值决定、胖瘦由标准差决定；标准化把不同尺度转为“离均值几个标准差”。
+\textbf{符号：}$x$ 是取值，$\mu$ 是均值，$\sigma>0$ 是标准差；$\pi$ 是圆周率；$\exp(a)=e^a$；$Z$ 是无量纲标准正态变量。$x,\mu,\sigma$ 的单位相同，密度单位相反。
+\textbf{条件与误用：}正态是分布假设，需要看残差或机制。绝对不能只因画出了平滑曲线就认定正态；正态分布允许负值，不适合直接描述跨度很大的严格正量。定义核对：\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html}。
+
+\subsection{S09：均匀分布——只有上下界信息时的明确假设}
+\begin{equation}
+ f_X(x)=\frac{1}{b-a}\ (a\le x\le b),\quad f_X(x)=0\ \text{（区间外）};
+ \quad\mathrm{E}[X]=\frac{a+b}{2},\quad\operatorname{Var}(X)=\frac{(b-a)^2}{12}.
+\end{equation}
+\textbf{人话：}相同长度的小区间被抽到的机会相同。
+\textbf{符号：}$a$ 为下界，$b$ 为上界，要求 $a<b$；$x$ 是可能值。$a,b,x$ 同单位，方差是其单位平方。
+\textbf{条件与误用：}只知道范围并不逻辑上推出均匀分布。用它模拟参数不确定性时，要写明这是一项假设，并检查改用其他分布后结论是否改变。定义核对：\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.uniform.html}。
+
+\subsection{S10：指数分布——等待时间}
+\begin{equation}
+ f_T(t)=r e^{-rt}\ (t\ge0),\qquad P(T>t)=e^{-rt},\qquad
+ \mathrm{E}[T]=1/r,\quad\operatorname{Var}(T)=1/r^2.
+\end{equation}
+\textbf{人话：}稳定泊松到达过程中，下一次事件还要等多久。
+\textbf{符号：}$T$ 是非负等待时间，$t$ 是指定时间，单位 s；$r>0$ 是发生率，单位 $\mathrm{s}^{-1}$；$P(T>t)$ 是等了 $t$ 秒还没发生的概率。
+\textbf{条件与误用：}它具有无记忆性，相当于事件风险不随已等待时间变化。磨损越来越严重的寿命数据通常不满足这个条件。SciPy 的尺度参数为 $1/r$，不要把率直接当尺度。定义核对：\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.expon.html}。
+
+\section{从有限数据估计总体}
+\subsection{S11：样本均值、样本方差与标准误}
+\begin{equation}
+ \bar{x}=\frac1n\sum_{i=1}^{n}x_i,\quad
+ s^2=\frac1{n-1}\sum_{i=1}^{n}(x_i-\bar{x})^2,\quad
+ s=\sqrt{s^2},\quad\widehat{\operatorname{SE}}(\bar{x})=s/\sqrt n.
+\end{equation}
+\textbf{人话：}平均值概括中心，标准差概括单次测量波动，标准误概括这个平均值有多不稳。样本越多，独立随机波动越容易被平均掉。
+\textbf{符号：}$x_i$ 为第 $i$ 个观测；$n>1$ 为样本数；$\bar{x}$ 为样本均值；$s^2,s$ 为样本方差与标准差；$\operatorname{SE}$ 为标准误。除方差单位平方外，其他统计量与数据同单位。
+\textbf{条件与误用：}上述标准误要求独立同分布观测及有限方差；$n-1$ 是估计均值后损失一个自由度产生的修正。每秒记录的相邻温度有相关性，不能把一万个点当一万次独立实验。基础阅读：\url{https://www.itl.nist.gov/div898/handbook/eda/section3/eda356.htm}。
+
+\subsection{S12：大数定律——多测能改善什么}
+\begin{equation}
+ \bar X_n=\frac1n\sum_{i=1}^{n}X_i\xrightarrow{P}\mu.
+\end{equation}
+\textbf{人话：}独立重复次数越来越多，样本平均偏离真实平均很多的概率会越来越小。
+\textbf{符号：}$X_i$ 是第 $i$ 次随机观测，$n$ 是次数，$\bar X_n$ 为随机的样本均值，$\mu=\mathrm E[X_i]$ 为总体均值；$\xrightarrow{P}$ 表示依概率收敛。均值与观测同单位。
+\textbf{条件与误用：}这里采用独立同分布且绝对一阶矩有限的版本。它不保证每增加一个样本就更接近真值，也消不掉传感器整体偏高的系统误差。基础阅读：MIT 概率课程，\url{https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/}。
+
+\subsection{S13：中心极限定理——为什么均值常近似正态}
+\begin{equation}
+ \frac{\sqrt n(\bar X_n-\mu)}{\sigma}\xrightarrow{d}\mathcal N(0,1).
+\end{equation}
+\textbf{人话：}很多独立小波动的平均，在合适缩放后常接近钟形分布。注意变得近似正态的是样本平均的抽样分布。
+\textbf{符号：}$n,\bar X_n,\mu$ 同上一节；$\sigma>0$ 为总体标准差；$\xrightarrow d$ 为分布收敛；$\mathcal N(0,1)$ 为均值零、方差一的正态分布。分式无单位。
+\textbf{条件与误用：}此经典版本要求独立同分布、有限且非零方差。不存在适合所有数据的“超过 30 个就一定正态”规则；极偏、重尾或强相关数据可能需要很多样本或不同理论。基础阅读：\url{https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/}。
+
+\subsection{S14：总体均值的 $t$ 置信区间}
+\begin{equation}
+ \bar{x}\pm t_{1-\alpha/2,\,n-1}\frac{s}{\sqrt n}.
+\end{equation}
+\textbf{人话：}用“估计中心加减一段误差范围”报告平均值。假如反复采样并按此规则做区间，大约 $100(1-\alpha)\%$ 的区间会覆盖真实均值。
+\textbf{符号：}$\bar x,s,n$ 是样本均值、样本标准差、样本数；$\alpha$ 是不覆盖概率的名义水平，常取 $0.05$；$t_{q,\nu}$ 是自由度 $\nu$ 的 $t$ 分布的 $q$ 分位数，即左侧累计概率为 $q$ 的位置；此处 $q=1-\alpha/2,\nu=n-1$。区间单位与数据一致。
+\textbf{条件与误用：}独立正态样本时是精确区间，其他分布大样本时可能近似有效。它不是“95\% 的单个观测位于此区间”，也不是频率学框架下已固定真值在这个已算区间里的概率为 95\%。阅读：\url{https://www.itl.nist.gov/div898/handbook/prc/section1/prc14.htm}。
+
+\subsection{S15：单样本 $t$ 检验}
+\begin{equation}
+ t_{\rm obs}=\frac{\bar{x}-\mu_0}{s/\sqrt n},\qquad
+ p=2\bigl[1-F_{t,n-1}(|t_{\rm obs}|)\bigr].
+\end{equation}
+\textbf{人话：}检验观测平均与宣称值之间的差异，是否大到难以仅由随机波动解释。
+\textbf{符号：}$\mu_0$ 是原假设声称的总体均值，与 $\bar x,s$ 同单位；$t_{\rm obs}$ 是算出的无量纲统计量；$F_{t,n-1}$ 是自由度 $n-1$ 的 $t$ 累积分布函数；竖线为绝对值；$p$ 是双侧 $p$ 值，无单位。
+\textbf{条件与误用：}独立正态样本给出精确检验，备择假设为均值不等于 $\mu_0$。$p<\alpha$ 时拒绝原假设；$p\ge\alpha$ 不等于证明原假设正确。$p$ 不是“原假设为真的概率”。应同时报告差值大小、区间和实际意义。阅读：\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_1samp.html}。
+
+\subsection{S16：两独立样本的 Welch 检验}
+\begin{equation}
+ t=\frac{\bar{x}_1-\bar{x}_2-\Delta_0}{\sqrt{s_1^2/n_1+s_2^2/n_2}},\qquad
+ \nu\approx\frac{(s_1^2/n_1+s_2^2/n_2)^2}{(s_1^2/n_1)^2/(n_1-1)+(s_2^2/n_2)^2/(n_2-1)}.
+\end{equation}
+\textbf{人话：}比较两种方案的平均表现，允许两组波动程度不同。
+\textbf{符号：}下标 $1,2$ 代表两组；$\bar{x}_j,s_j^2,n_j$ 是第 $j$ 组均值、方差、数量；$\Delta_0$ 是原假设中的均值差，通常为零；$t$ 是统计量，$\nu$ 是近似自由度，二者无单位。两组数据必须表达同一量且统一单位。
+\textbf{条件与误用：}两组相互独立、组内观测独立；正态或适当大样本近似。若同一台设备在改造前后各测一次，应优先对“成对差值”作单样本检验，不能抹掉配对结构。阅读：\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html}。
+
+\section{回归：从实验反推参数}
+\subsection{S17：线性最小二乘}
+\begin{equation}
+ \mathbf y=X\boldsymbol\beta+\boldsymbol\varepsilon,\qquad
+ \hat{\boldsymbol\beta}=\underset{\boldsymbol\beta}{\operatorname{argmin}}\,
+ \|X\boldsymbol\beta-\mathbf y\|_2^2
+ =(X^{\mathsf T}X)^{-1}X^{\mathsf T}\mathbf y.
+\end{equation}
+\textbf{人话：}找一组参数，让所有预测与观测的差的平方加起来最小。“线性”是对未知参数线性，可以包含已知的 $x^2$ 或 $\sin x$ 特征。
+\textbf{符号：}$\mathbf y$ 是 $n$ 个响应组成的列向量；$X$ 是 $n\times p$ 设计矩阵，每行一个样本、每列一个已知特征；$\boldsymbol\beta$ 为 $p$ 个待估参数；$\boldsymbol\varepsilon$ 为观测误差；$\mathsf T$ 表示转置；$-1$ 表示矩阵逆；$\|\cdot\|_2^2$ 表示元素平方和；$\operatorname{argmin}$ 返回使目标最小的参数。第 $j$ 个参数单位为响应单位除以第 $j$ 列特征单位。
+\textbf{条件与误用：}闭式逆矩阵表达要求满列秩，通常 $n\ge p$；误差条件均值为零才有无偏解释。实际程序用 QR、SVD 或最小二乘求解器，不显式求逆。高次多项式外推很容易失真。阅读：\url{https://www.itl.nist.gov/div898/handbook/pmd/section1/pmd141.htm}。
+
+\subsection{S18：线性回归参数不确定性与新观测区间}
+\begin{equation}
+ \hat\sigma^2=\frac{\|\mathbf y-X\hat{\boldsymbol\beta}\|_2^2}{n-p},\qquad
+ \widehat{\operatorname{Cov}}(\hat{\boldsymbol\beta})=\hat\sigma^2(X^{\mathsf T}X)^{-1},
+\end{equation}
+\begin{equation}
+ \hat y_0\pm t_{1-\alpha/2,n-p}\hat\sigma\sqrt{1+\mathbf x_0^{\mathsf T}(X^{\mathsf T}X)^{-1}\mathbf x_0},\qquad
+ \hat y_0=\mathbf x_0^{\mathsf T}\hat{\boldsymbol\beta}.
+\end{equation}
+\textbf{人话：}第一式估计参数波动；第二式预测未来一次实际观测的范围。根号内的 $1$ 表示新观测本身的随机噪声，去掉它才是均值响应的置信区间。
+\textbf{符号：}$X,\mathbf y,\hat{\boldsymbol\beta},n,p$ 同上一节，$p$ 含截距参数；$\hat\sigma^2$ 为噪声方差估计；$\mathbf x_0$ 是新位置的 $p$ 维特征列；$\hat y_0$ 为预测中心；$\alpha$ 为显著性水平；$t$ 为对应分位数。协方差矩阵第 $i,j$ 项单位为参数 $i,j$ 单位的乘积；区间与响应同单位。
+\textbf{条件与误用：}要求 $n>p$、满列秩、独立同方差正态误差，以及新观测独立且同噪声方差。不同方差或时间相关误差需修正协方差，不能照搬。阅读：\url{https://www.itl.nist.gov/div898/handbook/pmd/section1/pmd131.htm}。
+
+\subsection{S19：非线性与加权最小二乘}
+\begin{equation}
+ \hat{\boldsymbol\theta}=\underset{\boldsymbol\theta\in\Omega}{\operatorname{argmin}}
+ \sum_{i=1}^{n}\left[\frac{f(\mathbf x_i;\boldsymbol\theta)-y_i}{\sigma_i}\right]^2.
+\end{equation}
+\textbf{人话：}用物理模型 $f$ 拟合数据；测量越不准，给它的权重越小。例如拟合冷却曲线中的换热系数。
+\textbf{符号：}$\boldsymbol\theta$ 为待估参数向量；$\Omega$ 是参数允许范围；$\mathbf x_i$ 为第 $i$ 组输入，可包含时间和环境温度；$y_i$ 为对应观测；$\sigma_i>0$ 为该观测误差的标准差；$n$ 为数据量；$i$ 为样本下标。$f,y_i,\sigma_i$ 单位相同，每项残差标准化后无单位。参数单位由模型决定。
+\textbf{条件与误用：}独立高斯误差且标准差已知时，此目标对应最大似然；有相关误差应使用完整协方差矩阵。非线性问题可能有局部极小，需要合理边界、多初值和残差检查。参数强相关时，即使曲线拟合漂亮，也可能识别不出各个参数。阅读：\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html}。
+
+\subsection{S20：残差、RMSE 与决定系数}
+\begin{equation}
+ e_i=y_i-\hat y_i,\qquad
+ \operatorname{RMSE}=\sqrt{\frac1n\sum_{i=1}^{n}e_i^2},\qquad
+ R^2=1-\frac{\sum_{i=1}^{n}e_i^2}{\sum_{i=1}^{n}(y_i-\bar y)^2}.
+\end{equation}
+\textbf{人话：}残差是每一点算错多少；RMSE 汇总典型误差；$R^2$ 比较模型与直接用均值预测谁更好。
+\textbf{符号：}$y_i$ 为观测，$\hat y_i$ 为预测，$e_i$ 为残差，$\bar y$ 为当前评价样本均值，$n$ 为评价样本量。残差和 RMSE 与响应同单位，$R^2$ 无单位。
+\textbf{条件与误用：}$R^2$ 分母非零才有定义；测试集上的 $R^2$ 可以为负。必须看残差对时间、输入、预测值的散点图：趋势提示漏掉结构，喇叭口提示异方差，连续同号提示相关。训练集分数不能替代独立测试，时间数据按时间划分，避免未来信息泄漏。阅读：\url{https://scikit-learn.org/stable/modules/model_evaluation.html#regression-metrics}。
+
+\section{让不确定性穿过物理模型}
+\subsection{S21：一阶误差传播}
+\begin{equation}
+ u_y^2\approx\mathbf g^{\mathsf T}\Sigma\mathbf g
+ =\sum_{i=1}^{d}\sum_{j=1}^{d}
+ \frac{\partial f}{\partial x_i}\frac{\partial f}{\partial x_j}\Sigma_{ij},\qquad
+ \mathbf g=\nabla f(\boldsymbol\mu).
+\end{equation}
+\textbf{人话：}输入有小误差时，先看输出对每个输入有多敏感，再把输入的不确定性传到输出。
+\textbf{符号：}$y=f(\mathbf x)$ 为输出；$\mathbf x$ 有 $d$ 个输入分量；$\boldsymbol\mu$ 为输入均值向量；$\mathbf g$ 为在均值处的梯度，第 $i$ 项为偏导数；$\Sigma_{ij}=\operatorname{Cov}(X_i,X_j)$ 为输入协方差；$u_y$ 为输出标准不确定度；$i,j$ 枚举输入。偏导单位为输出单位除以对应输入单位，结果 $u_y^2$ 为输出单位平方。
+\textbf{条件与误用：}需要均值附近可微、波动足够小使线性化合理。输入相关时不能删掉交叉项；强非线性、大范围波动或阈值问题宜做蒙特卡洛。这里的标准不确定度不是已知的真实误差。阅读：\url{https://doi.org/10.59161/JCGM100-2008E}。
+
+\subsection{S22：乘幂模型的相对不确定性}
+\begin{equation}
+ y=C\prod_{i=1}^{d}x_i^{a_i},\qquad
+ \left(\frac{u_y}{|y|}\right)^2\approx
+ \sum_{i=1}^{d}a_i^2\left(\frac{u_i}{|x_i|}\right)^2.
+\end{equation}
+\textbf{人话：}乘除和乘幂模型中，独立输入的相对不确定性可以按指数加权后平方求和。例如面积随长度平方变化，同样的相对长度误差会被放大。
+\textbf{符号：}$C$ 为当作已知的常数；$\prod$ 为连乘；$x_i\ne0$ 为输入估计值；$a_i$ 为已知指数；$u_i$ 为输入标准不确定度；$u_y$ 为输出标准不确定度；$d$ 为输入数。指数无单位，相对不确定度无单位，$C$ 的单位需使等式量纲一致。
+\textbf{条件与误用：}这是上一条在输入互不相关且小误差下的特例，非整数幂通常要求正输入。$C$ 若也不确定，应加入传播；输入接近零时相对误差会失去实用意义。阅读：\url{https://doi.org/10.59161/JCGM100-2008E}。
+
+\subsection{S23：蒙特卡洛估计与抽样误差}
+\begin{equation}
+ y^{(b)}=f(\mathbf x^{(b)}),\quad
+ \hat\mu_y=\frac1B\sum_{b=1}^{B}y^{(b)},\quad
+ s_y^2=\frac1{B-1}\sum_{b=1}^{B}(y^{(b)}-\hat\mu_y)^2,\quad
+ \widehat{\operatorname{SE}}(\hat\mu_y)=s_y/\sqrt B.
+\end{equation}
+\textbf{人话：}按输入的联合分布抽很多组参数，每组都运行模型，收集输出分布。最后一个数只衡量模拟平均值因抽样次数有限而产生的误差。
+\textbf{符号：}$b$ 为第几次模拟，括号上标不是乘方；$B>1$ 为模拟次数；$\mathbf x^{(b)}$ 为输入向量样本；$y^{(b)}$ 为对应输出；$\hat\mu_y$ 为模拟均值；$s_y$ 为输出标准差。所有输出统计量与 $y$ 同单位，$s_y^2$ 单位平方。
+\textbf{条件与误用：}标准误表达适用于独立抽样和有限方差。必须保留输入相关性，并固定随机种子便于复现。$s_y$ 是输入不确定性导致的输出散布，不会因 $B$ 增大而消失；$s_y/\sqrt B$ 会减小。阅读：\url{https://doi.org/10.59161/JCGM101-2008}。
+
+\subsection{S24：Bootstrap——让数据自己模拟重复实验}
+\begin{equation}
+ \hat\theta^{*(b)}=T(x_1^{*(b)},\ldots,x_n^{*(b)}),\qquad
+ I_{\rm perc}=\left[Q^*_{\alpha/2},Q^*_{1-\alpha/2}\right].
+\end{equation}
+\textbf{人话：}从现有 $n$ 个数据中有放回地再抽 $n$ 个，计算一次想研究的统计量，重复很多次。星号统计量的分布近似估计量在重复采样中的波动。
+\textbf{符号：}$T$ 是统计量计算规则，如均值或拟合参数；$x_i^{*(b)}$ 是第 $b$ 次重抽样的第 $i$ 个数据；$\hat\theta^{*(b)}$ 是对应估计；$Q_q^*$ 为所有重抽样估计的 $q$ 分位数；$\alpha$ 为名义不覆盖水平；$I_{\rm perc}$ 为百分位区间。区间单位与统计量一致。
+\textbf{条件与误用：}普通独立重抽样要求原数据可视为独立同分布样本。配对数据必须成对抽，时间序列需考虑块 Bootstrap。百分位法便于理解但可能覆盖不足，偏差明显时考虑 BCa；极少数据或未观察过的尾部风险不能凭空补出来。阅读：\url{https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.bootstrap.html}。
+
+\section{敏感性：哪个参数最值得认真测量}
+\subsection{S25：局部敏感度与无量纲弹性}
+\begin{equation}
+ G_i=\frac{\partial f}{\partial x_i},\qquad
+ E_i=\frac{x_i}{y}\frac{\partial f}{\partial x_i},\qquad
+ G_i\approx\frac{f(\mathbf x+h\mathbf e_i)-f(\mathbf x-h\mathbf e_i)}{2h}.
+\end{equation}
+\textbf{人话：}只轻轻改变一个参数，观察结果如何变化。$E_i=2$ 表示在当前点附近，输入增大约 1\% 时输出约增大 2\%。
+\textbf{符号：}$y=f(\mathbf x)$ 为输出；$i$ 为待研究参数编号；$G_i$ 为有量纲敏感度，单位是输出除以输入 $i$ 的单位；$E_i$ 为无量纲弹性；$\mathbf e_i$ 为第 $i$ 个坐标为一、其余为零的方向向量；$h$ 为第 $i$ 个输入的微小步长，与其同单位。
+\textbf{条件与误用：}要求局部可微；弹性还要求 $y\ne0$。有限差分的 $h$ 既不能大到跨越非线性区域，也不能小到被数值噪声吞掉；应比较不同步长。这是某个基准点的结论，不是整个可行范围的全局重要性。阅读：\url{https://docs.scipy.org/doc/scipy/reference/differentiate.html}。
+
+\subsection{S26：Sobol 一阶与总效应指标}
+\begin{equation}
+ S_i=\frac{\operatorname{Var}_{X_i}(\mathrm E[Y\mid X_i])}{\operatorname{Var}(Y)},\qquad
+ S_{T_i}=\frac{\mathrm E_{X_{-i}}[\operatorname{Var}(Y\mid X_{-i})]}{\operatorname{Var}(Y)}.
+\end{equation}
+\textbf{人话：}一阶指标衡量参数自己造成多少输出波动；总效应还包含它与其他参数配合产生的波动。总效应大、一阶小，说明它主要通过交互作用影响结果。
+\textbf{符号：}$Y=f(X_1,\ldots,X_d)$ 是随机输出；$X_i$ 是第 $i$ 个随机输入；$X_{-i}$ 指除第 $i$ 个以外的所有输入；$\mathrm E[\cdot\mid\cdot]$ 为条件期望；$\operatorname{Var}(\cdot\mid\cdot)$ 为条件方差；外侧下标说明对哪个输入的分布再平均或计算方差；$S_i,S_{T_i}$ 均无单位。
+\textbf{条件与误用：}经典方差分解解释要求输入相互独立、输出有限且非零方差；分布与范围也是问题设定的一部分。改变范围可能改变排名。有限样本估计可能略为负或超过一，应看置信区间和收敛性，不能解释成负的真实贡献。Sobol 采样和分析必须配套，不能把随意乱序的实验表直接塞给估计器。阅读：\url{https://salib.readthedocs.io/en/stable/api/SALib.analyze.html#module-SALib.analyze.sobol}。
+
+\section{A 题中一套可直接照做的统计检查顺序}
+先把每一列的物理含义、单位、采样时刻、设备编号写清楚，保留原始数据。再画原始曲线，确认异常点是传感器错误还是模型必须解释的真实现象。选物理模型后，分出独立验证工况；只在训练数据上估参数，再对验证数据算误差。最后改变网格、求解容差、关键输入与分布假设，分别检查数值误差和参数不确定性。
+报告结果时，把点估计、单位、区间、区间的含义、数据量和关键假设一起写。例如“某系数估计为……，95\% 置信区间为……，由独立重复实验并在正态误差假设下计算”。不要用一串小数位代替精度证据，也不要让显著性检验掩盖效应大小。
+

@@ -1,0 +1,124 @@
+{
+ "n_items": 9,
+ "items": [
+  {
+   "id": "XP1",
+   "quantity": "问题一药材温度上界",
+   "unit": "°C",
+   "bound": {
+    "op": "<=",
+    "value": 41.513
+   },
+   "observed": 36.78558601032612,
+   "reason": "1800 s 内热风由 28 °C 线性升至 41.5130 °C，药材温度不得超过同期热风温度",
+   "satisfied": true
+  },
+  {
+   "id": "XP2",
+   "quantity": "问题一药材温度下界",
+   "unit": "°C",
+   "bound": {
+    "op": ">=",
+    "value": 28.0
+   },
+   "observed": 28.0,
+   "reason": "热风全程高于初温 28 °C，故药材只被加热",
+   "satisfied": true
+  },
+  {
+   "id": "XP3",
+   "quantity": "问题一含水率上界",
+   "unit": "kg/kg",
+   "bound": {
+    "op": "<=",
+    "value": 2.55
+   },
+   "observed": 2.55,
+   "reason": "干燥过程只失水，任意点含水率不超过初值 C0",
+   "satisfied": true
+  },
+  {
+   "id": "XP4",
+   "quantity": "问题二药材温度上界",
+   "unit": "°C",
+   "bound": {
+    "op": "<=",
+    "value": 50.246
+   },
+   "observed": 49.966413251404134,
+   "reason": "附件 1 热风温度峰值 50.2460 °C（现读自附件 1，出现在 t=10620 s），药材温度不得越过驱动包络",
+   "satisfied": true
+  },
+  {
+   "id": "XP5",
+   "quantity": "问题三与问题二在 t<=10800 s 的场差",
+   "unit": "°C 或 kg/kg",
+   "bound": {
+    "op": "<=",
+    "value": 1e-09
+   },
+   "observed": 0.0,
+   "reason": "同一右端、同一积分设定，问题三前 10800 s 必须与问题二逐格恒等",
+   "satisfied": true
+  },
+  {
+   "id": "XP6",
+   "quantity": "问题三事件时刻全域最大含水率",
+   "unit": "kg/kg",
+   "bound": {
+    "op": "<=",
+    "value": 0.15001
+   },
+   "observed": 0.15,
+   "reason": "判据即全域最大含水率首次下穿 0.15，事件时刻必须贴住阈值",
+   "satisfied": true
+  },
+  {
+   "id": "XP7",
+   "quantity": "问题四半径下界",
+   "unit": "cm",
+   "bound": {
+    "op": ">=",
+    "value": 1.198
+   },
+   "observed": 1.2,
+   "reason": "附件 2 末点半径 1.198 cm，保单调插值不得越出实测下界",
+   "satisfied": true
+  },
+  {
+   "id": "XP8",
+   "quantity": "问题四半径上界",
+   "unit": "cm",
+   "bound": {
+    "op": "<=",
+    "value": 2.0
+   },
+   "observed": 1.9949873268608413,
+   "reason": "半径单调不增，起点即为最大值 2.0 cm",
+   "satisfied": true
+  },
+  {
+   "id": "XP9",
+   "quantity": "问题三、四烘干时长量级",
+   "unit": "d",
+   "bound": {
+    "op": "in",
+    "value": [
+     0.2,
+     30.0
+    ]
+   },
+   "observed": [
+    2.401045532471893,
+    2.131297426069245
+   ],
+   "reason": "题面「一般持续 2-3 天」是独立量级参照，允许同量级偏离，不作标定目标",
+   "satisfied": true
+  }
+ ],
+ "violations": [],
+ "all_satisfied": true,
+ "cross_problem_check_module": "_utils/cross_problem_check.py",
+ "module_available": false,
+ "note": "SKILL 第 7 步引用的 _utils/cross_problem_check.py 在本运行时不存在；按「缺少内部模块时停止并报告模块名」的要求，此处只如实记录模块名，台账本身按 §12.2 的 bound/observed/reason 三段式由真实运行回填"
+}

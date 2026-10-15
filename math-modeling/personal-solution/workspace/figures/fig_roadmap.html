@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh"><head><meta charset="utf-8"><style>
+@page{margin:0}
+html,body{margin:0;padding:0;width:fit-content;height:fit-content;background:transparent}
+.fig,.fig *{font-family:"Times New Roman","SimSun","Songti SC","Microsoft YaHei",serif;
+  -webkit-font-smoothing:antialiased;box-sizing:border-box;font-style:normal!important}
+.fig{width:672px;height:504px;background:transparent;padding:16px 16px 14px;
+  break-inside:avoid;page-break-inside:avoid;display:flex;flex-direction:column}
+.rw{display:flex;align-items:stretch}
+.tc{width:76px;flex:0 0 76px;margin-right:10px;display:flex;align-items:center;
+  justify-content:center}
+.tag{border:1px solid #000;padding:5px 7px;font-size:14px;font-weight:600;color:#000;
+  background:#fff;text-align:center;line-height:1.35;white-space:nowrap}
+.tag u{display:block;text-decoration:none;font-weight:400;font-size:14px;letter-spacing:.05em}
+.md{width:488px;flex:0 0 488px;display:grid;align-items:stretch}
+.c3{grid-template-columns:1fr 16px 1fr 16px 1fr}
+.c4{grid-template-columns:1fr 16px 1fr 16px 1fr 16px 1fr}
+.c1{grid-template-columns:1fr}
+.n{border:1.2px solid #000;background:#fff;color:#000;padding:7px 6px;text-align:center;
+  font-size:14px;font-weight:400;line-height:1.5}
+.n b{display:block;font-weight:600;font-size:14.5px;letter-spacing:.03em}
+.n.sup{border:1px dashed #000}
+.n.foc{border-left:2px solid #000}
+.n.foc b{font-weight:700}
+.ar{display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
+.ar .ln{width:1.6px;height:13px;background:#000}
+.ar .tp{width:0;height:0;border-top:6px solid #000;border-left:5px solid transparent;
+  border-right:5px solid transparent}
+.st{display:flex;flex-direction:column;align-items:center}
+.st .ln{width:1.6px;height:13px;background:#000}
+.bs{height:1.6px;background:#000;margin:0 55px}
+.hx{display:flex;align-items:center;justify-content:center}
+.hx .hl{height:1.6px;width:8px;background:#000}
+.hx .ht{width:0;height:0;border-left:6px solid #000;border-top:4px solid transparent;
+  border-bottom:4px solid transparent}
+.gu{width:66px;flex:0 0 66px;display:flex;flex-direction:column;align-items:stretch}
+.gu .vl{flex:1;min-height:2px;border-left:1.4px dashed #000;margin-left:auto;width:1.4px}
+.gu .hr{display:flex;align-items:center;flex:0 0 auto}
+.gu .hr .hd{width:0;height:0;border-right:7px solid #000;border-top:4.5px solid transparent;
+  border-bottom:4.5px solid transparent}
+.gu .hr .hz{flex:1;height:0;border-top:1.4px dashed #000}
+.gu .lb{border:1px dashed #000;background:#fff;color:#000;font-size:14px;line-height:1.4;
+  text-align:center;padding:3px 1px;white-space:nowrap;flex:0 0 auto}
+</style></head><body>
+<div class="fig" data-mh-palette="mono" data-mh-quality="roadmap-v2">
+  <div class="rw">
+    <div class="tc"><div class="tag" data-mh-role="stage">1<u>输入数据</u></div></div>
+    <div class="md c3">
+      <div class="n sup" data-mh-node="true" data-mh-role="input" data-mh-row="1"><b>附件一</b>热风温度<br>与湿度时程</div>
+      <div></div>
+      <div class="n sup" data-mh-node="true" data-mh-role="input" data-mh-row="1"><b>附件二</b>半径收缩<br>实测轨迹</div>
+      <div></div>
+      <div class="n sup" data-mh-node="true" data-mh-role="input" data-mh-row="1"><b>圆柱几何</b>与均匀<br>初始状态</div>
+    </div>
+    <div class="gu"></div>
+  </div>
+
+  <div class="rw">
+    <div class="tc"></div>
+    <div class="md c3">
+      <div class="ar"><span class="ln"></span><span class="tp"></span></div>
+      <div></div>
+      <div class="ar"><span class="ln"></span><span class="tp"></span></div>
+      <div></div>
+      <div class="ar"><span class="ln"></span><span class="tp"></span></div>
+    </div>
+    <div class="gu"></div>
+  </div>
+
+  <div class="rw">
+    <div class="tc"><div class="tag" data-mh-role="stage">2<u>共享内核</u></div></div>
+    <div class="md c3">
+      <div class="n foc" data-mh-node="true" data-mh-focus="true" data-mh-row="2"><b>统一控制方程</b>轴对称热质<br>耦合守恒律</div>
+      <div></div>
+      <div class="n" data-mh-node="true" data-mh-row="2"><b>表面边界条件</b>第三类对流<br>换热与传质</div>
+      <div></div>
+      <div class="n" data-mh-node="true" data-mh-row="2"><b>数值离散</b>守恒有限体积<br>与刚性隐式推进</div>
+    </div>
+    <div class="gu">
+      <div class="vl"></div>
+      <div class="hr"><span class="hd"></span><span class="hz"></span></div>
+      <div class="vl"></div>
+    </div>
+  </div>
+
+  <div class="rw">
+    <div class="tc"></div>
+    <div class="md c1"><div class="st" data-mh-col="ctr"><span class="ln"></span></div></div>
+    <div class="gu"><div class="vl"></div></div>
+  </div>
+  <div class="rw">
+    <div class="tc"></div>
+    <div class="md"><div class="bs"></div></div>
+    <div class="gu"><div class="vl"></div></div>
+  </div>
+  <div class="rw">
+    <div class="tc"></div>
+    <div class="md c4">
+      <div class="ar"><span class="ln"></span><span class="tp"></span></div>
+      <div></div>
+      <div class="ar"><span class="ln"></span><span class="tp"></span></div>
+      <div></div>
+      <div class="ar"><span class="ln"></span><span class="tp"></span></div>
+      <div></div>
+      <div class="ar"><span class="ln"></span><span class="tp"></span></div>
+    </div>
+    <div class="gu"><div class="vl"></div></div>
+  </div>
+
+  <div class="rw">
+    <div class="tc"><div class="tag" data-mh-role="stage">3<u>逐问递进</u></div></div>
+    <div class="md c4">
+      <div class="n" data-mh-node="true" data-mh-row="3"><b>问题一</b>预热平衡段<br>常物性解耦<br>半解析校核</div>
+      <div class="hx"><span class="hl"></span><span class="ht"></span></div>
+      <div class="n" data-mh-node="true" data-mh-row="3"><b>问题二</b>全过程变物性<br>热质双向耦合<br>扩散随温激活</div>
+      <div class="hx"><span class="hl"></span><span class="ht"></span></div>
+      <div class="n" data-mh-node="true" data-mh-row="3"><b>问题三</b>达标烘干时长<br>全域最大判据<br>事件检测定位</div>
+      <div class="hx"><span class="hl"></span><span class="ht"></span></div>
+      <div class="n" data-mh-node="true" data-mh-row="3"><b>问题四</b>收缩移动边界<br>坐标伸缩变换<br>附加对流通量</div>
+    </div>
+    <div class="gu">
+      <div class="vl"></div>
+      <div class="lb">精度不足<br>加密网格<br>减小步长</div>
+      <div class="vl"></div>
+    </div>
+  </div>
+
+  <div class="rw">
+    <div class="tc"></div>
+    <div class="md c4">
+      <div class="ar"><span class="ln"></span><span class="tp"></span></div>
+      <div></div>
+      <div class="ar"><span class="ln"></span><span class="tp"></span></div>
+      <div></div>
+      <div class="ar"><span class="ln"></span><span class="tp"></span></div>
+      <div></div>
+      <div class="ar"><span class="ln"></span><span class="tp"></span></div>
+    </div>
+    <div class="gu"><div class="vl"></div></div>
+  </div>
+
+  <div class="rw">
+    <div class="tc"><div class="tag" data-mh-role="stage">4<u>结果验证</u></div></div>
+    <div class="md c4">
+      <div class="n sup" data-mh-node="true" data-mh-role="validation" data-mh-row="4">半解析级数解<br>逐点对照</div>
+      <div></div>
+      <div class="n sup" data-mh-node="true" data-mh-role="validation" data-mh-row="4">网格与时间步<br>收敛性</div>
+      <div></div>
+      <div class="n sup" data-mh-node="true" data-mh-role="validation" data-mh-row="4">判据定义对照<br>与灵敏度扫描</div>
+      <div></div>
+      <div class="n sup" data-mh-node="true" data-mh-role="validation" data-mh-row="4">封闭表面时<br>绝干质量守恒</div>
+    </div>
+    <div class="gu">
+      <div class="vl"></div>
+      <div class="hr"><span class="hz"></span></div>
+      <div class="vl" style="border-left:0"></div>
+    </div>
+  </div>
+
+  <div class="rw">
+    <div class="tc"></div>
+    <div class="md c4">
+      <div class="st"><span class="ln"></span></div>
+      <div></div>
+      <div class="st"><span class="ln"></span></div>
+      <div></div>
+      <div class="st"><span class="ln"></span></div>
+      <div></div>
+      <div class="st"><span class="ln"></span></div>
+    </div>
+    <div class="gu"></div>
+  </div>
+  <div class="rw">
+    <div class="tc"></div>
+    <div class="md"><div class="bs"></div></div>
+    <div class="gu"></div>
+  </div>
+  <div class="rw">
+    <div class="tc"></div>
+    <div class="md c1"><div class="ar" data-mh-col="ctr"><span class="ln"></span><span class="tp"></span></div></div>
+    <div class="gu"></div>
+  </div>
+
+  <div class="rw">
+    <div class="tc"><div class="tag" data-mh-role="stage">5<u>输出结论</u></div></div>
+    <div class="md c1">
+      <div class="n" data-mh-node="true" data-mh-role="output">四问的温度场、水分场与烘干时长，以及收缩效应的对比分析</div>
+    </div>
+    <div class="gu"></div>
+  </div>
+</div>
+</body></html>

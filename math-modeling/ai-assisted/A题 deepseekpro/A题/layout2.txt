@@ -1,0 +1,362 @@
+---- P305 ind=125 ----
+   "密度为"                          sz=- pos=0
+   " "                            sz=- pos=0
+   "820 kg/m"                     sz=- pos=0
+   "3"                            sz=13 pos=10
+   " "                            sz=13 pos=10
+   "、比热容为"                        sz=- pos=0
+   " "                            sz=- pos=0
+   "2600 J/(kg"                   sz=- pos=0
+   "·"                            sz=- pos=0
+   "K)"                           sz=- pos=0
+   "、热传导系数为"                      sz=- pos=0
+   " "                            sz=- pos=0
+   "0.36 W/(m"                    sz=- pos=0
+   " "                            sz=- pos=0
+   "·"                            sz=- pos=0
+   "K)"                           sz=- pos=0
+   "，对流换热"                        sz=- pos=0
+   " "                            sz=- pos=0
+   "系数为"                          sz=- pos=0
+   " "                            sz=- pos=0
+   "25 W/(m"                      sz=- pos=0
+   "2"                            sz=13 pos=9
+   "  "                           sz=13 pos=9
+   "·"                            sz=- pos=0
+   "K)"                           sz=- pos=0
+   "，对流传质系数为 "                    sz=- pos=0
+   "8"                            sz=- pos=0
+   " "                            sz=- pos=0
+   "×"                            sz=- pos=0
+   " "                            sz=- pos=0
+   "10"                           sz=- pos=0
+   "−7    "                       sz=15 pos=7
+   "m"                            sz=- pos=0
+   "/s"                           sz=- pos=0
+   "，水分浓度扩散系数的经验公式为"              sz=- pos=0
+
+---- P306 ind=4846 ----
+   "0.89"                         sz=15 pos=0
+
+---- P307 ind=3409 ----
+   [IMG rId7 80010x123190]        sz=21 pos=-1
+   " "                            sz=21 pos=0
+   "="                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "7"                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "×"                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "10"                           sz=21 pos=0
+   "−9"                           sz=15 pos=6
+   "e"                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "−   "                         sz=15 pos=9
+   [IMG rId8 49530x88265]         sz=15 pos=1
+
+---- P308 ind=121 ----
+   "其中 "                          sz=- pos=0
+   [IMG rId9 80010x133985]        sz=- pos=-4
+   " "                            sz=- pos=0
+   "为水分浓度扩散系数（单位："                sz=- pos=0
+   "m"                            sz=- pos=0
+   "2"                            sz=13 pos=9
+   "/s"                           sz=- pos=0
+   "），"                           sz=- pos=0
+   [IMG rId10 68580x133985]       sz=- pos=-4
+   " "                            sz=- pos=0
+   "为药材水分浓度（单位："                  sz=- pos=0
+   "kg/kg"                        sz=- pos=0
+   "）。"                           sz=- pos=0
+
+---- P309 ind=1687 ----
+
+---- P310 ind=34 ----
+   "附录"                           sz=21 pos=0
+   " "                            sz=21 pos=0
+   "3    "                        sz=21 pos=0
+   "问题"                           sz=21 pos=0
+   " "                            sz=21 pos=0
+   "2 "                           sz=21 pos=0
+   "和问题"                          sz=21 pos=0
+   " "                            sz=21 pos=0
+   "3"                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "的相关经"                         sz=21 pos=0
+   "验公式"                          sz=21 pos=0
+
+---- P311 ind=466 ----
+   "问题"                           sz=- pos=0
+   " "                            sz=- pos=0
+   "2 "                           sz=- pos=0
+   "和问题"                          sz=- pos=0
+   " "                            sz=- pos=0
+   "3 "                           sz=- pos=0
+   "用到的经验公式"                      sz=- pos=0
+
+---- P312 ind=- ----
+
+---- P313 ind=1785 ----
+
+---- P314 ind=2992 ----
+   [IMG rId11 72390x133985]       sz=21 pos=-2
+   " "                            sz=21 pos=0
+   "="                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "650"                          sz=21 pos=0
+   " "                            sz=21 pos=0
+   "+"                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "128"                          sz=21 pos=0
+   [IMG rId12 73660x133985]       sz=21 pos=-2
+
+---- P315 ind=- ----
+   [IMG rId13 52070x133985]       sz=21 pos=-2
+   [IMG rId14 46990x95885]        sz=21 pos=-5
+   "  "                           sz=21 pos=0
+   "="                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "1450"                         sz=21 pos=0
+   " "                            sz=21 pos=0
+   "+"                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "2736"                         sz=21 pos=0
+   " "                            sz=21 pos=0
+   "∙"                            sz=21 pos=0
+
+---- P316 ind=- ----
+
+---- P317 ind=- ----
+
+---- P318 ind=196 ----
+   [IMG rId12 68580x133985]       sz=- pos=-4
+
+---- P319 ind=13 ----
+   [IMG rId15 68580x133985]       sz=21 pos=-2
+   " "                            sz=21 pos=0
+   "+"                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "1"                            sz=21 pos=0
+
+---- P320 ind=1785 ----
+
+---- P321 ind=- ----
+   [IMG rId16 64135x133985]       sz=21 pos=-2
+   " "                            sz=21 pos=0
+   "="                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "0.21"                         sz=21 pos=0
+   " "                            sz=21 pos=0
+   "+"                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "0.38"                         sz=21 pos=0
+   " "                            sz=21 pos=0
+   "∙"                            sz=21 pos=0
+
+---- P322 ind=- ----
+
+---- P323 ind=196 ----
+   [IMG rId17 68580x132715]       sz=- pos=-4
+
+---- P324 ind=13 ----
+   [IMG rId18 68580x133985]       sz=21 pos=-2
+   " "                            sz=21 pos=0
+   "+"                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "1"                            sz=21 pos=0
+
+---- P325 ind=1785 ----
+
+---- P326 ind=4565 ----
+   "0.45"                         sz=15 pos=0
+   " "                            sz=15 pos=0
+   "      "                       sz=15 pos=0
+   " "                            sz=15 pos=0
+   "3850"                         sz=15 pos=0
+
+---- P327 ind=2965 ----
+   [IMG rId19 80010x122555]       sz=21 pos=-1
+   "  "                           sz=21 pos=0
+   "="                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "2.4"                          sz=21 pos=0
+   " "                            sz=21 pos=0
+   "×"                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "10"                           sz=21 pos=0
+   "−3"                           sz=15 pos=7
+   "e"                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "−   "                         sz=15 pos=9
+   [IMG rId20 49530x87630]        sz=15 pos=1
+   "   "                          sz=15 pos=9
+   "e"                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "−    "                        sz=15 pos=9
+   [IMG rId21 52070x87630]        sz=15 pos=1
+
+---- P328 ind=21 ----
+   "其中 "                          sz=- pos=0
+   [IMG rId22 67310x133985]       sz=- pos=-4
+   " "                            sz=- pos=0
+   "为密度（单位："                      sz=- pos=0
+   "kg/m"                         sz=- pos=0
+   "3"                            sz=13 pos=10
+   "），"                           sz=- pos=0
+   [IMG rId23 52070x133985]       sz=- pos=-4
+   [IMG rId24 46990x95885]        sz=- pos=-7
+   " "                            sz=- pos=0
+   "为比热容（单位："                     sz=- pos=0
+   "J/(kg"                        sz=- pos=0
+   " "                            sz=- pos=0
+   "·"                            sz=- pos=0
+   "K)"                           sz=- pos=0
+   "），"                           sz=- pos=0
+   [IMG rId25 64135x133985]       sz=- pos=-4
+   " "                            sz=- pos=0
+   "为热传导系数（单"                     sz=- pos=0
+   " "                            sz=- pos=0
+   "位："                           sz=- pos=0
+   "W/(m"                         sz=- pos=0
+   " "                            sz=- pos=0
+   "·"                            sz=- pos=0
+   "K)"                           sz=- pos=0
+   "），"                           sz=- pos=0
+   [IMG rId26 80010x133985]       sz=- pos=-4
+   " "                            sz=- pos=0
+   "为水分浓度扩散系数（单"                  sz=- pos=0
+   "位："                           sz=- pos=0
+   "m"                            sz=- pos=0
+   "2"                            sz=13 pos=10
+   "/s"                           sz=- pos=0
+   "），"                           sz=- pos=0
+   [IMG rId12 68580x133985]       sz=- pos=-4
+   " "                            sz=- pos=0
+   "为药材水分浓度（单位："                  sz=- pos=0
+   "kg/kg"                        sz=- pos=0
+   "），"                           sz=- pos=0
+   " "                            sz=- pos=0
+   [IMG rId27 73025x133985]       sz=- pos=-4
+   " "                            sz=- pos=0
+   "为药材温度（单位："                    sz=- pos=0
+   "K"                            sz=- pos=0
+   "）。"                           sz=- pos=0
+
+---- P329 ind=- ----
+
+---- P330 ind=34 ----
+   "附录"                           sz=21 pos=0
+   " "                            sz=21 pos=0
+   "4    "                        sz=21 pos=0
+   "问题"                           sz=21 pos=0
+   " "                            sz=21 pos=0
+   "4"                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "的相关经验公式"                      sz=21 pos=0
+
+---- P331 ind=466 ----
+   "问题"                           sz=- pos=0
+   " "                            sz=- pos=0
+   "4 "                           sz=- pos=0
+   "用到的经验公式"                      sz=- pos=0
+
+---- P332 ind=- ----
+
+---- P333 ind=1785 ----
+
+---- P334 ind=2992 ----
+   [IMG rId11 72390x133985]       sz=21 pos=-2
+   " "                            sz=21 pos=0
+   "="                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "760"                          sz=21 pos=0
+   " "                            sz=21 pos=0
+   "+"                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "90"                           sz=21 pos=0
+   [IMG rId12 73660x133985]       sz=21 pos=-2
+
+---- P344 ind=13 ----
+   [IMG rId12 68580x133985]       sz=21 pos=-2
+   " "                            sz=21 pos=0
+   "+"                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "1"                            sz=21 pos=0
+
+---- P345 ind=1785 ----
+
+---- P346 ind=4565 ----
+   "0.30"                         sz=15 pos=0
+   " "                            sz=15 pos=0
+   "      "                       sz=15 pos=0
+   " "                            sz=15 pos=0
+   "3850"                         sz=15 pos=0
+
+---- P347 ind=2965 ----
+   [IMG rId29 80010x122555]       sz=21 pos=-1
+   "  "                           sz=21 pos=0
+   "="                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "4.2"                          sz=21 pos=0
+   " "                            sz=21 pos=0
+   "×"                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "10"                           sz=21 pos=0
+   "−4"                           sz=15 pos=7
+   "e"                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "−   "                         sz=15 pos=9
+   [IMG rId30 49530x87630]        sz=15 pos=1
+   "   "                          sz=15 pos=9
+   "e"                            sz=21 pos=0
+   " "                            sz=21 pos=0
+   "−    "                        sz=15 pos=9
+   [IMG rId21 52070x87630]        sz=15 pos=1
+
+---- P348 ind=21 ----
+   "其中 "                          sz=- pos=0
+   [IMG rId31 67310x133985]       sz=- pos=-4
+   " "                            sz=- pos=0
+   "为密度（单位："                      sz=- pos=0
+   "kg/m"                         sz=- pos=0
+   "3"                            sz=13 pos=10
+   "），"                           sz=- pos=0
+   [IMG rId13 52070x133985]       sz=- pos=-4
+   [IMG rId32 46990x95885]        sz=- pos=-7
+   " "                            sz=- pos=0
+   "为比热容（单位："                     sz=- pos=0
+   "J/(kg"                        sz=- pos=0
+   " "                            sz=- pos=0
+   "·"                            sz=- pos=0
+   "K)"                           sz=- pos=0
+   "），"                           sz=- pos=0
+   [IMG rId33 64135x133985]       sz=- pos=-4
+   " "                            sz=- pos=0
+   "为热传导系数（单"                     sz=- pos=0
+   " "                            sz=- pos=0
+   "位："                           sz=- pos=0
+   "W/(m"                         sz=- pos=0
+   " "                            sz=- pos=0
+   "·"                            sz=- pos=0
+   "K)"                           sz=- pos=0
+   "），"                           sz=- pos=0
+   [IMG rId26 80010x133985]       sz=- pos=-4
+   " "                            sz=- pos=0
+   "为水分浓度扩散系数（单"                  sz=- pos=0
+   "位："                           sz=- pos=0
+   "m"                            sz=- pos=0
+   "2"                            sz=13 pos=10
+   "/s"                           sz=- pos=0
+   "），"                           sz=- pos=0
+   [IMG rId12 68580x133985]       sz=- pos=-4
+   " "                            sz=- pos=0
+   "为药材水分浓度（单位："                  sz=- pos=0
+   "kg/kg"                        sz=- pos=0
+   "），"                           sz=- pos=0
+   " "                            sz=- pos=0
+   [IMG rId34 73025x133985]       sz=- pos=-4
+   " "                            sz=- pos=0
+   "为药材温度（单位："                    sz=- pos=0
+   "K"                            sz=- pos=0
+   "）。"                           sz=- pos=0
+

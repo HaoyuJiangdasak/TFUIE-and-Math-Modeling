@@ -1,0 +1,36 @@
+{
+  "current_round": 2,
+  "max_rounds": 2,
+  "last_score": 82,
+  "last_score_scale": 100,
+  "round_scores": [
+    {"round": 1, "reviewed_snapshot": "round0_original.md", "score": 70, "scale": 100, "raw": "7/10", "verdict": "Almost"},
+    {"round": 2, "reviewed_snapshot": "round1.md", "score": 82, "scale": 100, "raw": "82/100", "verdict": "Almost"}
+  ],
+  "status": "complete",
+  "target": "paper/main.md",
+  "review_mode": "external_cross_model",
+  "review_chunks": {"round1": 5, "round2": 6},
+  "findings_count": {"round1": 52, "round2": 75},
+  "snapshots": {
+    "round0_original": "paper/_improvement_rounds/round0_original.md",
+    "round1": "paper/_improvement_rounds/round1.md",
+    "round2": "paper/_improvement_rounds/round2.md"
+  },
+  "round2_identical_to_main": true,
+  "format_check": {
+    "figures": 32,
+    "tables": 10,
+    "equations_tagged": 32,
+    "references": 15,
+    "missing_image_files": 0,
+    "numbering_gaps": 0,
+    "unpaired_math_delimiters": 0,
+    "residual_markers": 0,
+    "toc_present": false,
+    "figure_as_subject_hits": 0
+  },
+  "numbers_reverified_from_json": true,
+  "not_done_in_this_step": ["latex_compile", "docx_export", "page_count", "re_solve", "figure_regeneration"],
+  "timestamp": "2026-09-11T22:45:00+08:00"
+}

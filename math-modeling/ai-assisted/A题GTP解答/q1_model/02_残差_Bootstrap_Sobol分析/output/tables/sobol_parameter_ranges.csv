@@ -1,0 +1,7 @@
+parameter,baseline,lower,upper,distribution
+k,0.36,0.288,0.432,uniform
+Cv_rho_cp,2132000,1705600,2558400,uniform
+hT,25,17.5,32.5,uniform
+D0,7e-09,3.5e-09,1.4e-08,log-uniform
+diffusivity_exponent,0.89,0.712,1.068,uniform
+hM,8e-07,5.6e-07,1.04e-06,uniform

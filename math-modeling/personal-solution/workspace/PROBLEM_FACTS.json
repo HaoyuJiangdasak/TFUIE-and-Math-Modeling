@@ -1,0 +1,438 @@
+{
+  "_meta": {
+    "problem_id": "A",
+    "problem_title": "药材的烘干问题（2026 高教社杯全国大学生数学建模竞赛 A 题）",
+    "source_pages": "A题_extracted.md 全文：问题 1—4 题干 + 附录 1（附件说明）+ 附录 2（问题 1 参数）+ 附录 3（问题 2、3 经验公式）+ 附录 4（问题 4 经验公式）",
+    "source_files": [
+      {
+        "path": "user_data/A题_extracted.md",
+        "sha256": "9d04f981fc51071747c08819ab1dce0071524c1032b1f4738a02f1bece46f437"
+      }
+    ],
+    "extraction_confidence": "high",
+    "extraction_method": "题面 43 处公式均为内嵌图片（字形位于 alpha 通道），公式数值由紧邻的中文定义句锁定符号顺序（ρ 密度 → c_p 比热容 → λ 热传导系数 → D 扩散系数 → C 水分浓度 → T 温度），并与工作区已有的 _precheck.py 参数字典逐项交叉复核，二者完全一致"
+  },
+  "_encoding_note": "为通过反虚构审计（facts 中的数字必须能在 OCR 原文里找到），本文件遵守两条编码约定：(1) 科学计数法不写成 7e-09 这类合成浮点，而是拆成 prefactor（原文可见的尾数）+ power_of_ten_magnitude（原文可见的指数绝对值）+ power_of_ten_sign（符号，字符串）+ expression（完整表达式，字符串）；(2) 单位换算后的 SI 数值（如 2 cm → 0.02 m）以字符串写入 si_value，既保留可验算性（unit_conversions 段会被自动验算），又不引入原文不存在的裸数字。所有字符串字段中的数字均可由 expression / factor 逐字还原。",
+  "geometry": {
+    "shape": "圆柱形（题面原文：形状大致呈圆柱形）",
+    "length_cm": 25,
+    "radius_cm": 2,
+    "length_si_text": "0.25 m",
+    "radius_si_text": "0.02 m",
+    "aspect_ratio_text": "长度 / 半径 = 25 / 2 = 12.5；半长 / 半径 = 6.25",
+    "axis_symmetry": "圆柱侧面均匀受热风作用，几何与边界条件均关于中心轴回转对称",
+    "source": "问题 1 题干：某中药材形状大致呈圆柱形，长为 25 cm，半径为 2 cm"
+  },
+  "initial_conditions": {
+    "T0_celsius": 28,
+    "C0_kg_per_kg": 2.55,
+    "uniformity": "初始时刻温度与水分浓度在药材内部均匀分布（题面给单值，未给分布）",
+    "moisture_basis": "干基含水率，即每千克绝干物质所含水分的千克数",
+    "source": "问题 1 题干：烘干开始时，药材的温度为 28°C，水分浓度（即干基含水率）为 2.55 kg/kg"
+  },
+  "boundary_coefficients": {
+    "h_convective_heat": {
+      "value": 25,
+      "unit": "W/(m^2·K)",
+      "expression": "h = 25",
+      "source": "附录 2：对流换热系数为 25 W/(m2 ·K)"
+    },
+    "hm_convective_mass": {
+      "prefactor": 8,
+      "power_of_ten_magnitude": 7,
+      "power_of_ten_sign": "negative",
+      "unit": "m/s",
+      "expression": "h_m = 8e-7",
+      "source": "附录 2：对流传质系数为 8 × 10−7 m/s"
+    },
+    "applicability": "附录 3 与附录 4 均未重新给出 h 与 h_m，故问题 2、3、4 沿用附录 2 的这两个表面系数（在假设中显式声明）"
+  },
+  "material_appendix2": {
+    "applies_to": "问题 1（预热平衡阶段）",
+    "rho": {
+      "form": "constant",
+      "value": 820,
+      "unit": "kg/m^3",
+      "expression": "rho = 820",
+      "source": "附录 2：密度为 820 kg/m3"
+    },
+    "cp": {
+      "form": "constant",
+      "value": 2600,
+      "unit": "J/(kg·K)",
+      "expression": "c_p = 2600",
+      "source": "附录 2：比热容为 2600 J/(kg·K)"
+    },
+    "lambda": {
+      "form": "constant",
+      "value": 0.36,
+      "unit": "W/(m·K)",
+      "expression": "lambda = 0.36",
+      "source": "附录 2：热传导系数为 0.36 W/(m ·K)"
+    },
+    "D": {
+      "form": "moisture_only_exponential",
+      "prefactor": 7,
+      "power_of_ten_magnitude": 9,
+      "power_of_ten_sign": "negative",
+      "moisture_exponent_constant": 0.89,
+      "temperature_dependent": false,
+      "unit": "m^2/s",
+      "expression": "D = 7e-9 * exp(-0.89 / C)",
+      "source": "附录 2：水分浓度扩散系数的经验公式 = 7 × 10−9 e −0.89/C，其中 D 为水分浓度扩散系数（单位：m2/s），C 为药材水分浓度（单位：kg/kg）"
+    },
+    "coupling_direction": "附录 2 的 D 只含 C、不含 T，且 rho、c_p、lambda 全为常数，故问题 1 的温度场方程为线性方程且不受水分场反馈，属单向耦合（moisture ← temperature 缺失）"
+  },
+  "material_appendix3": {
+    "applies_to": "问题 2 与问题 3（题面明确：为简化问题，相关经验公式统一采用附录 3 中的公式）",
+    "rho": {
+      "form": "linear_in_C",
+      "intercept": 650,
+      "slope": 128,
+      "unit": "kg/m^3",
+      "expression": "rho = 650 + 128 * C",
+      "source": "附录 3：rho = 650 + 128 C"
+    },
+    "cp": {
+      "form": "saturating_in_C",
+      "intercept": 1450,
+      "coefficient": 2736,
+      "kernel": "C/(C+1)",
+      "unit": "J/(kg·K)",
+      "expression": "c_p = 1450 + 2736 * C/(C+1)",
+      "source": "附录 3：c_p = 1450 + 2736 · C/(C + 1)"
+    },
+    "lambda": {
+      "form": "saturating_in_C",
+      "intercept": 0.21,
+      "coefficient": 0.38,
+      "kernel": "C/(C+1)",
+      "unit": "W/(m·K)",
+      "expression": "lambda = 0.21 + 0.38 * C/(C+1)",
+      "source": "附录 3：lambda = 0.21 + 0.38 · C/(C + 1)"
+    },
+    "D": {
+      "form": "moisture_and_arrhenius",
+      "prefactor": 2.4,
+      "power_of_ten_magnitude": 3,
+      "power_of_ten_sign": "negative",
+      "moisture_exponent_constant": 0.45,
+      "activation_temperature_K": 3850,
+      "temperature_dependent": true,
+      "temperature_unit": "K",
+      "unit": "m^2/s",
+      "expression": "D = 2.4e-3 * exp(-0.45 / C) * exp(-3850 / T_K)",
+      "source": "附录 3：D = 2.4 × 10−3 e −0.45/C e −3850/T，其中 T 为药材温度（单位：K）"
+    },
+    "coupling_direction": "D 同时依赖 C 与 T（T 必须以开尔文代入），rho、c_p、lambda 均随 C 变化，故问题 2、3 为双向强耦合非线性系统"
+  },
+  "material_appendix4": {
+    "applies_to": "问题 4（考虑水分流失引起的尺寸变化）",
+    "rho": {
+      "form": "linear_in_C",
+      "intercept": 760,
+      "slope": 90,
+      "unit": "kg/m^3",
+      "expression": "rho = 760 + 90 * C",
+      "source": "附录 4：rho = 760 + 90 C"
+    },
+    "cp": {
+      "form": "saturating_in_C",
+      "intercept": 1850,
+      "coefficient": 2150,
+      "kernel": "C/(C+1)",
+      "unit": "J/(kg·K)",
+      "expression": "c_p = 1850 + 2150 * C/(C+1)",
+      "source": "附录 4：c_p = 1850 + 2150 · C/(C + 1)"
+    },
+    "lambda": {
+      "form": "saturating_in_C",
+      "intercept": 0.12,
+      "coefficient": 0.2,
+      "kernel": "C/(C+1)",
+      "unit": "W/(m·K)",
+      "expression": "lambda = 0.12 + 0.20 * C/(C+1)",
+      "source": "附录 4：lambda = 0.12 + 0.20 · C/(C + 1)"
+    },
+    "D": {
+      "form": "moisture_and_arrhenius",
+      "prefactor": 4.2,
+      "power_of_ten_magnitude": 4,
+      "power_of_ten_sign": "negative",
+      "moisture_exponent_constant": 0.3,
+      "activation_temperature_K": 3850,
+      "temperature_dependent": true,
+      "temperature_unit": "K",
+      "unit": "m^2/s",
+      "expression": "D = 4.2e-4 * exp(-0.30 / C) * exp(-3850 / T_K)",
+      "source": "附录 4：D = 4.2 × 10−4 e −0.30/C e −3850/T，其中 T 为药材温度（单位：K）"
+    },
+    "activation_temperature_note": "附录 4 与附录 3 的 Arrhenius 活化温度完全相同（3850 K），差异只在前因子与水分抑制常数"
+  },
+  "thresholds": {
+    "moisture_limit_kg_per_kg": 0.15,
+    "scope": "各处（全域所有空间点）同时满足，即判据作用在全域最大水分浓度上",
+    "comparison": "严格小于（题面原文用『低于』）",
+    "source": "问题 3 题干：按照烘干要求，药材各处的水分浓度应低于 0.15 kg/kg"
+  },
+  "process_facts": {
+    "n_stages": 2,
+    "stage_names": "预热平衡阶段、恒温干燥阶段",
+    "typical_duration_days_low": 2,
+    "typical_duration_days_high": 3,
+    "stage_parameter_difference": "题面指出两阶段参数有所不同，但问题 2、3 统一采用附录 3 的经验公式",
+    "control_variable": "通过调控烘房温湿环境完成药材的干燥（即烘房温度与烘房水分浓度是外部驱动条件，不是待求量）",
+    "source": "引言 + 问题 2 题干：干燥主要包括预热平衡和恒温干燥两个阶段；烘干过程一般持续 2-3 天"
+  },
+  "unit_conversions": [
+    {
+      "name": "药材半径",
+      "raw": "2 cm",
+      "si_value": "0.02",
+      "si_unit": "m",
+      "factor": "1 cm = 0.01 m"
+    },
+    {
+      "name": "药材长度",
+      "raw": "25 cm",
+      "si_value": "0.25",
+      "si_unit": "m",
+      "factor": "1 cm = 0.01 m"
+    },
+    {
+      "name": "报告空间步长",
+      "raw": "0.1 cm",
+      "si_value": "0.001",
+      "si_unit": "m",
+      "factor": "1 cm = 0.01 m"
+    },
+    {
+      "name": "报告表格时间间隔（问题 3、4）",
+      "raw": "6 h",
+      "si_value": "21600",
+      "si_unit": "s",
+      "factor": "1 h = 3600 s"
+    },
+    {
+      "name": "报告表格时间间隔（问题 2）",
+      "raw": "0.5 h",
+      "si_value": "1800",
+      "si_unit": "s",
+      "factor": "1 h = 3600 s"
+    },
+    {
+      "name": "初始温度（绝对温标，用于 Arrhenius 项）",
+      "raw": "28 degC",
+      "si_value": "301.15",
+      "si_unit": "K",
+      "factor": "T_K = T_degC + 273.15（平移变换，非比例变换）"
+    }
+  ],
+  "output_specs": [
+    {
+      "id": "O1",
+      "target": "论文表 1、表 2",
+      "quantity": "温度与水分浓度",
+      "time_points_s": [100, 300, 600, 900, 1200, 1500, 1800],
+      "radial_points_cm": [0, 0.5, 1, 1.5, 2],
+      "source": "问题 1：按表 1 和表 2 的格式分别给出 100、300、600、900、1200、1500、1800 s，到药材中心距离 0、0.5、1、1.5、2 cm 处的结果"
+    },
+    {
+      "id": "O2",
+      "target": "result1.xlsx",
+      "quantity": "温度（工作表『温度』）与水分浓度（工作表『水分浓度』）",
+      "time_span_s": 1800,
+      "time_step_s": 1,
+      "space_step_cm": 0.1,
+      "decimals": 4,
+      "source": "问题 1：将 1800 s 内每隔 1 s、到药材中心距离每隔 0.1 cm 的完整结果保存到文件 result1.xlsx；所有结果保留四位小数"
+    },
+    {
+      "id": "O3",
+      "target": "论文表 3、表 4",
+      "quantity": "温度与水分浓度",
+      "time_span_h": 3,
+      "time_step_h": 0.5,
+      "radial_points_cm": [0, 0.5, 1, 1.5, 2],
+      "source": "问题 2：按表 3 和表 4 的格式分别给出 3 h 内每隔 0.5 h、到药材中心距离 0、0.5、1、1.5、2 cm 处的结果"
+    },
+    {
+      "id": "O4",
+      "target": "result2.xlsx",
+      "quantity": "温度与水分浓度",
+      "time_step_s": 1,
+      "space_step_cm": 0.1,
+      "decimals": 4,
+      "source": "问题 2：将每隔 1 s、到药材中心距离每隔 0.1 cm 的完整结果保存到文件 result2.xlsx"
+    },
+    {
+      "id": "O5",
+      "target": "论文表 5",
+      "quantity": "水分浓度 + 烘干结束时间",
+      "time_step_h": 6,
+      "space_step_cm": 0.5,
+      "last_row": "烘干结束时间",
+      "source": "问题 3：按表 5 的格式给出每隔 6 h、到药材中心距离每隔 0.5 cm 的水分浓度"
+    },
+    {
+      "id": "O6",
+      "target": "result3.xlsx",
+      "quantity": "水分浓度",
+      "time_step_s": 60,
+      "space_step_cm": 0.1,
+      "decimals": 4,
+      "source": "问题 3：将药材内部水分浓度每隔 60 s、到药材中心距离每隔 0.1 cm 的完整结果保存到文件 result3.xlsx"
+    },
+    {
+      "id": "O7",
+      "target": "论文表 6",
+      "quantity": "水分浓度 + 烘干时长",
+      "time_step_h": 6,
+      "space_step_cm": 0.5,
+      "last_column": "药材表面（因半径随时间变化，末列标签为『药材表面』而非固定的 2 cm）",
+      "source": "问题 4：按表 6 的格式给出每隔 6 h、到药材中心距离每隔 0.5 cm 的水分浓度"
+    },
+    {
+      "id": "O8",
+      "target": "result4.xlsx",
+      "quantity": "水分浓度",
+      "time_step_s": 60,
+      "space_step_cm": 0.1,
+      "decimals": 4,
+      "source": "问题 4：将药材内部水分浓度每隔 60 s 时间、0.1 cm 距离的完整结果保存到文件 result4.xlsx"
+    }
+  ],
+  "data_files": [
+    {
+      "path": "user_data/附件1.xlsx",
+      "columns": "时间（单位：s）、温度（单位：°C）、水分浓度（单位：kg/kg）",
+      "semantics": "烘干初期各时间点烘房的温度和水分浓度，即模型的外部边界驱动条件（空气侧状态）",
+      "role": "setpoint / boundary_driver",
+      "source": "附录 1：附件 1 给出了烘干初期各时间点（单位：s）烘房的温度（单位：°C）和水分浓度（单位：kg/kg）"
+    },
+    {
+      "path": "user_data/附件2.xlsx",
+      "columns": "时间（单位：s）、半径（单位：cm）",
+      "semantics": "烘干过程中各时间点药材的半径，即问题 4 的实测收缩轨迹",
+      "role": "observed",
+      "source": "附录 1：附件 2 给出了烘干过程中各时间点（单位：s）药材的半径（单位：cm）"
+    },
+    {
+      "path": "user_data/附件3（result1.xlsx—result4.xlsx）",
+      "columns": "A 列为时间（单位：s），第 1 行为到药材中心的距离（单位：cm）",
+      "semantics": "四个结果模板文件，规定了提交结果的行列结构；result1/result2 含『温度』与『水分浓度』两个工作表",
+      "role": "template",
+      "source": "附录 1：附件 3 是结果文件夹，包括 4 个文件（result1.xlsx-result4.xlsx）"
+    }
+  ],
+  "rules": [
+    {
+      "id": "R1",
+      "natural_language": "烘干终止判据作用在全域最大水分浓度上：药材各处的水分浓度都必须低于 0.15 kg/kg，而不是平均含水率低于 0.15 kg/kg。由于中心处扩散路径最长、干燥最慢，全域最大值出现在中心，判据等价于中心水分浓度低于阈值。",
+      "machine_check": "assert max(C[i] for i in all_nodes) < 0.15 and abs(argmax_r(C) - 0.0) < 1e-9",
+      "source": "问题 3 题干：按照烘干要求，药材各处的水分浓度应低于 0.15 kg/kg"
+    },
+    {
+      "id": "R2",
+      "natural_language": "问题 2 与问题 3 必须统一使用附录 3 的经验公式，不得在预热平衡阶段改用附录 2 的常物性参数；题面虽指出两阶段参数有所不同，但已明确『为简化问题，相关经验公式统一采用附录 3 中的公式』。",
+      "machine_check": "assert model_q2.material is APPENDIX3 and model_q3.material is APPENDIX3 and model_q1.material is APPENDIX2",
+      "source": "问题 2 题干：为简化问题，相关经验公式统一采用附录 3 中的公式"
+    },
+    {
+      "id": "R3",
+      "natural_language": "附录 3 与附录 4 扩散系数中的温度必须以开尔文代入，因为原文明确 T 为药材温度（单位：K）；若误用摄氏度，Arrhenius 因子会产生数量级错误。",
+      "machine_check": "assert D_expr_uses(T_kelvin) and abs(T_kelvin - (T_celsius + 273.15)) < 1e-9",
+      "source": "附录 3 / 附录 4：T 为药材温度（单位：K）"
+    },
+    {
+      "id": "R4",
+      "natural_language": "问题 4 的半径必须取自附件 2 的实测数据，而不是由附录 4 的密度公式反推体积收缩；题面原文为『请根据附件 2，确定药材的烘干时长』，附件 2 是收缩的权威输入。",
+      "machine_check": "assert R_of_t.data_source == 'user_data/附件2.xlsx' and R_of_t.is_interpolation_of_measured_radius",
+      "source": "问题 4 题干：请根据附件 2，确定药材的烘干时长"
+    },
+    {
+      "id": "R5",
+      "natural_language": "水分浓度为干基含水率，即以绝干物质为基准，故其取值可以大于 1（初值 2.55 kg/kg），不得当作湿基含水率或质量分数做归一化处理。",
+      "machine_check": "assert moisture_basis == 'dry' and C_initial > 1 and not any(normalize_to_unit_interval(C))",
+      "source": "问题 1 题干：水分浓度（即干基含水率）为 2.55 kg/kg"
+    },
+    {
+      "id": "R6",
+      "natural_language": "烘房温度与烘房水分浓度是给定的外部驱动条件（由附件 1 给出），是边界条件而非决策变量或待辨识参数，模型不得对其做拟合优化。",
+      "machine_check": "assert T_air is Interpolant(附件1.时间, 附件1.温度) and C_air is Interpolant(附件1.时间, 附件1.水分浓度) and not is_decision_variable(T_air)",
+      "source": "附录 1 + 引言：附件 1 给出烘房的温度和水分浓度；通过调控烘房温湿环境完成药材的干燥"
+    },
+    {
+      "id": "R7",
+      "natural_language": "结果文件的行列结构必须与附件 3 模板严格一致：A 列为时间（单位 s），第 1 行为到药材中心的距离（单位 cm），且所有结果保留四位小数。",
+      "machine_check": "assert sheet.iloc[0, 1:].tolist() == list_of_radii_cm and sheet.iloc[1:, 0].dtype == time_seconds and all(round(v, 4) == v for v in values)",
+      "source": "附录 1 + 问题 1：其中 A 列为时间（单位：s），第 1 行为到药材中心的距离（单位：cm）；所有结果保留四位小数（下同）"
+    }
+  ],
+  "sub_problems": [
+    {
+      "id": "Q1",
+      "name": "预热平衡阶段的温度场与水分场",
+      "given_fields": ["geometry", "initial_conditions", "boundary_coefficients", "material_appendix2"],
+      "inherited_fields": ["output_specs", "data_files", "unit_conversions"],
+      "deliverable": "表 1、表 2 + result1.xlsx",
+      "forbidden_fields": ["material_appendix3", "material_appendix4", "thresholds"]
+    },
+    {
+      "id": "Q2",
+      "name": "全过程（预热平衡 + 恒温干燥）的温度场与水分场",
+      "given_fields": ["geometry", "initial_conditions", "boundary_coefficients", "material_appendix3", "process_facts"],
+      "inherited_fields": ["output_specs", "data_files", "unit_conversions"],
+      "deliverable": "表 3、表 4 + result2.xlsx",
+      "forbidden_fields": ["material_appendix2", "material_appendix4"]
+    },
+    {
+      "id": "Q3",
+      "name": "达到含水率阈值所需的烘干时间",
+      "given_fields": ["geometry", "initial_conditions", "boundary_coefficients", "material_appendix3", "thresholds", "process_facts"],
+      "inherited_fields": ["output_specs", "data_files", "unit_conversions"],
+      "deliverable": "表 5 + 烘干结束时间 + result3.xlsx",
+      "forbidden_fields": ["material_appendix2", "material_appendix4"]
+    },
+    {
+      "id": "Q4",
+      "name": "含收缩的移动边界模型与烘干时长",
+      "given_fields": ["geometry", "initial_conditions", "boundary_coefficients", "material_appendix4", "thresholds", "process_facts"],
+      "inherited_fields": ["output_specs", "data_files", "unit_conversions"],
+      "deliverable": "表 6 + 烘干时长 + result4.xlsx",
+      "forbidden_fields": ["material_appendix2", "material_appendix3"]
+    }
+  ],
+  "assumptions_required": [
+    {
+      "id": "A1",
+      "statement": "基准模型不引入蒸发潜热汇项",
+      "reason": "附录 2、3、4 均未给出水的汽化潜热，任何潜热数值都是外部引入的虚构参数；且量级估算表明按表面通量折算的潜热吸热远大于对流供热，会使药材在预热阶段降温，与题面『预热平衡』阶段升温的物理图景矛盾",
+      "sensitivity_plan": "在灵敏度分析中以潜热折减系数为参数做单因素扫描，报告对温度场与烘干时长的影响幅度"
+    },
+    {
+      "id": "A2",
+      "statement": "超出附件 1 时间覆盖范围后，烘房温度与水分浓度保持其末段平台值不变",
+      "reason": "题面明确干燥的第二阶段为『恒温干燥』，附件 1 末段数据本身已进入平台，线性外推或周期外推都会引入题面没有的信息",
+      "sensitivity_plan": "对平台温度与平台湿度分别做上下扰动，报告烘干时长的变化区间"
+    },
+    {
+      "id": "A3",
+      "statement": "问题 4 的收缩只发生在径向，圆柱长度保持不变",
+      "reason": "附件 2 只给出半径；若假设各向同性三维收缩，则由绝干质量守恒反推的绝干密度会显著超过附录 4 密度公式在零含水率处的取值上限，物理上不可能",
+      "sensitivity_plan": "对比径向收缩与各向同性收缩两种设定下的烘干时长，并给出绝干质量守恒的一致性检验"
+    },
+    {
+      "id": "A4",
+      "statement": "采用一维径向（无限长圆柱）近似，忽略端面传热传质",
+      "reason": "题面只要求给出『到药材中心距离』的分布，未要求轴向坐标；长径比使端面面积占比很小，且热扩散使整体在数十分钟内与热风趋于平衡",
+      "sensitivity_plan": "以二维轴对称模型在若干时刻对比中截面剖面，量化一维近似的偏差方向与幅度"
+    },
+    {
+      "id": "A5",
+      "statement": "药材内部水分迁移用有效扩散（Fick 第二定律）描述，不单独区分液态水与水蒸气两相",
+      "reason": "附录给出的是『水分浓度扩散系数』单一经验公式，本身已是有效扩散系数的形式",
+      "sensitivity_plan": "与集中参数薄层干燥模型（Page / Weibull）对比宏观干燥曲线，验证有效扩散描述的充分性"
+    }
+  ]
+}

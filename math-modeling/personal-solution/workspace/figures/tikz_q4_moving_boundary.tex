@@ -1,0 +1,110 @@
+% purpose: 读者应能回答"收缩物料的物理域如何映射到固定计算域、映射把收缩的影响留在哪一项、绝干质量为什么必须让密度随半径变化"
+% topology: geometry (两域伸缩映射) + causal (映射后的等价改写)
+% reading_direction: 左→右（物理域→计算域），上下分别为两个时刻
+% node_roles: 初始物理域、收缩后物理域、固定计算域、物质控制体、几何放大因子
+% edge_roles: 坐标映射、控制体对应、绝干质量守恒记账
+% visual_encoding: 实线=物料边界；斜线阴影=同一个物质控制体；虚线=对应关系；点划线=对称轴；无颜色
+% style_family: C1（纯黑白线稿，与全篇 mono 流程图一致）
+% annotation_policy: minimal   result_policy: symbolic   final_width: text   print_mode: grayscale
+\documentclass[border=2pt]{standalone}
+\usepackage{ctex}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,patterns}
+\begin{document}
+\begin{tikzpicture}[
+  font=\small,
+  solidline/.style={line width=0.9pt},
+  facelin/.style={line width=0.6pt},
+  thinline/.style={line width=0.5pt},
+  mapedge/.style={-{Stealth[length=4.4pt,width=3.2pt]},line width=0.7pt},
+  corresp/.style={line width=0.5pt,densely dashed},
+  lead/.style={line width=0.4pt,densely dotted},
+  dimline/.style={{Stealth[length=3.4pt,width=2.6pt]}-{Stealth[length=3.4pt,width=2.6pt]},line width=0.5pt}
+]
+% 三个四分之一截面：上左=初始物理域，下左=收缩后物理域，右=固定计算域。
+% 同一个物质控制体在三处用相同斜线阴影，物理宽度变了但 eta 区间不变。
+\def\Ra{2.60}\def\Rb{1.87}\def\Rc{2.20}   % 两个物理半径与计算域绘图半径
+\def\sAi{1.30}\def\sAo{1.82}              % 初始域中该壳层的内外半径
+\def\sBi{0.94}\def\sBo{1.35}              % 收缩后同一壳层（按 R(t)/R_0 等比缩小）
+\def\sCi{1.10}\def\sCo{1.54}              % 计算域中对应的固定 eta 区间
+\def\Cy{-3.20}\def\Dx{4.90}\def\Dy{-1.30} % 下左扇形圆心 y、右扇形圆心 (x,y)
+
+% ---- 上左：初始物理域
+\fill[pattern=north east lines]
+      (\sAi,0) -- (\sAo,0) arc[start angle=0,end angle=90,radius=\sAo]
+   -- (0,\sAi) arc[start angle=90,end angle=0,radius=\sAi] -- cycle;
+\foreach \r in {\sAi,\sAo}{ \draw[facelin] (\r,0) arc[start angle=0,end angle=90,radius=\r]; }
+\draw[solidline] (\Ra,0) arc[start angle=0,end angle=90,radius=\Ra];
+\draw[thinline] (0,0) -- (\Ra,0);
+\draw[thinline,dash pattern=on 5pt off 2pt on 1pt off 2pt] (0,-0.20) -- (0,\Ra+0.20);
+\node[anchor=south west,inner sep=2pt] at (0.10,\Ra+0.08) {初始物理域 $r\in[0,R_0]$};
+\node[anchor=north,inner sep=2pt] at (\Ra,-0.08) {$R_0$};
+\node[anchor=west,inner sep=2pt] at (2.70,1.90) {物质控制体};
+\draw[lead] (2.66,1.86) -- (1.22,1.22);
+
+% ---- 下左：收缩后的物理域（半径变小，同一壳层等比变窄）
+\begin{scope}[yshift=\Cy cm]
+  \fill[pattern=north east lines]
+        (\sBi,0) -- (\sBo,0) arc[start angle=0,end angle=90,radius=\sBo]
+     -- (0,\sBi) arc[start angle=90,end angle=0,radius=\sBi] -- cycle;
+  \foreach \r in {\sBi,\sBo}{ \draw[facelin] (\r,0) arc[start angle=0,end angle=90,radius=\r]; }
+  \draw[solidline] (\Rb,0) arc[start angle=0,end angle=90,radius=\Rb];
+  \draw[thinline] (0,0) -- (\Rb,0);
+  \draw[thinline,dash pattern=on 5pt off 2pt on 1pt off 2pt] (0,-0.20) -- (0,\Rb+0.20);
+\end{scope}
+\node[anchor=south west,inner sep=2pt] at (0.10,\Cy+\Rb+0.08) {收缩后物理域 $r\in[0,R(t)]$};
+\node[anchor=north,inner sep=2pt] at (\Rb,\Cy-0.08) {$R(t)$};
+\node[anchor=west,inner sep=2pt] at (2.00,-2.70) {同一控制体变窄};
+\draw[lead] (1.96,-2.66) -- (0.86,-2.34);
+
+% ---- 右：固定计算域。两个时刻映到同一个 eta 区间，网格因此永不重划
+\begin{scope}[shift={(\Dx cm,\Dy cm)}]
+  \fill[pattern=north east lines]
+        (\sCi,0) -- (\sCo,0) arc[start angle=0,end angle=90,radius=\sCo]
+     -- (0,\sCi) arc[start angle=90,end angle=0,radius=\sCi] -- cycle;
+  \foreach \r in {\sCi,\sCo}{ \draw[facelin] (\r,0) arc[start angle=0,end angle=90,radius=\r]; }
+  \draw[solidline] (\Rc,0) arc[start angle=0,end angle=90,radius=\Rc];
+  \draw[thinline] (0,0) -- (\Rc,0);
+  \draw[thinline,dash pattern=on 5pt off 2pt on 1pt off 2pt] (0,-0.20) -- (0,\Rc+0.20);
+\end{scope}
+\node[anchor=south west,inner sep=2pt] at (\Dx,\Dy+\Rc+0.08) {固定计算域 $\eta\in[0,1]$};
+\node[anchor=north,inner sep=2pt] at (\Dx+\Rc,\Dy-0.08) {$\eta=1$};
+\node[anchor=north west,align=left,inner sep=2pt] at (7.25,0.42)
+     {落到固定 $\eta$ 区间\\[1pt] 网格一次生成、全程不重划};
+\draw[lead] (7.21,0.14) -- (5.92,-0.32);
+
+% ---- 伸缩映射：两个时刻的物理壳层都落到同一 eta 区间
+\draw[mapedge] (2.85,1.00) -- (4.78,0.32);
+\draw[mapedge] (2.05,-2.30) -- (4.78,-1.06);
+% 两条箭头各自带记号：共用一个居中标签时它离两条线都有 25pt 以上，且会被读成只标注上面那条。
+% 上箭头写成 t=0 的特例 R(0)=R_0，下箭头写一般形式，同一映射的两个实例，读者能看出规则相同。
+% 标签均贴在各自箭头的空白侧：上箭头在页面上向右下走，标签压在其左端之上；下箭头反之。
+\node[anchor=south,inner sep=2pt] at (3.72,1.05) {$\eta=r/R_0$};
+\node[anchor=north,inner sep=2pt] at (4.00,-1.88) {$\eta=r/R(t)$};
+
+% ---- 映射后的方程：收缩的全部影响只剩一个几何放大因子
+% 整块上移，与下方"固定计算域"子图标题拉开一整行：两者左缘相同，靠得近会被读成同一块的第四行
+\node[anchor=north west,align=left,inner sep=2pt] at (\Dx,3.72)
+     {$\dfrac{\partial C}{\partial t}
+       =\dfrac{1}{R^{2}(t)}\,\dfrac{1}{\eta}\dfrac{\partial}{\partial\eta}
+        \Bigl(\eta D\dfrac{\partial C}{\partial\eta}\Bigr)$\\[3pt]
+      收缩的全部影响集中在 $1/R^{2}(t)$：\\[1pt]
+      半径变小则扩散路程变短、输运加快};
+
+% ---- 绝干质量记账：载体质量不变，只是含水量在变
+% 单行横贯底部，填住底部右半的空白（原两行版只占左半）
+\node[anchor=north west,align=left,inner sep=2pt] at (0.05,-3.92)
+     {物质控制体的绝干质量不随时间变化：$\rho_d\propto R^{-2}$，
+      $\Delta m_{d,i}=\rho_{d0}\pi R_0^{2}\cdot 2V_i$};
+
+% ---- 附注：Euler 型写法中对流项的等价来源。贴在固定计算域右侧（它解释的正是该域），
+%      三行分栏使宽度收窄，既不压扇形也填住原先中右侧的空白带
+%      改左对齐并与全图其余说明块一致：左缘取最长那行的起点，右缘仍与上方"网格一次生成"块齐平
+\node[anchor=north west,align=left,inner sep=2pt] at (7.75,-0.95)
+     {物质坐标下对流项\\[1pt]
+      与膨胀项相消；\\[2pt]
+      固定 $r$ 的 Euler 型写法\\[1pt]
+      需显式补 $R\dot R\eta^{2}\rho_dC$};
+\end{tikzpicture}
+\end{document}

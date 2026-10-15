@@ -1,0 +1,10 @@
+{
+  "residualDefinition": "observed minus predicted",
+  "bootstrapMethod": "circular moving-block residual bootstrap",
+  "bootstrapReplicates": 1000,
+  "sobolEstimator": "Jansen first-order and total-effect estimators",
+  "sobolBaseSampleSize": 2048,
+  "sobolModelEvaluations": 16384,
+  "sobolBootstrapReplicates": 1000,
+  "parameterRangeCaveat": "Ranges are engineering exploratory assumptions; the problem attachments provide no parameter probability distributions."
+}

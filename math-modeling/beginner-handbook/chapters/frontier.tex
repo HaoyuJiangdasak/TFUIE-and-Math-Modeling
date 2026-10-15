@@ -1,0 +1,122 @@
+\chapter{基础定理与代表性前沿方法：读论文时抓住什么}
+本章选取连接传统物理建模与科学机器学习的代表性方法。这里的“前沿”表示研究方向，不表示它们都是最近发表，更不是截至 2026 年的完整最新清单。竞赛中是否使用一种方法，取决于数据量、算力、可解释性和验证结果。先建立可复现的守恒方程与数值基线，再决定新方法能否降低误差或节省总计算成本。
+
+\section{F01：弱形式——把难求的高阶导数转移出去}
+对一维稳态导热，考虑
+\begin{equation}
+ \begin{aligned}
+ -\frac{\mathrm d}{\mathrm dx}\!\left(k\frac{\mathrm dT}{\mathrm dx}\right)&=q,\\
+ \int_0^L kT'v'\,\mathrm dx&=\int_0^L qv\,\mathrm dx.
+ \end{aligned}
+\end{equation}
+弱式对所有满足 $v(0)=v(L)=0$ 的适当测试函数 $v$ 成立。
+\textbf{人话：}原式要求每一点满足热量平衡；弱式先乘一个用于“检查误差”的函数，再对整段杆积分。分部积分把温度的二阶导数变成一阶导数，因此可以使用分段直线来逼近温度。
+\textbf{符号与单位：}$x$ 是位置，$L$ 是杆长，单位 m；$T$ 是温度，单位 K；$k>0$ 是导热系数，单位 $\mathrm{W/(m\,K)}$；$q$ 是体积热源，单位 $\mathrm{W/m^3}$；$T'=\mathrm dT/\mathrm dx$；$v$ 是人为选择的无量纲测试函数，$v'=\mathrm dv/\mathrm dx$，单位 $\mathrm m^{-1}$；$\mathrm dx$ 是积分长度元。两边弱式单位均为 $\mathrm{W/m^2}$，这里采用恒截面积、单位截面积的写法。
+\textbf{条件与误用：}本式取两端温度已知的 Dirichlet 边界，故测试函数端点为零，边界项才消失。绝热、给定热流或对流边界需要重新保留并处理边界项。弱解并不要求处处存在经典二阶导数，但仍要求适当可积性。它是有限元和弱形式辨识的基础，不能理解为“物理约束变松了可以任意不满足”。
+\textbf{阅读定位：}Dokken 的 FEniCSx 教程给出 Poisson 方程的强式到弱式推导；上面是面向导热问题的原创改写。\url{https://jsdokken.com/dolfinx-tutorial/chapter1/fundamentals.html}。
+
+\section{F02：SVD 与 Eckart--Young 最佳低秩逼近定理}
+\begin{equation}
+ A=U\Sigma V^{\mathsf T},\qquad
+ A_r=\sum_{j=1}^{r}\sigma_j\mathbf u_j\mathbf v_j^{\mathsf T},\qquad
+ \min_{\operatorname{rank}(B)\le r}\|A-B\|_F^2
+ =\|A-A_r\|_F^2=\sum_{j=r+1}^{q}\sigma_j^2.
+\end{equation}
+\textbf{人话：}一大张时空温度表可能主要由少数几种变化模式组成。SVD 把它拆成按重要程度排列的模式，只留前几个时，在平方误差意义下已经是同等秩预算里最好的近似。
+\textbf{符号与单位：}$A$ 是 $m\times n$ 数据矩阵，$m$ 为位置数、$n$ 为快照数；$q=\min(m,n)$；$U,V$ 的列 $\mathbf u_j,\mathbf v_j$ 是单位长度且相互正交的方向向量，无量纲；$\Sigma$ 为含奇异值的对角矩阵；$\sigma_1\ge\cdots\ge\sigma_q\ge0$ 是奇异值，单位与 $A$ 元素相同；$r$ 是保留模式数；$B$ 为任意竞争近似矩阵；$\operatorname{rank}$ 是独立方向数量；$\|\cdot\|_F^2$ 是所有元素平方和；$\mathsf T$ 是转置。
+\textbf{条件与误用：}这是任意实矩阵在 Frobenius 范数下的有限维定理。若各列混合温度、速度、压力，必须先有合理尺度或加权内积，否则“最重要”主要由数值单位决定。低训练重构误差不自动保证新工况预测准确；奇异值相同时最佳解可能不唯一。
+\textbf{阅读定位：}MIT 的矩阵方法课程第 7 讲专门讲解这一基础定理。\url{https://ocw.mit.edu/courses/18-065-matrix-methods-in-data-analysis-signal-processing-and-machine-learning-spring-2018/resources/lecture-7-eckart-young-the-closest-rank-k-matrix-to-a/}。
+
+\section{F03：POD--Galerkin——把高维物理模型压缩成小模型}
+\begin{equation}
+ \mathbf u(t)\approx\bar{\mathbf u}+\Phi_r\mathbf a(t),\qquad
+ \dot{\mathbf a}(t)=\Phi_r^{\mathsf T}F(\bar{\mathbf u}+\Phi_r\mathbf a(t),t),\qquad
+ \eta_r=\frac{\sum_{j=1}^{r}\sigma_j^2}{\sum_{j=1}^{q}\sigma_j^2}.
+\end{equation}
+\textbf{人话：}把整条温度曲线表示成“平均曲线加上少数形状的加权组合”，只追踪这些权重如何随时间变化。
+\textbf{符号与单位：}$\mathbf u(t)$ 是 $m$ 维离散场，$t$ 为时间 s；$\bar{\mathbf u}$ 是固定平均场；$\Phi_r$ 是由去均值快照 SVD 得到的前 $r$ 个左奇异向量组成的 $m\times r$ 矩阵，无量纲；$\mathbf a$ 是 $r$ 个模式幅值，与场同单位；$F$ 是原系统 $\dot{\mathbf u}=F(\mathbf u,t)$ 的右端，单位为场单位每秒；点号是时间导数；$\sigma_j,q$ 为去均值快照的奇异值及总数；$\eta_r$ 为无量纲快照平方幅值保留比例，分母须非零。
+\textbf{条件与误用：}此简式假定欧氏正交基、原系统质量矩阵为单位矩阵、平均场不随时间变化。有限元带质量矩阵时需保留投影质量矩阵。保留 99\% 快照“能量”不等于任意物理量都误差小于 1\%；这里的能量通常仅指平方范数。对流、突变、新参数区间可能需要更多模式；非线性右端仍可能昂贵，不能只凭状态维数小就宣布计算提速。
+\textbf{阅读定位：}Gubisch 与 Volkwein，2017，POD 基础与降阶。\url{https://doi.org/10.1137/1.9781611974829.ch1}。
+
+\section{F04：PINN——把方程残差加入训练目标}
+\begin{equation}
+ r_{\boldsymbol\theta}=\frac{\partial u_{\boldsymbol\theta}}{\partial t}
+ -a\frac{\partial^2u_{\boldsymbol\theta}}{\partial x^2}-s,\qquad
+ \mathcal L=\frac{w_r}{N_r}\sum_{i=1}^{N_r}r_{\boldsymbol\theta}(x_i,t_i)^2
+ +\frac{w_d}{N_d}\sum_{j=1}^{N_d}\left[u_{\boldsymbol\theta}(\tilde x_j,\tilde t_j)-\tilde u_j\right]^2
+ +w_b\mathcal L_b+w_0\mathcal L_0.
+\end{equation}
+\textbf{人话：}神经网络猜一个完整温度场；训练时既惩罚它与观测不符，也惩罚它不满足热方程、边界和初值。网络对坐标的导数通常用自动微分计算。
+\textbf{符号与单位：}本节先将全部坐标、场和方程无量纲化。$u_{\boldsymbol\theta}$ 为网络输出；$\boldsymbol\theta$ 为网络权重；$x,t$ 是无量纲位置和时间；$a$ 为缩放后的扩散系数；$s$ 为无量纲源项；$r$ 为方程残差；$(x_i,t_i)$ 是 $N_r$ 个物理检查点；$(\tilde x_j,\tilde t_j,\tilde u_j)$ 为 $N_d$ 个数据点，波浪号表示观测；$\mathcal L_b,\mathcal L_0$ 为边界、初值的平均平方残差；$w_r,w_d,w_b,w_0>0$ 是权重；所有损失项无量纲。
+\textbf{条件与误用：}网络需有足够光滑的激活函数，以支持所需阶数的导数。残差小不自动等于解误差小；采样遗漏、权重失衡、优化失败都会影响结果。反问题中可把 $a$ 也设为待估参数，但仍需检验可辨识性。对一维标准导热，有限差分通常是值得先做的基线。
+\textbf{原始文献：}Raissi、Perdikaris 与 Karniadakis，2017 预印本。\url{https://arxiv.org/abs/1711.10561}。
+
+\section{F05：SINDy——从候选物理项中挑出简洁方程}
+\begin{equation}
+ \dot X\approx\Theta(X)\Xi,\qquad
+ \hat\Xi=\underset{\Xi}{\operatorname{argmin}}
+ \left\{\frac12\|\dot X-\Theta(X)\Xi\|_F^2+\lambda\|\Xi\|_1\right\}.
+\end{equation}
+\textbf{人话：}先列出可能出现的常数项、一次项、平方项、交叉项等，再寻找只用少数项就能解释变化率的方程。这里用 $\ell_1$ 惩罚展示稀疏回归思想，原始 SINDy 也采用序贯阈值最小二乘等做法。
+\textbf{符号与单位：}先对状态和时间无量纲化；$X$ 是 $n\times d$ 状态数据矩阵，$n$ 为时刻数、$d$ 为状态数；$\dot X$ 为对应导数；$\Theta(X)$ 是 $n\times p$ 候选函数矩阵，$p$ 为候选项数；$\Xi$ 是 $p\times d$ 系数矩阵；$\lambda\ge0$ 控制稀疏程度；$\|\cdot\|_F^2$ 为全部元素平方和，$\|\cdot\|_1$ 此处明确指全部元素绝对值之和。全部量按无量纲表达，恢复物理单位时须撤销缩放。
+\textbf{条件与误用：}真实动力学需要能被候选库合理表示，数据应激发足够多的动态。直接对噪声数据差分会放大噪声；候选项强相关可能导致错误选择。发现一个拟合好的方程不等于证明它是唯一真实机理，需要跨初值、跨工况验证。
+\textbf{原始文献：}Brunton、Proctor 与 Kutz，2016。\url{https://doi.org/10.1073/pnas.1517384113}。
+
+\section{F06：Weak SINDy——先积分，再辨识}
+\begin{equation}
+ \dot x(t)=\sum_{j=1}^{p}\xi_j\theta_j(x(t)),\qquad
+ -\int_{t_0}^{t_1}x(t)\psi'(t)\,\mathrm dt
+ =\sum_{j=1}^{p}\xi_j\int_{t_0}^{t_1}\theta_j(x(t))\psi(t)\,\mathrm dt.
+\end{equation}
+\textbf{人话：}为了避免直接给有噪声的观测求导，给方程乘一个自己选的光滑函数并积分，再通过分部积分把导数转移给这个已知函数。
+\textbf{符号与单位：}此处使用无量纲标量状态与时间；$x(t)$ 为状态；$t_0,t_1$ 为积分窗口端点；$p$ 为候选项数；$\theta_j$ 为第 $j$ 个已知候选函数；$\xi_j$ 为它的未知系数；$\psi$ 为光滑测试函数且 $\psi(t_0)=\psi(t_1)=0$；$\psi'$ 为其时间导数；$\mathrm dt$ 为时间积分元。若不无量纲化，各系数单位必须使每个候选项与 $\dot x$ 同单位。
+\textbf{条件与误用：}测试函数端点为零才可删掉分部积分边界项。窗口太宽可能抹掉局部动态，太窄可能不足以抑制噪声；仍需处理积分离散误差。这里展示易懂的一维 ODE 原理，PDE 的 WSINDy 会对时间和空间导数作相应弱形式处理，不是直接复制同一个积分就够了。
+\textbf{原始文献：}Messenger 与 Bortz，2020 预印本，PDE 的 Weak SINDy。\url{https://arxiv.org/abs/2007.02848}。
+
+\section{F07：高斯过程回归——同时预测数值和模型内不确定性}
+\begin{equation}
+ C=K+\sigma_n^2I,\qquad
+ \mu_*=\mathbf k_*^{\mathsf T}C^{-1}\mathbf y,\qquad
+ s_*^2=k(\mathbf x_*,\mathbf x_*)-\mathbf k_*^{\mathsf T}C^{-1}\mathbf k_*.
+\end{equation}
+\textbf{人话：}把未知函数看成一群可能曲线；观测数据排除不合适的曲线，剩下的平均给预测，分散程度给条件不确定性。
+\textbf{符号与单位：}这里假定先验均值为零，非零均值可先扣除再加回；$\mathbf x_i$ 为第 $i$ 个输入，$\mathbf x_*$ 为查询输入；$n$ 为观测数；$\mathbf y$ 为 $n$ 个观测组成的向量；$K_{ij}=k(\mathbf x_i,\mathbf x_j)$ 为核协方差矩阵；$\mathbf k_*$ 的第 $i$ 项为 $k(\mathbf x_i,\mathbf x_*)$；$\sigma_n^2$ 为独立同方差观测噪声方差；$I$ 为 $n$ 阶单位矩阵；$\mu_*$ 为潜在函数预测均值，$s_*^2$ 为潜在函数预测方差。核和各方差单位为响应单位平方，均值与响应同单位。
+\textbf{条件与误用：}公式基于高斯过程先验与高斯观测噪声，并把核超参数视为给定。若预测新的带噪观测，其方差再加 $\sigma_n^2$。这个不确定性依赖核、噪声和数据假设，不是现实误差保证；实现应用线性求解而非显式逆矩阵。普通稠密实现的计算量随样本数约呈立方增长。
+\textbf{基础文献：}Rasmussen 与 Williams，2006，第 2 章。\url{https://gaussianprocess.org/gpml/chapters/RW2.pdf}。
+
+\section{F08：贝叶斯优化的期望改进 EI}
+\begin{equation}
+ z(\mathbf x)=\frac{f_{\rm best}-\mu(\mathbf x)}{s(\mathbf x)},\qquad
+ \operatorname{EI}(\mathbf x)=
+ [f_{\rm best}-\mu(\mathbf x)]\Phi(z)+s(\mathbf x)\phi(z),\qquad
+ \mathbf x_{\rm next}=\underset{\mathbf x\in\Omega}{\operatorname{argmax}}\operatorname{EI}(\mathbf x).
+\end{equation}
+\textbf{人话：}一个仿真很贵时，每次都要认真选下一个参数。EI 同时考虑“看起来能更好”和“这里还很不确定、值得探一探”。本式写的是最小化目标。
+\textbf{符号与单位：}$\mathbf x$ 为设计参数向量；$\Omega$ 为可行参数域；$f_{\rm best}$ 为当前最小的无噪声目标观测；$\mu,s>0$ 为代理模型预测均值、标准差；$z$ 为无量纲标准化改进；$\Phi,\phi$ 为标准正态累积分布、密度；$\operatorname{EI}$ 为期望改进，与目标同单位；$\operatorname{argmax}$ 返回让 EI 最大的输入；$\mathbf x_{\rm next}$ 为下一次真正运行昂贵仿真的参数。
+\textbf{条件与误用：}公式假定查询目标的后验为高斯分布；$s=0$ 时用极限 $\max(f_{\rm best}-\mu,0)$。强噪声下不能直接将偶然很低的观测当作确定最优，应采用考虑噪声的采集策略。它适合低到中等维度、单次评估昂贵的问题；便宜可微目标往往可直接优化。
+\textbf{代表文献：}Snoek、Larochelle 与 Adams，2012。\url{https://arxiv.org/abs/1206.2944}。
+
+\section{F09：DeepONet——学习“输入函数到输出函数”的映射}
+\begin{equation}
+ \mathcal G_{\boldsymbol\theta}(a)(x)
+ =\sum_{j=1}^{p}b_j\bigl(a(\xi_1),\ldots,a(\xi_m)\bigr)\,t_j(x)+b_0.
+\end{equation}
+\textbf{人话：}普通回归常把几个数变成一个数；算子学习把一整条初温曲线变成另一条温度曲线，或者把材料系数场变成解场。分支网络理解输入函数，主干网络理解“想在什么位置看答案”。
+\textbf{符号与单位：}本式采用无量纲化输入输出；$a$ 是输入函数；$\xi_1,\ldots,\xi_m$ 是 $m$ 个输入传感位置；$a(\xi_i)$ 为该处函数值；$x$ 是输出查询坐标，也可包含时间；$b_j$ 为分支网络第 $j$ 个输出；$t_j$ 为主干网络第 $j$ 个输出；$p$ 为共同特征数；$b_0$ 为偏置；$\boldsymbol\theta$ 为所有可训练参数；$\mathcal G_{\boldsymbol\theta}$ 为学到的算子。
+\textbf{条件与误用：}需要多组“输入函数、对应解函数”的训练对。一条轨迹上的很多点不等于很多种工况。算子通用逼近结果在相应连续性、紧性和网络容量条件下说明存在足够好的表示，不保证梯度下降能找到它，也不保证训练范围之外准确。输入传感点分辨不了的细节可能无法恢复。
+\textbf{代表文献：}Lu、Jin 与 Karniadakis，2019 预印本。\url{https://arxiv.org/abs/1910.03193}。
+
+\section{F10：FNO——在频域学习非局部作用}
+\begin{equation}
+ v_{\ell+1}(x)=\sigma\!\left[
+ W_\ell v_\ell(x)+\mathcal F^{-1}\!\left(R_\ell(k)\,\mathcal F[v_\ell](k)\right)(x)+b_\ell(x)
+ \right].
+\end{equation}
+\textbf{人话：}先把场分解成不同空间频率，在频域让各通道相互混合，再变回空间。这使一个位置可以吸收远处的信息，适合学习某一类 PDE 的解算子。
+\textbf{符号与单位：}本式采用无量纲坐标与隐特征；$\ell$ 为网络层编号；$v_\ell(x)$ 为该层在位置 $x$ 的多通道特征；$\sigma$ 为逐分量非线性激活函数，与奇异值符号无关；$W_\ell$ 为逐点通道混合矩阵；$\mathcal F$ 为傅里叶变换，$\mathcal F^{-1}$ 为逆变换；$k$ 是频率模式索引，不是导热系数；$R_\ell(k)$ 为保留频率上的可训练复矩阵；$b_\ell$ 为偏置。实际离散实现通常用 FFT，并只保留部分低频模式。
+\textbf{条件与误用：}需准备覆盖目标问题族的训练数据；FFT 网格、周期性处理、填充和边界方式必须明确。更换分辨率可以复用一部分算子结构，但并不自动保证任意网格或任意高频细节正确。应与传统求解器比较总成本：数据生成加训练加预测，而非只比较训练完成后的单次推理。
+\textbf{原始文献：}Li 等，2020 预印本、2021 ICLR 工作。\url{https://arxiv.org/abs/2010.08895}。
+
+\section{怎样把文献中的公式写进自己的建模论文}
+先说明你要解决的具体困难，例如未知参数、噪声导数、重复仿真昂贵或空间维数过大。随后写出采用公式，并重新定义本文符号、单位、边界条件和离散方式。最后写清它在自己的数据上通过了什么验证。引用作者和方法名称不能代替推导；公式外形相同也不代表物理假设相同。
+学习顺序建议为：守恒方程与数值收敛，最小二乘与统计不确定性，弱形式与 SVD，最后再选与问题相符的科学机器学习方向。上述十节中，F01--F03 是重要基础，F04--F10 是连接这些基础的代表性研究方法。所有解释均为针对本手册的教学性重述，未逐字搬录论文，也未声称复现论文全部理论与实验。

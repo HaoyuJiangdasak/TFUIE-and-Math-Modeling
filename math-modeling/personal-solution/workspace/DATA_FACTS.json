@@ -1,0 +1,272 @@
+{
+  "_meta": {
+    "problem_id": "A",
+    "purpose": "数据事实台账：把附件里『到底给了什么、什么必须原样使用、什么是我假设的』三类信息分开登记，防止后续步骤把假设当数据、把数据当决策变量。",
+    "source_files": [
+      {"path": "user_data/附件1.xlsx", "role": "烘房环境时序（边界驱动）"},
+      {"path": "user_data/附件2.xlsx", "role": "药材半径时序（收缩实测）"},
+      {"path": "user_data/A题_extracted.md", "sha256": "9d04f981fc51071747c08819ab1dce0071524c1032b1f4738a02f1bece46f437", "role": "题面 OCR 原文"},
+      {"path": "user_data/result1.xlsx", "role": "问题 1 结果模板"},
+      {"path": "user_data/result2.xlsx", "role": "问题 2 结果模板"},
+      {"path": "user_data/result3.xlsx", "role": "问题 3 结果模板"},
+      {"path": "user_data/result4.xlsx", "role": "问题 4 结果模板"}
+    ]
+  },
+  "datasets": [
+    {
+      "id": "D1",
+      "path": "user_data/附件1.xlsx",
+      "n_rows": 241,
+      "columns": ["时间", "温度", "水分浓度"],
+      "time_unit": "s",
+      "time_min": 0,
+      "time_max": 14400,
+      "time_step": 60,
+      "time_step_uniform": true,
+      "missing_values": 0,
+      "coverage_note": "覆盖 0 至 14400 s（前 4 小时），远短于烘干全程；问题 2、3、4 的时间跨度均超出此范围，必须显式声明外推规则",
+      "quality_flags": ["无缺失", "时间步严格均匀", "温度与湿度均单调上升后进入平台"]
+    },
+    {
+      "id": "D2",
+      "path": "user_data/附件2.xlsx",
+      "n_rows": 145,
+      "columns": ["时间", "半径"],
+      "time_unit": "s",
+      "time_min": 0,
+      "time_max": 259200,
+      "time_step": 1800,
+      "time_step_uniform": true,
+      "missing_values": 0,
+      "coverage_note": "覆盖 0 至 259200 s（72 小时），完整覆盖烘干全程；半径单调不增，末段进入平台",
+      "quality_flags": ["无缺失", "时间步严格均匀", "半径单调不增（已逐点核验）", "首点等于题面给定的初始半径"]
+    }
+  ],
+  "variables": [
+    {
+      "symbol": "t",
+      "name": "时间",
+      "role": "index",
+      "unit": "s",
+      "range": "0 至 259200（附件 2 覆盖）",
+      "granularity": "附件 1 为 60 s，附件 2 为 1800 s，输出要求为 1 s 或 60 s",
+      "censored": false,
+      "has_data": true,
+      "note": "输出网格（1 s）比输入网格（60 s / 1800 s）细，需插值获取边界条件；这是插值而非编造，插值方式必须在论文中声明"
+    },
+    {
+      "symbol": "r",
+      "name": "到药材中心的径向距离",
+      "role": "index",
+      "unit": "cm",
+      "range": "0 至 2（问题 1—3）；0 至 R(t)（问题 4，随时间收缩）",
+      "granularity": "输出要求 0.1 cm；论文表格 0.5 cm",
+      "censored": false,
+      "has_data": false,
+      "note": "计算网格必须显著细于输出网格，输出时再插值到 0.1 cm；表面附近水分梯度极陡，需局部加密或用足够多的单元"
+    },
+    {
+      "symbol": "T_a(t)",
+      "name": "烘房（热风）温度",
+      "role": "setpoint",
+      "unit": "degC",
+      "range": "28.0 至 50.246（附件 1 实测）",
+      "plateau_mean": 49.9685,
+      "plateau_std": 0.1648,
+      "granularity": "60 s",
+      "censored": true,
+      "has_data": true,
+      "note": "role=setpoint：这是工艺设定的外部驱动条件，不是模型输出、也不是待优化决策变量。censored=true 指时间上被截断（只到 14400 s），超出部分必须按恒温干燥假设外推为平台值"
+    },
+    {
+      "symbol": "C_a(t)",
+      "name": "烘房（热风）水分浓度",
+      "role": "setpoint",
+      "unit": "kg/kg",
+      "range": "0.01963 至 0.05025（附件 1 实测）",
+      "plateau_mean": 0.04987,
+      "plateau_std": 0.00029,
+      "granularity": "60 s",
+      "censored": true,
+      "has_data": true,
+      "note": "与温度同源同步上升，说明升温阶段热风增湿；平台段标准差极小（相对波动约千分之六），支持按常数外推"
+    },
+    {
+      "symbol": "R(t)",
+      "name": "药材半径",
+      "role": "observed",
+      "unit": "cm",
+      "range": "1.198 至 2.0（附件 2 实测）",
+      "granularity": "1800 s",
+      "censored": false,
+      "has_data": true,
+      "monotone": "非增",
+      "note": "role=observed：这是实测收缩轨迹，问题 4 必须原样使用（题面：请根据附件 2）。首点与题面初始半径一致，构成一致性交叉验证；末段进入平台，说明收缩已基本停止"
+    },
+    {
+      "symbol": "T(r,t)",
+      "name": "药材内部温度",
+      "role": "model_output",
+      "unit": "degC",
+      "initial_value": 28,
+      "granularity": "输出 1 s × 0.1 cm",
+      "censored": false,
+      "has_data": false,
+      "note": "待求场量。没有任何内部温度实测数据可用于标定，故只能靠解析解 / 网格收敛 / 能量守恒等内部一致性手段验证"
+    },
+    {
+      "symbol": "C(r,t)",
+      "name": "药材内部水分浓度（干基含水率）",
+      "role": "model_output",
+      "unit": "kg/kg",
+      "initial_value": 2.55,
+      "termination_threshold": 0.15,
+      "granularity": "输出 1 s 或 60 s × 0.1 cm",
+      "censored": false,
+      "has_data": false,
+      "note": "待求场量，也是烘干终止判据的作用对象。可通过附件 2 的收缩轨迹间接交叉检验（收缩量与失水量应大致同步）"
+    },
+    {
+      "symbol": "t_end",
+      "name": "烘干结束时间 / 烘干时长",
+      "role": "model_output",
+      "unit": "h",
+      "granularity": "由 60 s 输出网格与事件检测精度决定",
+      "censored": false,
+      "has_data": false,
+      "note": "问题 3 与问题 4 的核心答案。题面给出的『一般持续 2-3 天』是量级校验参照，不是标定目标"
+    },
+    {
+      "symbol": "h_fg",
+      "name": "水的汽化潜热",
+      "role": "assumed",
+      "unit": "J/kg",
+      "has_data": false,
+      "censored": false,
+      "note": "⛔ role=assumed：题面附录 2、3、4 均未给出。基准模型取其效应为零（不设潜热汇项），并在灵敏度分析中以折减系数扫描其影响。任何具体数值都不得写入 PROBLEM_FACTS.json"
+    },
+    {
+      "symbol": "L_axial_behavior",
+      "name": "圆柱长度在干燥过程中的变化",
+      "role": "assumed",
+      "unit": "cm",
+      "has_data": false,
+      "censored": false,
+      "note": "role=assumed：附件 2 只给半径，长度是否收缩未言明。基准假设长度不变（径向收缩），依据是绝干质量守恒对各向同性收缩的排除性检验"
+    },
+    {
+      "symbol": "end_face_transfer",
+      "name": "圆柱端面的传热传质",
+      "role": "assumed",
+      "unit": "-",
+      "has_data": false,
+      "censored": false,
+      "note": "role=assumed：一维径向近似将其忽略。需以长径比与扩散渗透深度的量级比较给出定量论证，并说明偏差方向"
+    }
+  ],
+  "given": [
+    {
+      "id": "G-APP2-D",
+      "name": "问题 1 的水分浓度扩散系数经验公式",
+      "raw_quote": "水分浓度扩散系数的经验公式为 D = 7 × 10−9 e −0.89/C，其中 D 为水分浓度扩散系数（单位：m2/s），C 为药材水分浓度（单位：kg/kg）",
+      "must_use_verbatim": true,
+      "applies_to": ["Q1"],
+      "misuse_warning": "禁止擅自加入温度依赖项；附录 2 的 D 只含 C。这不是遗漏，而是问题 1 单向耦合结构的来源"
+    },
+    {
+      "id": "G-APP2-CONST",
+      "name": "问题 1 的常物性参数与表面系数",
+      "raw_quote": "密度为 820 kg/m3、比热容为 2600 J/(kg·K)、热传导系数为 0.36 W/(m ·K)，对流换热系数为 25 W/(m2 ·K)，对流传质系数为 8 × 10−7 m/s",
+      "must_use_verbatim": true,
+      "applies_to": ["Q1"],
+      "misuse_warning": "禁止在问题 1 中改用附录 3 的 rho(C)、c_p(C)、lambda(C)；问题 1 的物性是常数，这正是它可以半解析求解并用于交叉验证的原因"
+    },
+    {
+      "id": "G-APP3",
+      "name": "问题 2 与问题 3 的经验公式组",
+      "raw_quote": "rho = 650 + 128 C；c_p = 1450 + 2736 · C/(C + 1)；lambda = 0.21 + 0.38 · C/(C + 1)；D = 2.4 × 10−3 e −0.45/C e −3850/T。其中 rho 为密度（单位：kg/m3），c_p 为比热容（单位：J/(kg ·K)），lambda 为热传导系数（单位：W/(m ·K)），D 为水分浓度扩散系数（单位：m2/s），C 为药材水分浓度（单位：kg/kg），T 为药材温度（单位：K）",
+      "must_use_verbatim": true,
+      "applies_to": ["Q2", "Q3"],
+      "misuse_warning": "T 必须是开尔文。C/(C+1) 是饱和型核，不可简化为线性。题面已明确问题 2、3 统一采用本组公式，不得为『两阶段参数不同』而在预热段切回附录 2"
+    },
+    {
+      "id": "G-APP4",
+      "name": "问题 4 的经验公式组",
+      "raw_quote": "rho = 760 + 90 C；c_p = 1850 + 2150 · C/(C + 1)；lambda = 0.12 + 0.20 · C/(C + 1)；D = 4.2 × 10−4 e −0.30/C e −3850/T",
+      "must_use_verbatim": true,
+      "applies_to": ["Q4"],
+      "misuse_warning": "附录 4 未重新给出 h 与 h_m，须沿用附录 2 的值并在假设中声明；活化温度与附录 3 相同"
+    },
+    {
+      "id": "G-INIT",
+      "name": "初始条件",
+      "raw_quote": "烘干开始时，药材的温度为 28°C，水分浓度（即干基含水率）为 2.55 kg/kg",
+      "must_use_verbatim": true,
+      "applies_to": ["Q1", "Q2", "Q3", "Q4"],
+      "misuse_warning": "干基含水率可大于 1，禁止归一化。四个问题共用同一初值（题面未给问题 2—4 另设初值）"
+    },
+    {
+      "id": "G-GEOM",
+      "name": "几何尺寸",
+      "raw_quote": "某中药材形状大致呈圆柱形，长为 25 cm，半径为 2 cm",
+      "must_use_verbatim": true,
+      "applies_to": ["Q1", "Q2", "Q3", "Q4"],
+      "misuse_warning": "问题 4 中半径是时间的函数，初始值取此处的 2 cm，与附件 2 首点一致"
+    },
+    {
+      "id": "G-THR",
+      "name": "烘干终止阈值",
+      "raw_quote": "按照烘干要求，药材各处的水分浓度应低于 0.15 kg/kg",
+      "must_use_verbatim": true,
+      "applies_to": ["Q3", "Q4"],
+      "misuse_warning": "『各处』= 全域最大值判据，不是平均含水率判据。用平均值会显著低估烘干时间"
+    },
+    {
+      "id": "G-A1",
+      "name": "烘房环境时序",
+      "raw_quote": "附件 1 给出了烘干初期各时间点（单位：s）烘房的温度（单位：°C）和水分浓度（单位：kg/kg）",
+      "must_use_verbatim": true,
+      "applies_to": ["Q1", "Q2", "Q3", "Q4"],
+      "misuse_warning": "原文说的是『烘干初期』，覆盖不到全程。超出覆盖范围必须按恒温干燥假设外推，且要在论文中显式说明外推规则"
+    },
+    {
+      "id": "G-A2",
+      "name": "药材半径时序",
+      "raw_quote": "附件 2 给出了烘干过程中各时间点（单位：s）药材的半径（单位：cm）",
+      "must_use_verbatim": true,
+      "applies_to": ["Q4"],
+      "misuse_warning": "问题 1—3 不得使用附件 2（那三问不考虑尺寸变化）；问题 4 必须使用（题面：请根据附件 2）"
+    },
+    {
+      "id": "G-TPL",
+      "name": "结果文件模板结构",
+      "raw_quote": "其中 A 列为时间（单位：s），第 1 行为到药材中心的距离（单位：cm）",
+      "must_use_verbatim": true,
+      "applies_to": ["Q1", "Q2", "Q3", "Q4"],
+      "misuse_warning": "result1/result2 含『温度』与『水分浓度』两个工作表；result4 末列表头为『药材表面』而非固定距离值。写盘前必须逐格核对模板行列，不得自行改结构"
+    }
+  ],
+  "extrapolation_rules": [
+    {
+      "id": "E1",
+      "target": "T_a(t), C_a(t) 当 t 超出附件 1 覆盖范围",
+      "rule": "取附件 1 末段平台的均值并保持恒定（零阶保持），对应题面的恒温干燥阶段",
+      "justification": "平台段温度标准差与湿度标准差都极小；线性外推会让温度无界上升，物理上不成立",
+      "role_of_result": "assumed"
+    },
+    {
+      "id": "E2",
+      "target": "R(t) 当 t 超出附件 2 覆盖范围",
+      "rule": "保持末点半径不变（收缩已进入平台）",
+      "justification": "附件 2 末段半径已不再变化，且烘干在覆盖范围内即已结束",
+      "role_of_result": "assumed"
+    },
+    {
+      "id": "E3",
+      "target": "R(t) 在附件 2 相邻采样点之间",
+      "rule": "采用保单调的分段三次插值（PCHIP），并同时给出 Weibull 型解析拟合作为对照",
+      "justification": "求解移动边界问题需要 R 的时间导数；线性插值会给出阶跃导数，导致数值刚性与非物理振荡",
+      "role_of_result": "derived"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+# Python and editor artefacts
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.workbuddy/
+_logs/
+_refs/
+_scratch/
+_tmp/
+*.log
+*.tmp
+*.bak
+
+# Local secrets and machine-specific files
+.env
+*.pem
+*.key

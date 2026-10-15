@@ -1,0 +1,36 @@
+===== 附件/附件3/result1.xlsx / sheet=温度  dims=A1:F5 rows=5 cols=6
+  row1: ('时间\\到药材中心的距离', 0, 0.1, 0.2, '…', 2)
+  row2: (1, None, None, None, None, None)
+  row3: (2, None, None, None, None, None)
+  last row: ('…', None, None, None, None, None)
+  merged: []
+===== 附件/附件3/result1.xlsx / sheet=水分浓度  dims=A1:F5 rows=5 cols=6
+  row1: ('时间\\到药材中心的距离', 0, 0.1, 0.2, '…', 2)
+  row2: (1, None, None, None, None, None)
+  row3: (2, None, None, None, None, None)
+  last row: ('…', None, None, None, None, None)
+  merged: []
+===== 附件/附件3/result2.xlsx / sheet=温度  dims=A1:F5 rows=5 cols=6
+  row1: ('时间\\到药材中心的距离', 0, 0.1, 0.2, '…', 2)
+  row2: (1, None, None, None, None, None)
+  row3: (2, None, None, None, None, None)
+  last row: ('…', None, None, None, None, None)
+  merged: []
+===== 附件/附件3/result2.xlsx / sheet=水分浓度  dims=A1:F5 rows=5 cols=6
+  row1: ('时间\\到药材中心的距离', 0, 0.1, 0.2, '…', 2)
+  row2: (1, None, None, None, None, None)
+  row3: (2, None, None, None, None, None)
+  last row: ('…', None, None, None, None, None)
+  merged: []
+===== 附件/附件3/result3.xlsx / sheet=Sheet1  dims=A1:F5 rows=5 cols=6
+  row1: ('时间\\到药材中心的距离', 0, 0.1, 0.2, '…', 2)
+  row2: (60, None, None, None, None, None)
+  row3: (120, None, None, None, None, None)
+  last row: ('…', None, None, None, None, None)
+  merged: []
+===== 附件/附件3/result4.xlsx / sheet=Sheet1  dims=A1:F5 rows=5 cols=6
+  row1: ('时间\\到药材中心的距离', 0, 0.1, 0.2, '…', '药材表面')
+  row2: (60, None, None, None, None, None)
+  row3: (120, None, None, None, None, None)
+  last row: ('…', None, None, None, None, None)
+  merged: []
